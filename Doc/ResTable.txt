@@ -1,0 +1,27 @@
+# 13.12.2018 Творческий человек (accuratealx@gmail.com)
+# Таблица загрузки ресурсов Simple Game Engine 1.17
+#
+#  Общая форма записи:
+#  [TYPE] [NAME] [FILE NAME] <PARAM 1> <PARAM N>
+#
+#  Примеры:
+#  SystemFont [Имя] [Путь к файлу]
+#  SystemIcon  [Имя] [Путь к файлу]
+#  SystemCursor [Имя] [Путь к файлу]
+#  SoundBuffer [Имя] [Путь к файлу]
+#  Parameters [Имя] [Путь к файлу]
+#  GraphicFrames [Имя] [Путь к файлу]
+#  GraphicSprite [Имя] [Путь к файлу] <Плиток по X> <Плиток по Y> <Фильтр увеличения (Linear/Nearest)> <Фильтр уменьшения (Linear/Nearest)>
+#  GraphicFont [Имя] [Имя шрифта из папки Fonts] <Высота в пикселях> <Атрибуты (BIUS)>
+#
+#  Описание:
+#  Пустые строки и начинающиеся с символа "#" пропускаются.
+#
+#
+
+
+#Загрузить спрайт
+GraphicSprite 'Map' 'Map.png'
+
+#Загрузить таблицу параметров
+Parameters 'PARAMS' 'Param.txt'
