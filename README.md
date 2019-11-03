@@ -1,2 +1,3 @@
 # SGE
-Simple Game Engine
+
+Simple Game Engine written in Lazarus for 2D games
