@@ -1,2 +1,2 @@
-# sge
+# SGE
 Simple Game Engine
