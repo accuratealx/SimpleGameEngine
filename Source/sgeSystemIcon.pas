@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeSystemIcon.pas
-Версия            1.4
+Версия            1.5
 Создан            14.05.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс системного значка *.ico для формы
@@ -49,6 +49,10 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeSystemIcon';
+
+
 
 procedure TsgeSystemIcon.DeleteIcon;
 begin
@@ -87,7 +91,7 @@ var
 begin
   H := LoadImage(0, PChar(FileName), IMAGE_ICON, 0, 0, LR_LOADFROMFILE or LR_DEFAULTSIZE);
   if H = 0 then
-    raise EsgeException.Create(Err_sgeSystemIcon + Err_Separator + Err_sgeSystemIcon_CantLoadIconFromFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileReadError, FileName));
 
   DeleteIcon;
   FHandle := H;
@@ -99,7 +103,7 @@ var
 begin
   H := LoadIcon(HINSTANCE, PChar(Name));
   if H = 0 then
-    raise EsgeException.Create(Err_sgeSystemIcon + Err_Separator + Err_sgeSystemIcon_CantLoadIconFromHinstance + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantLoadFromHinstance, Name));
 
   DeleteIcon;
   FHandle := H;

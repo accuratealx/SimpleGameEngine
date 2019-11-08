@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeShell.pas
-Версия            1.7
+Версия            1.9
 Создан            09.12.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Оболочка для движка
@@ -28,8 +28,15 @@ type
   TsgeShellLineType = (sltError, sltText, sltNote);
 
 
+  //Обработчик ошибок
+  TsgeShellErrorHandle = procedure(Msg: String) of object;
+
+
   TsgeShell = class
   private
+    FParameters: TsgeParameters;          //Системные параметры
+    FErrorHandler: TsgeShellErrorHandle;  //Обработчик ошибок
+
     FSets: TsgeParameters;                //Наборы команд
     FCommands: TsgeShellCommands;         //Массив команд
     FKeyTable: TsgeKeyTable;              //Таблица команд на кнопках
@@ -49,6 +56,11 @@ type
     FTABList: TStringArray;               //Список совпадений для TAB
     FTABIndex: Integer;                   //Текущий элемент в списке совпадений
 
+    FScanMode: Boolean;                   //Режим сканирования клавиш
+    FJournalOffset: Integer;              //Смещение для прокрутки журнала
+    FJournalPageSize: Byte;               //Размер прокрутки журнала
+    FSubstChar: ShortString;              //Символ признака переменной
+
     FBGColor: TsgeGraphicColor;           //Цвет фона
     FEditorColor: TsgeGraphicColor;       //Цвет редактора
     FCursorColor: TsgeGraphicColor;       //Цвет курсора
@@ -58,30 +70,36 @@ type
     FNoteColor: TsgeGraphicColor;         //Цвет заметки
     FBGSprite: TsgeGraphicSprite;         //Фоновая картинка
 
-    FmsgCommandNotFound: String;          //Не найдена команда
-    FmsgEmptyPointer: String;             //Пустой указатель на функцию
-    FmsgWrongParamCount: String;          //Неправильное количество параметров
-    FmsgCommandError: String;             //Ошибка выполнения команды
-    FmsgCommandException: String;         //Непредвиденная ошибка
-    FmsgNoData: String;                   //Не найдены сведения
-    FMsgHelpHint: String;                 //Подсказка для помощи
+    FMsgHelpHint: String;
+    FMsgScanModeOn: String;
+    FMsgScanModeOff: String;
+    FMsgKeyName: String;
 
     procedure GetMatchList(List: PStringArray; Mask: ShortString);
     procedure PrepareTAB;
     function  GetNextTABCommand: String;
     function  GetPrevTABCommand: String;
+
+    procedure SetScanMode(AMode: Boolean);
+    procedure SetJournalOffset(AOffset: Integer);
+    procedure SetJournalPageSize(ASize: Byte);
+    procedure SetSubstChar(Str: ShortString);
+    procedure LogError(Msg: String);
   public
-    constructor Create;
+    constructor Create(Parameters: TsgeParameters; ErrorHandler: TsgeShellErrorHandle);
     destructor  Destroy; override;
 
-
-
+    function  GetJournalInterval: TsgeInterval;
+    procedure LogMessageLocalized(LngConst: String; Postfix: ShortString = ''; rType: TsgeShellLineType = sltNote);
     procedure LogHelpHint;
     procedure LogMessage(Text: String; tType: TsgeShellLineType = sltText);
     procedure LoadLanguage(FileName: String; Mode: TsgeLoadMode = lmReplace);
     procedure DoCommand(Cmd: String);
-    procedure ProcessChar(Chr: Char; KeyboardButtons: TsgeKeyboardButtons);
-    procedure ProcessKey(Key: Byte; KeyboardButtons: TsgeKeyboardButtons);
+
+    procedure KeyChar(Chr: Char; KeyboardButtons: TsgeKeyboardButtons);
+    procedure KeyDown(Key: Byte; KeyboardButtons: TsgeKeyboardButtons);
+    procedure MouseDown(X, Y: Integer; MouseButtons: TsgeMouseButtons; KeyboardButtons: TsgeKeyboardButtons);
+    procedure MouseScroll(X, Y: Integer; MouseButtons: TsgeMouseButtons; KeyboardButtons: TsgeKeyboardButtons; Delta: Integer);
 
     property Sets: TsgeParameters read FSets;
     property Commands: TsgeShellCommands read FCommands;
@@ -105,11 +123,18 @@ type
     property TextColor: TsgeGraphicColor read FTextColor write FTextColor;
     property NoteColor: TsgeGraphicColor read FNoteColor write FNoteColor;
     property BGSprite: TsgeGraphicSprite read FBGSprite write FBGSprite;
+    property ScanMode: Boolean read FScanMode write SetScanMode;
+    property SubstChar: ShortString read FSubstChar write SetSubstChar;
+    property JournalOffset: Integer read FJournalOffset write SetJournalOffset;
+    property JournalPageSize: Byte read FJournalPageSize write SetJournalPageSize;
   end;
 
 
 implementation
 
+
+const
+  _UNITNAME = 'sgeShell';
 
 
 procedure TsgeShell.GetMatchList(List: PStringArray; Mask: ShortString);
@@ -206,8 +231,59 @@ begin
 end;
 
 
-constructor TsgeShell.Create;
+procedure TsgeShell.SetScanMode(AMode: Boolean);
+var
+  s: String;
 begin
+  FScanMode := AMode;
+
+  if FScanMode then
+    begin
+    LogMessage('');
+    s := FMsgScanModeOn;
+    end else s := FMsgScanModeOff;
+  LogMessage(s, sltNote);
+end;
+
+
+procedure TsgeShell.SetJournalOffset(AOffset: Integer);
+var
+  Cnt: Integer;
+begin
+  Cnt := FJournal.Count;
+  if AOffset + FVisibleLines > Cnt then AOffset := Cnt - FVisibleLines;
+  if AOffset < 0 then AOffset := 0;
+
+  FJournalOffset := AOffset;
+end;
+
+
+procedure TsgeShell.SetJournalPageSize(ASize: Byte);
+begin
+  if ASize < 1 then ASize := 1;
+  FJournalPageSize := ASize;
+end;
+
+
+procedure TsgeShell.SetSubstChar(Str: ShortString);
+begin
+  Str := Trim(Str);
+  if Str = '' then FSubstChar := '@' else FSubstChar := Str[1];
+end;
+
+
+procedure TsgeShell.LogError(Msg: String);
+begin
+  if Assigned(FErrorHandler) then FErrorHandler(Msg);
+end;
+
+
+constructor TsgeShell.Create(Parameters: TsgeParameters; ErrorHandler: TsgeShellErrorHandle);
+begin
+  //Указатели
+  FParameters := Parameters;
+  FErrorHandler := ErrorHandler;
+
   //Классы
   FSets := TsgeParameters.Create;
   FCommands := TsgeShellCommands.Create;
@@ -219,12 +295,16 @@ begin
 
   //Переменные
   FLogErrors := True;
-  FVisibleLines := 32;
+  FVisibleLines := 16;
   FStrictSearch := False;
   FSetsSearch := True;
   FSortMatchList := True;
   FTABMode := stmSearch;
   FTABIndex := -1;
+  FScanMode := False;
+  FJournalOffset := 0;
+  FJournalPageSize := 5;
+  FSubstChar := '@';
 
   //Цвета
   FBGColor     := sgeGraphicColor_RGBAToColor(0, 0, 0, 127);
@@ -236,13 +316,10 @@ begin
   FNoteColor   := sgeGraphicColor_RGBAToColor(255, 255, 255, 127);
 
   //Сообщения
-  FmsgCommandNotFound  := 'Command not found "$CmdName$"';
-  FmsgEmptyPointer     := 'Empty pointer "$CmdName$"';
-  FmsgWrongParamCount  := 'Wrong param count "$Cmd$", must be "$PrmCnt$"';
-  FmsgCommandError     := 'Command error "$Cmd$"  "$ErrStr$"';
-  FmsgCommandException := 'Command exception "$Cmd$"';
-  FmsgNoData           := 'No data';
-  FMsgHelpHint         := 'Type "Help CmdName" for info, "CmdList" for command list';
+  FMsgHelpHint    := 'Type "Help CmdName" for info, "CmdList" for command list';
+  FMsgScanModeOn  := 'Scan mode is Enable';
+  FMsgScanModeOff := 'Scan mode is Disable';
+  FMsgKeyName     := 'Key name';
 end;
 
 
@@ -256,6 +333,21 @@ begin
   FEditor.Free;
   FJournal.Free;
   FLanguage.Free;
+end;
+
+
+function TsgeShell.GetJournalInterval: TsgeInterval;
+begin
+  Result.iBegin := FJournal.Count - 1 - FJournalOffset;
+  Result.iEnd := Result.iBegin - FVisibleLines + 1;
+  if Result.iEnd < 0 then Result.iEnd := 0;
+end;
+
+
+procedure TsgeShell.LogMessageLocalized(LngConst: String; Postfix: ShortString; rType: TsgeShellLineType);
+begin
+  FLanguage.GetString('Cmd:' + LngConst, LngConst);
+  LogMessage(LngConst, rType);
 end;
 
 
@@ -278,7 +370,7 @@ end;
 procedure TsgeShell.LoadLanguage(FileName: String; Mode: TsgeLoadMode);
 begin
   if not FileExists(FileName) then
-    raise EsgeException.Create(Err_sgeShell + Err_Separator + Err_sgeShell_FileNotExist + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileNotFound, FileName));
 
   //Попробывать загрузить
   try
@@ -287,17 +379,14 @@ begin
       lmAdd: FLanguage.UpdateFromFile(FileName, True);
     end;
   except
-    raise EsgeException.Create(Err_sgeShell + Err_Separator + Err_sgeShell_ErrorLoadingFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileReadError, FileName));
   end;
 
   //Заменить константы, если есть
-  FLanguage.GetString(sge_ShellMessage_CommandNotFound, FmsgCommandNotFound);
-  FLanguage.GetString(sge_ShellMessage_EmptyPointer, FmsgEmptyPointer);
-  FLanguage.GetString(sge_ShellMessage_WrongParamCount, FmsgWrongParamCount);
-  FLanguage.GetString(sge_ShellMessage_CommandError, FmsgCommandError);
-  FLanguage.GetString(sge_ShellMessage_CommandException, FmsgCommandException);
-  FLanguage.GetString(sge_ShellMessage_NoData, FmsgNoData);
-  FLanguage.GetString(sge_ShellMessage_HelpHint, FMsgHelpHint);
+  FLanguage.GetString('Shell:Hint', FMsgHelpHint);
+  FLanguage.GetString('Shell:ScanModeOn', FMsgScanModeOn);
+  FLanguage.GetString('Shell:ScanModeOff', FMsgScanModeOff);
+  FLanguage.GetString('Shell:KeyName', FMsgKeyName);
 end;
 
 
@@ -310,14 +399,16 @@ const
 var
   sa, sb: TStringArray;
   Mode: Byte;
-  cName, ErrStr, s: String;
+  cName, s: String;
   SetIdx, CmdIdx, i, c: Integer;
 begin
-  Cmd := Trim(Cmd);                           //Отпилить лишнее
-  SimpleCommand_Disassemble(@sa, Cmd);        //Разобрать на части
+  Cmd := Trim(Cmd);                               //Отпилить лишнее
+  Cmd := FParameters.Substitute(Cmd, FSubstChar); //Подставить переменные
+  SimpleCommand_Disassemble(@sa, Cmd);            //Разобрать на части
 
-  if not StringArray_Equal(@sa, 1) then Exit; //Пустая строка
-  cName := LowerCase(sa[0]);                  //Выделить имя команды
+  if not StringArray_Equal(@sa, 1) then Exit;     //Пустая строка
+  cName := LowerCase(sa[0]);                      //Выделить имя команды
+  FJournalOffset := 0;                            //Прокрутить журнал вниз
 
   //Определить режим работы
   Mode := ModeEmpty;
@@ -330,10 +421,7 @@ begin
   //Обработать
   case Mode of
     ModeEmpty:
-      begin
-      ErrStr := StringReplace(FmsgCommandNotFound, '$CmdName$', sa[0], [rfIgnoreCase, rfReplaceAll]);
-      LogMessage(ErrStr, sltError);
-      end;
+      LogError(sgeCreateErrorString(_UNITNAME, Err_CommandNotFound, sa[0]));
 
     ModeSet:
       begin
@@ -345,44 +433,20 @@ begin
       end;
 
     ModeCmd:
-      begin
-      //Проверить указатель
-      if FCommands.Command[CmdIdx].Addr <> nil then
+      if FCommands.Command[CmdIdx].Addr <> nil then                                     //Проверить указатель
         begin
-        //Проверить хватает ли параметров
-        if StringArray_Equal(@sa, FCommands.Command[CmdIdx].MinParams + 1) then
+        if StringArray_Equal(@sa, FCommands.Command[CmdIdx].MinParams + 1) then         //Проверить хватает ли параметров
           begin
-          //Выполнить команду
           try
-            i := FCommands.Command[CmdIdx].Addr(@sa);
+            s := FCommands.Command[CmdIdx].Addr(@sa);                                   //Выполнить команду
           except
-            //Непредвиденная ошибка
-            ErrStr := StringReplace(FmsgCommandException, '$Cmd$', Cmd, [rfIgnoreCase, rfReplaceAll]);
-            LogMessage(ErrStr, sltError);
+            LogError(sgeCreateErrorString(_UNITNAME, Err_UnexpectedError, Cmd));        //Непредвиденная ошибка
           end;
-          //Проверить код выполнения
-          if i <> 0 then
-            begin
-            s := FmsgNoData;
-            if not FLanguage.GetString(cName + ':Error.' + IntToStr(i), s) then s := IntToStr(i) + ' - ' + s;
-            ErrStr := StringReplace(FmsgCommandError, '$Cmd$', Cmd, [rfIgnoreCase, rfReplaceAll]);
-            ErrStr := StringReplace(ErrStr, '$ErrStr$', s, [rfIgnoreCase, rfReplaceAll]);
-            LogMessage(ErrStr, sltError);
-            end;
+          if s <> '' then LogError(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CommandError, Cmd), s));  //Проверить код выполнения
           end
-          else begin
-          //Не хватает параметров
-          ErrStr := StringReplace(FmsgWrongParamCount, '$Cmd$', Cmd, [rfIgnoreCase, rfReplaceAll]);
-          ErrStr := StringReplace(ErrStr, '$PrmCnt$', IntToStr(FCommands.Command[CmdIdx].MinParams), [rfIgnoreCase, rfReplaceAll]);
-          LogMessage(ErrStr, sltError);
-          end;
+          else LogError(sgeCreateErrorString(_UNITNAME, Err_NotEnoughParameters, Cmd)); //Не хватает параметров
         end
-        else begin
-        //Пустой указатель
-        ErrStr := StringReplace(FmsgEmptyPointer, '$CmdName$', sa[0], [rfIgnoreCase, rfReplaceAll]);
-        LogMessage(ErrStr, sltError);
-        end;
-      end;
+        else LogError(sgeCreateErrorString(_UNITNAME, Err_EmptyPointer, Cmd));          //Пустой указатель
 
     ModeAutor: FJournal.Add(GC_Lime, 'sge.ntlab.su  accuratealx@gmail.com');
   end;
@@ -391,13 +455,15 @@ begin
 end;
 
 
-procedure TsgeShell.ProcessChar(Chr: Char; KeyboardButtons: TsgeKeyboardButtons);
+procedure TsgeShell.KeyChar(Chr: Char; KeyboardButtons: TsgeKeyboardButtons);
 begin
+  if FScanMode then Exit;
+
   FEditor.ProcessChar(Chr, KeyboardButtons);
 end;
 
 
-procedure TsgeShell.ProcessKey(Key: Byte; KeyboardButtons: TsgeKeyboardButtons);
+procedure TsgeShell.KeyDown(Key: Byte; KeyboardButtons: TsgeKeyboardButtons);
 const
   mList = 0;
   mNext = 1;
@@ -408,6 +474,26 @@ var
   i, c: Integer;
   Mode: Byte;
 begin
+  //Переключение режима сканирования
+  if (kbLeftShift in KeyboardButtons) and (Key = VK_ESCAPE) then
+    begin
+    ScanMode := not ScanMode;
+    FJournalOffset := 0;
+    Exit;
+    end;
+
+  //Вывод имени клавиши
+  if FScanMode then
+    begin
+    s := FKeyTable.GetNameByIndex(Key);
+    if s <> '' then LogMessage(FMsgKeyName + ' = ' + s);
+    Exit;
+    end;
+
+
+
+
+  //Обработать нажатие
   case Key of
     //Закрыть оболочку
     VK_ESCAPE: FEnable := False;
@@ -430,10 +516,10 @@ begin
           if c > 0 then
             begin
             LogMessage('');
-            LogMessage('Found:', sltNote);
+            LogMessageLocalized('Found', ': ' + FEditor.Line);
             for i := 0 to c - 1 do
               LogMessage(List[i]);
-            LogMessage('Count: ' + IntToStr(c), sltNote);
+            LogMessageLocalized('Count', ': ' + IntToStr(c));
             end;
           StringArray_Clear(@List);
           end;
@@ -472,11 +558,22 @@ begin
     //Установить предыдущую команду в поле редактора
     VK_UP: FEditor.Line := FCommandHistory.GetPreviousCommand;
 
+
     //Установить следующую команду в поле редактора
     VK_DOWN: FEditor.Line := FCommandHistory.GetNextCommand;
 
+
     //Очистить журнал оболочки
     VK_L: if (kbCtrl in KeyboardButtons) then FJournal.Clear;
+
+
+    //Прокрутить вниз
+    VK_NEXT: if (kbCtrl in KeyboardButtons) then JournalOffset := JournalOffset - FJournalPageSize else JournalOffset := JournalOffset - 1;
+
+
+    //Прокрутить вверх
+    VK_PRIOR: if (kbCtrl in KeyboardButtons) then JournalOffset := JournalOffset + FJournalPageSize else JournalOffset := JournalOffset + 1;
+
 
     //Прочие клавиши передать в редактор
     else
@@ -484,8 +581,42 @@ begin
       if not (kbShift in KeyboardButtons) then FTABMode := stmSearch;
       FEditor.ProcessKey(Key, KeyboardButtons);
       end;
+
   end;
 end;
+
+
+procedure TsgeShell.MouseDown(X, Y: Integer; MouseButtons: TsgeMouseButtons; KeyboardButtons: TsgeKeyboardButtons);
+var
+  s: String;
+begin
+  //Вывод имени клавиши
+  if FScanMode then
+    begin
+    s := FKeyTable.GetNameByIndex(sgeGetMouseButtonIdx(MouseButtons));
+    if s <> '' then LogMessage(FMsgKeyName + ' = ' + s);
+    end;
+end;
+
+
+procedure TsgeShell.MouseScroll(X, Y: Integer; MouseButtons: TsgeMouseButtons; KeyboardButtons: TsgeKeyboardButtons; Delta: Integer);
+var
+  i: Integer;
+begin
+  //Вывод имени клавиши
+  if FScanMode then
+    begin
+    LogMessage(FMsgKeyName + ' = ' + FKeyTable.GetNameByIndex(5));
+    Exit;
+    end;
+
+
+  //Прокрутка журнала
+  if kbCtrl in KeyboardButtons then i := 1 else i := FJournalPageSize;
+  if Delta > 0 then JournalOffset := JournalOffset + i else JournalOffset := JournalOffset - i;
+end;
+
+
 
 
 end.

@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeParameters.pas
-Версия            1.2
+Версия            1.3
 Создан            07.06.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Параметры приложения
@@ -14,7 +14,7 @@ unit sgeParameters;
 interface
 
 uses
-  StringArray, SimpleParameters,
+  StringArray, SimpleParameters, SimpleCommand,
   sgeConst, sgeTypes, SysUtils;
 
 
@@ -60,6 +60,7 @@ type
     procedure LoadFromFile(FileName: String = ''; StrDivider: String = sa_StrDivider);
     procedure UpdateInFile(FileName: String = ''; AutoAdd: Boolean = False; StrDivider: String = sa_StrDivider);
     procedure UpdateFromFile(FileName: String = ''; AutoAdd: Boolean = False; StrDivider: String = sa_StrDivider);
+    function  Substitute(Str: String; OpenQuote: String = '@'; CloseQuote: String = ''): String;
 
     property Count: Integer read GetCount;
     property Parameter[Index: Integer]: TsgeParameter read GetParameter write SetParameter;
@@ -72,6 +73,9 @@ type
 
 implementation
 
+
+const
+  _UNITNAME = 'sgeParameters';
 
 
 function TsgeParameters.GetCount: Integer;
@@ -95,7 +99,7 @@ var
 begin
   c := Count - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeParameters + Err_Separator + Err_sgeParameters_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   FParameters[Index] := Param;
 end;
@@ -107,7 +111,7 @@ var
 begin
   c := Count - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeParameters + Err_Separator + Err_sgeParameters_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   Result := FParameters[Index];
 end;
@@ -116,14 +120,14 @@ end;
 procedure TsgeParameters.SetValue(Name: String; Value: String);
 begin
   if not SimpleParameters_Set(@FParameters, Name, Value, FOptions) then
-    raise EsgeException.Create(Err_sgeParameters + Err_Separator + Err_sgeParameters_ParameterNotFound + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_ParameterNotFound, Name));
 end;
 
 
 function TsgeParameters.GetValue(Name: String): String;
 begin
   if not SimpleParameters_Get(@FParameters, Name, Result, FOptions) then
-    raise EsgeException.Create(Err_sgeParameters + Err_Separator + Err_sgeParameters_ParameterNotFound + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_ParameterNotFound, Name));
 end;
 
 
@@ -250,28 +254,44 @@ end;
 procedure TsgeParameters.SaveToFile(FileName: String; StrDivider: String);
 begin
   if not SimpleParameters_SaveToFile(@FParameters, FileName, FIndent, StrDivider) then
-    raise EsgeException.Create(Err_sgeParameters + Err_Separator + Err_sgeParameters_CantSaveToFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileWriteError, FileName));
 end;
 
 
 procedure TsgeParameters.LoadFromFile(FileName: String; StrDivider: String);
 begin
   if not SimpleParameters_LoadFromFile(@FParameters, FileName, StrDivider) then
-    raise EsgeException.Create(Err_sgeParameters + Err_Separator + Err_sgeParameters_CantLoadFromFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileReadError, FileName));
 end;
 
 
 procedure TsgeParameters.UpdateInFile(FileName: String; AutoAdd: Boolean; StrDivider: String);
 begin
   if not SimpleParameters_UpdateInFile(@FParameters, FileName, FIndent, FOptions, StrDivider, AutoAdd) then
-    raise EsgeException.Create(Err_sgeParameters + Err_Separator + Err_sgeParameters_CantUpdateInFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileWriteError, FileName));
 end;
 
 
 procedure TsgeParameters.UpdateFromFile(FileName: String; AutoAdd: Boolean; StrDivider: String);
 begin
   if not SimpleParameters_UpdateFromFile(@FParameters, FileName, FOptions, StrDivider, AutoAdd) then
-    raise EsgeException.Create(Err_sgeParameters + Err_Separator + Err_sgeParameters_CantUpdateFromFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileReadError, FileName));
+end;
+
+
+function TsgeParameters.Substitute(Str: String; OpenQuote: String; CloseQuote: String): String;
+var
+  i, c: Integer;
+  s: String;
+begin
+  c := GetCount - 1;
+  for i := 0 to c do
+    begin
+    s := SimpleCommand_SecureString(FParameters[i].Value);
+    Str := StringReplace(Str, OpenQuote + FParameters[i].Name + CloseQuote, s, [rfIgnoreCase, rfReplaceAll]);
+    end;
+
+  Result := Str;
 end;
 
 

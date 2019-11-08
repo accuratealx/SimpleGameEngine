@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeGraphicSprite.pas
-Версия            1.6
+Версия            1.8
 Создан            11.04.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Спрайт OpenGL
@@ -76,6 +76,11 @@ type
 
 
 implementation
+
+
+const
+  _UNITNAME = 'sgeGraphicSprite';
+
 
 
 procedure TsgeGraphicSprite.SetMagFilter(AFilter: TsgeGraphicSpriteFilter);
@@ -179,22 +184,22 @@ var
 begin
   //Проверить наличие изображения
   if Image = nil then
-    raise EsgeException.Create(Err_sgeGraphicSprite + Err_Separator + Err_sgeGraphicSprite_ImageIsEmpty);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_GraphicNotInitialized));
 
   //Прочитать ширину
   W := 0;
   if GdipGetImageWidth(Image, W) <> Ok then
-    raise EsgeException.Create(Err_sgeGraphicSprite + Err_Separator + Err_sgeGraphicSprite_CantGetWidth + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantGetWidth, FFileName));
 
   //Прочитать высоту
   H := 0;
   if GdipGetImageHeight(Image, H) <> Ok then
-    raise EsgeException.Create(Err_sgeGraphicSprite + Err_Separator + Err_sgeGraphicSprite_CantGetHeight + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantGetHeight, FFileName));
 
   //Заблокировать память
   Rct := MakeRect(0, 0, W, H);
   if GdipBitmapLockBits(Image, @Rct, ImageLockModeRead, PixelFormat32bppARGB, @BmpData) <> Ok then
-    raise EsgeException.Create(Err_sgeGraphicSprite + Err_Separator + Err_sgeGraphicSprite_CantAccessMemory + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantAccessMemory, FFileName));
 
   //Подготовка буфера
   BytesPerLine := W * 4;    //Байтов в строке
@@ -234,7 +239,7 @@ constructor TsgeGraphicSprite.Create(FileName: String; TileCols: Word; TileRows:
 begin
   //Если вдруг особо одарённые будут неправильно использовать
   if (not Assigned(glGenTextures)) then
-    raise EsgeException.Create(Err_sgeGraphicSprite + Err_Separator + Err_sgeGraphicSprite_GraphicNotInitialized);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_GraphicNotInitialized, FileName));
 
   //Обработать информацию о плитках
   if TileCols < 1 then TileCols := 1;                                     //Поправить количество плиток
@@ -250,7 +255,12 @@ begin
   glBindTexture(GL_TEXTURE_2D, 0);                                        //Отменить выбор текстуры
 
   //Попробывать загрузить данные из файла
-  LoadFromFile(FileName);
+  try
+    LoadFromFile(FileName);
+  except
+    glDeleteTextures(1, @FGLHandle);
+    raise;
+  end;
 
   //Запомнить имя файла
   FFileName := FileName;
@@ -265,7 +275,7 @@ constructor TsgeGraphicSprite.CreateChessBoard(Width: Integer; Height: Integer; 
 begin
   //Если вдруг особо одарённые будут неправильно использовать
   if (not Assigned(glGenTextures)) then
-    raise EsgeException.Create(Err_sgeGraphicSprite + Err_Separator + Err_sgeGraphicSprite_GraphicNotInitialized);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_GraphicNotInitialized));
 
   //Обработать информацию о плитках
   FTileCols := 1;                                                         //Запомнить количество плиток
@@ -300,7 +310,7 @@ var
 begin
   //Попробывать загрузить файл с диска
   if GdipCreateBitmapFromFile(PWideChar(WideString(FileName)), Bmp) <> Ok then
-    raise EsgeException.Create(Err_sgeGraphicSprite + Err_Separator + Err_sgeGraphicSprite_CantLoadFromFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileReadError, FileName));
 
   LoadFromGPBitmap(Bmp);  //Залить в OpenGL
   GdipDisposeImage(Bmp);  //Освободить память
@@ -340,7 +350,7 @@ begin
   if GdipCreateBitmapFromScan0(Width, Height, Width * 4, PixelFormat32bppPARGB, @Data[0], Bmp) <> Ok then
     begin
     SetLength(Data, 0);
-    raise EsgeException.Create(Err_sgeGraphicSprite + Err_Separator + Err_sgeGraphicSprite_CantLoadFromScanLine + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantCreateBitmapFromScan));
     end;
 
   //Почистить память

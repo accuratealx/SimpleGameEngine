@@ -1952,7 +1952,7 @@ begin
     if s = 'a' then Mode := mUpdateAdd;
     end;
 
-  //Запись в файл
+  //Прочитать из файла
   try
     case Mode of
       mLoad: SGE.Parameters.LoadFromFile(fn);
@@ -1985,7 +1985,7 @@ begin
   with SGE.Shell.Commands do
     begin
     //Системные
-    Add('System', 'Name', @sge_ShellFunctions_System_Name, 0);
+    {Add('System', 'Name', @sge_ShellFunctions_System_Name, 0);
     Add('System', 'Stop', @sge_ShellFunctions_System_Stop, 0);
     Add('System', 'Close', @sge_ShellFunctions_System_Stop, 0);
     Add('System', 'Quit', @sge_ShellFunctions_System_Stop, 0);
@@ -2071,7 +2071,7 @@ begin
     Add('Parameters', 'ParamSet', @sge_ShellFunctions_Parameters_Set, 1);
     Add('Parameters', 'ParamDel', @sge_ShellFunctions_Parameters_Delete, 1);
     Add('Parameters', 'ParamSave', @sge_ShellFunctions_Parameters_Save, 1);
-    Add('Parameters', 'ParamLoad', @sge_ShellFunctions_Parameters_Load, 1);
+    Add('Parameters', 'ParamLoad', @sge_ShellFunctions_Parameters_Load, 1);}
     end;
 end;
 

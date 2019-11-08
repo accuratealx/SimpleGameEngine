@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              SimpleGameEngine.pas
-Версия            1.18
+Версия            1.19
 Создан            07.06.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Главный класс движка
@@ -14,9 +14,9 @@ unit SimpleGameEngine;
 interface
 
 uses
-  StringArray, SimpleCommand,
+  StringArray,
   sgeConst, sgeTypes, sgeParameters, sgeStartParameters, sgeWindow, sgeJournal, sgeGraphic, sgeEvent,
-  sgeResources, sgeSystemIcon, sgeSystemCursor, sgeSystemFont, sgeGraphicSprite, sgeGraphicFont,
+  sgeResources, sgeSystemIcon, sgeSystemCursor, sgeGraphicSprite, sgeGraphicFont,
   sgeFade, sgeGraphicColor, sgeSound, sgeSoundBuffer, sgeCounter, sgeGraphicFrames, sgeShell,
   sgeShellFunctions, sgeJoysticks,
   Windows, SysUtils;
@@ -41,6 +41,12 @@ type
   //Способ опроса клавиш клавиатуры
   TsgeKeyDownMethod = (kdmSync, kdmAsync);
 
+  //Режим обработки сообщения
+  TsgeMessageMode = (mmShell, mmCommand, mmNormal);
+
+  //Режим клавиш нажатие/отпускание
+  TsgeCommandKeyMethod = (ckmUp, ckmDowm);
+
 
   TSimpleGameEngine = class
   private
@@ -60,7 +66,7 @@ type
     FDrawControl: TsgeDrawControl;                                                      //Режим ограничения кадров
     FOneSecondFrequency: Int64;                                                         //Количество аппаратных тиков процессора в секунду
     FDrawLastTime: Int64;                                                               //Время прошлого вывода графики
-    FDrawCurrentTime: Int64;                                                            //Время текущого вывода графики
+    FDrawCurrentTime: Int64;                                                            //Время текущего вывода графики
     FDrawDelay: Int64;                                                                  //Задержка между выводами графики в тиках процессора
     FMaxFramesPerSecond: Word;                                                          //Максимально кадров в секунду
     FAutoEraseBG: Boolean;                                                              //Автоочистка фона перед рисованием
@@ -74,7 +80,6 @@ type
     FGraphic: TsgeGraphic;                                                              //OpenGL
     FSound: TsgeSound;                                                                  //Звук
     FResources: TsgeResources;                                                          //Хранилище ресурсов
-    FLanguage: TsgeParameters;                                                          //Массив языковых строк
     FTickEvent: TsgeEvent;                                                              //Таймер обработки мира
     FFPSCounter: TsgeCounter;                                                           //Счётчик кадров
     FShell: TsgeShell;                                                                  //Оболочка
@@ -110,15 +115,17 @@ type
     procedure SetDirShots(ADir: String);                                                //Изменить каталог скиншотов
     procedure SetDirUser(ADir: String);                                                 //Изменить каталог пользователя
     procedure SetDebug(AEnable: Boolean);                                               //Изменить режим отладки
-    function  GetLocalizedErrorString(ErrStr: String): String;                          //Вернуть подготовленную строку ошибки с учётом языка
+    function  GetLocalizedErrorString(ErrorString: String): String;                     //Вернуть подготовленную строку ошибки с учётом языка
     procedure SetMouseTrackEvent;                                                       //Запустить слежение за нестандартными сообщениями мыши
     procedure CorrectViewport;                                                          //Изменить область вывода графики
+    procedure CorrectShellVisibleLines;                                                 //Поправить количетво видимых линий в оболочке
     function  GetKeyboardButtons: TsgeKeyboardButtons;                                  //Определить функциональные клавиши
     function  GetMouseButtons(wParam: WPARAM): TsgeMouseButtons;                        //Узнать нажатые клавиши
     function  GetMouseScrollDelta(wParam: WPARAM): Integer;                             //Определить значение прокрутки
-    function  ProcessMouseDownCommand(wParam: WPARAM): Boolean;                         //Выполнить команду по нажатию клавиши мыши
-    function  ProcessMouseUpCommand(wParam: WPARAM): Boolean;                           //Выполнить команду по отпусканию клавиши мыши
-    function  ProcessMouseScrollCommand(wParam: WPARAM): Boolean;                       //Выполнить команду по прокрутке колеса мыши
+    procedure SendTranslateMessage(Msg: UINT; wParam: WPARAM; lParam: LPARAM);          //Послать самому себе сообщение WM_Char
+    function  GetMessageMode(Key: Byte; Method: TsgeCommandKeyMethod): TsgeMessageMode; //Определить режим обработки сообщений
+    function  GetMouseKeyIdx(wParam: WPARAM): Byte;                                     //Определить индекс кнопки
+
     procedure ProcessMessage;                                                           //Заглушка для обработки сообщений
     procedure DrawShell;                                                                //Нарисовать оболочку
     procedure DrawFade;                                                                 //Нарисовать затемнение
@@ -232,6 +239,11 @@ type
 
 implementation
 
+
+const
+  _UNITNAME = 'SGE';
+
+
 var
   _SGEGlobalPtr: TSimpleGameEngine;
 
@@ -259,7 +271,7 @@ begin
   end;
 
   if not SetPriorityClass(GetCurrentProcess, mode) then
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_SetPriority_CantChangePriority);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantChangePriority));
 end;
 
 
@@ -278,7 +290,7 @@ begin
   end;
 
   if mode = 0 then
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_GetPriority_CantReadPriority);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantReadPriority));
 end;
 
 
@@ -360,7 +372,7 @@ begin
       FGraphic.VerticalSync := (FDrawControl = dcSync);
     except
       on E:EsgeException do
-        ProcessError(Err_SGE + Err_Separator + Err_SGE_SetDrawControl_CantChangeVertSync + Err_StrSeparator + E.Message);
+        raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantChangeDrawControl), E.Message));
     end;
 end;
 
@@ -421,29 +433,22 @@ begin
       FJournal.Enable := True;
     except
       on E:EsgeException do
-        ProcessError(Err_SGE + Err_Separator + Err_SGE_SetDebug_CantStartJournal + Err_Separator + fn + Err_StrSeparator + E.Message);
+        raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantChangeDebug), E.Message));
     end;
     end else FJournal.Enable := False;
 end;
 
 
-function TSimpleGameEngine.GetLocalizedErrorString(ErrStr: String): String;
+function TSimpleGameEngine.GetLocalizedErrorString(ErrorString: String): String;
 var
-  aName, aCode, aInfo: String;
-  Name, Message: String;
+  aUnitName, aErrorMessage, aInfo: String;
 begin
-  //Разобрать строку на части
-  sgeDecodeErrorString(ErrStr, aName, aCode, aInfo);
+  sgeDecodeErrorString(ErrorString, aUnitName, aErrorMessage, aInfo); //Разобрать строку на части
+  FShell.Language.GetString('Unit:' + aUnitName, aUnitName);          //Найти имя модуля
+  FShell.Language.GetString('Error:' + aErrorMessage, aErrorMessage); //Найти информацию об ошибке
 
-  //Преобразовать в человеческий язык
-  Name := aName;                                              //Имя модуля по умолчанию
-  FLanguage.GetString(aName, Name);                           //Найти имя модуля
-  Message := aCode;                                           //Код ошибки по умолчанию
-  FLanguage.GetString(aName + '.' + aCode, Message);          //Найти информацию об ошибке
-
-  //Подготовить результат
-  Result := Name + ' - ' + Message;
-  if aInfo <> '' then Result := Result + ' (' + aInfo + ')';  //Если есть подробности, то добавить
+  Result := aUnitName + ': ' + aErrorMessage;
+  if aInfo <> '' then Result := Result + ' (' + aInfo + ')';
 end;
 
 
@@ -466,6 +471,17 @@ begin
   if FGraphic = nil then Exit;
   GetClientRect(FWindow.Handle, Rct);             //Текущие размеры окна
   FGraphic.ChangeViewArea(Rct.Right, Rct.Bottom); //Изменить ViewPort OpenGL
+end;
+
+
+procedure TSimpleGameEngine.CorrectShellVisibleLines;
+var
+  i: Integer;
+begin
+  if FWindow.ViewMode = wvmMinimize then Exit;
+
+  i := sgeGetShellMaxVisibleLines(FWindow.ClientHeight, FShellFont.Height);
+  if FShell.VisibleLines > i then FShell.VisibleLines := i;
 end;
 
 
@@ -512,191 +528,77 @@ begin
 end;
 
 
-function TSimpleGameEngine.ProcessMouseDownCommand(wParam: WPARAM): Boolean;
+procedure TSimpleGameEngine.SendTranslateMessage(Msg: UINT; wParam: WPARAM; lParam: LPARAM);
 var
-  mb: TsgeMouseButtons;
-  Btn: TsgeMouseButton;
-  Idx: Byte;
+  Message: TMSG;
 begin
-  Result := False;
-  mb := GetMouseButtons(wParam);
-
-  for Btn := Low(TsgeMouseButtons) to High(TsgeMouseButtons) do
-    begin
-    Idx := Ord(Btn);
-    if (Btn in mb) and (FShell.KeyTable.Key[Idx].Down <> '') then
-      begin
-      Result := True;
-      FShell.DoCommand(FShell.KeyTable.Key[Idx].Down);
-      end;
-    end;
+  Message.hwnd := FWindow.Handle;
+  Message.message := Msg;
+  Message.wParam := wParam;
+  Message.lParam := lParam;
+  TranslateMessage(Message);
 end;
 
 
-function TSimpleGameEngine.ProcessMouseUpCommand(wParam: WPARAM): Boolean;
-var
-  mb: TsgeMouseButtons;
-  Btn: TsgeMouseButton;
-  Idx: Byte;
+function TSimpleGameEngine.GetMessageMode(Key: Byte; Method: TsgeCommandKeyMethod): TsgeMessageMode;
 begin
-  Result := False;
-  mb := GetMouseButtons(wParam);
+  Result := mmNormal;
 
-  for Btn := Low(TsgeMouseButtons) to High(TsgeMouseButtons) do
-    begin
-    Idx := Ord(Btn);
-    if (Btn in mb) and (FShell.KeyTable.Key[Idx].Up <> '') then
-      begin
-      Result := True;
-      FShell.DoCommand(FShell.KeyTable.Key[Idx].Up);
-      end;
-    end;
+  case Method of
+    ckmUp   : if FShell.KeyTable.Key[Key].Up <> '' then Result := mmCommand;
+    ckmDowm : if FShell.KeyTable.Key[Key].Down <> '' then Result := mmCommand;
+  end;
+
+  if FShell.Enable then Result := mmShell;
 end;
 
 
-function TSimpleGameEngine.ProcessMouseScrollCommand(wParam: WPARAM): Boolean;
-var
-  Delta: SmallInt;
+function TSimpleGameEngine.GetMouseKeyIdx(wParam: WPARAM): Byte;
 begin
-  Result := False;
-  Delta := GetMouseScrollDelta(wParam);
-
-  //Up
-  if (Delta > 0) and (FShell.KeyTable.Key[5].Up <> '') then
-    begin
-    Result := True;
-    FShell.DoCommand(FShell.KeyTable.Key[5].Up);
-    end;
-
-  //Down
-  if (Delta < 0) and (FShell.KeyTable.Key[5].Down <> '') then
-    begin
-    Result := True;
-    FShell.DoCommand(FShell.KeyTable.Key[5].Down);
-    end;
+  Result := sgeGetMouseButtonIdx(GetMouseButtons(wParam));
 end;
 
 
 procedure TSimpleGameEngine.ProcessMessage;
-const
-  ModeDefault = 0;
-  ModeKey     = 1;
-  ModeShell   = 2;
-var
-  Mode: Byte;
-  I: Cardinal;
 begin
   while PeekMessage(_MSG, 0, 0, 0, PM_REMOVE) do
-
     case _MSG.message of
-      //Нажатие клавиши клавиатуры
-      WM_KEYDOWN, WM_SYSKEYDOWN:
-        begin
-        Mode := ModeDefault;
-        if FShell.KeyTable.Key[_MSG.wParam].Down <> '' then Mode := ModeKey;
-        if FShell.Enable then Mode := ModeShell;
-        case mode of
-          ModeDefault:
-            begin
-            TranslateMessage(_MSG);
-            DispatchMessage(_MSG);
-            end;
-          ModeShell:
-            begin
-            TranslateMessage(_MSG);
-            FShell.ProcessKey(_MSG.wParam, GetKeyboardButtons);
-            end;
-          ModeKey:
-            if (_MSG.lParam shr 30 <> 1) then FShell.DoCommand(FShell.KeyTable.Key[_MSG.wParam].Down);
-        end;
-        end;
 
-      //Отпускание клавиши клавиатуры
-      WM_KEYUP, WM_SYSKEYUP:
-        begin
-        Mode := ModeDefault;
-        if FShell.KeyTable.Key[_MSG.wParam].Up <> '' then Mode := ModeKey;
-        if FShell.Enable then Mode := ModeShell;
-        case mode of
-          ModeDefault:
-            begin
-            TranslateMessage(_MSG);
-            DispatchMessage(_MSG);
-            end;
-          ModeShell:
-            TranslateMessage(_MSG);
-          ModeKey:
-            FShell.DoCommand(FShell.KeyTable.Key[_MSG.wParam].Up);
-        end;
-        end;
-
-      //Нажатие клавиши мыши
-      WM_LBUTTONDOWN, WM_MBUTTONDOWN, WM_RBUTTONDOWN, WM_XBUTTONDOWN:
-        if not ProcessMouseDownCommand(_MSG.wParam) then DispatchMessage(_MSG);
-
-      //Двойной клик мыши
-      WM_LBUTTONDBLCLK, WM_MBUTTONDBLCLK, WM_RBUTTONDBLCLK, WM_XBUTTONDBLCLK:
-        if not ProcessMouseDownCommand(_MSG.wParam) then DispatchMessage(_MSG);
-
-      //Отпускание левой клавиши мыши
       WM_LBUTTONUP:
-        if not ProcessMouseUpCommand(MK_LBUTTON) then
-          begin
-          _MSG.wParam := MK_LBUTTON;
-          DispatchMessage(_MSG);
-          end;
+        begin
+        _MSG.wParam := MK_LBUTTON;
+        DispatchMessage(_MSG);
+        end;
 
-      //Отпускание средней клавиши мыши
       WM_MBUTTONUP:
-        if not ProcessMouseUpCommand(MK_MBUTTON) then
-          begin
-          _MSG.wParam := MK_MBUTTON;
-          DispatchMessage(_MSG);
-          end;
+        begin
+        _MSG.wParam := MK_MBUTTON;
+        DispatchMessage(_MSG);
+        end;
 
-      //Отпускание правой клавиши мыши
       WM_RBUTTONUP:
-        if not ProcessMouseUpCommand(MK_RBUTTON) then
-          begin
-          _MSG.wParam := MK_RBUTTON;
-          DispatchMessage(_MSG);
-          end;
+        begin
+        _MSG.wParam := MK_RBUTTON;
+        DispatchMessage(_MSG);
+        end;
 
-      //Отпускание дополнительных клавишь мыши
       WM_XBUTTONUP:
         begin
-        if SmallInt(HIWORD(_MSG.wParam)) = 1 then I := MK_XBUTTON1 else I := MK_XBUTTON2;
-        if not ProcessMouseUpCommand(I) then
-          begin
-          _MSG.wParam := I;
-          DispatchMessage(_MSG);
-          end;
+        if SmallInt(HIWORD(_MSG.wParam)) = 1 then _MSG.wParam := MK_XBUTTON1 else _MSG.wParam := MK_XBUTTON2;
+        DispatchMessage(_MSG);
         end;
 
-      //Прокрутка колеса мыши
-      WM_MOUSEWHEEL:
-        if not ProcessMouseScrollCommand(_MSG.wParam) then DispatchMessage(_MSG);
-
-      else begin
-        TranslateMessage(_MSG);
-        DispatchMessage(_MSG);
-      end;
+      else DispatchMessage(_MSG);
     end;
 end;
 
 
 procedure TSimpleGameEngine.DrawShell;
 var
-  w, h, hline, X1, Y1, X2, Y2: Single;
-  i, c, lc: Integer;
+  shWidth, shHeight, lnHeight, X, Y, X2, Y2, i: Integer;
   Rct: TsgeRect;
+  Interval: TsgeInterval;
 begin
-  //Определить параметры вывода
-  w := FWindow.ClientWidth;               //Ширина окна
-  hline := FShellFont.Height;             //Высота строки
-  h := hline * (FShell.VisibleLines + 1); //Область вывода оболочки
-  X1 := 3;
-
   //Подготовить графику
   FGraphic.Reset;
   FGraphic.PushAttrib;
@@ -705,55 +607,63 @@ begin
   FGraphic.Capabilities[gcLineSmooth] := False;
   FGraphic.Capabilities[gcColorBlend] := True;
 
-  //Фон
-  FGraphic.Color := FShell.BGColor;
-  FGraphic.DrawRect(0, 0, w, h);
+  //Размеры оболочки
+  lnHeight := FShellFont.Height;             //Высота строки
+  shWidth := FWindow.ClientWidth;               //Ширина окна
+  shHeight := (FShell.VisibleLines * lnHeight) + lnHeight + sge_ShellIndent * 3;
 
-  //Фоновая картинка
+  //Вывод фонового цвета
+  FGraphic.Color := FShell.BGColor;
+  FGraphic.DrawRect(0, 0, shWidth, shHeight);
+
+  //Вывод Фоновай картинки
   if FShell.BGSprite <> nil then
     begin
     FGraphic.Capabilities[gcTexture] := True;
-    Rct := sgeGetShellBGRect(w, h, FShell.BGSprite.Width, FShell.BGSprite.Height);
-    FGraphic.DrawSpritePart(0, 0, w, h, Rct.X1, Rct.Y1, Rct.X2, Rct.Y2, FShell.BGSprite, gdmClassic);
+    Rct := sgeGetShellBGRect(shWidth, shHeight, FShell.BGSprite.Width, FShell.BGSprite.Height);
+    FGraphic.DrawSpritePart(0, 0, shWidth, shHeight, Rct.X1, Rct.Y1, Rct.X2, Rct.Y2, FShell.BGSprite, gdmClassic);
     FGraphic.Capabilities[gcTexture] := False;
     end;
 
-  //Редактор
-  Y1 := h - hline - 5;
+  //Вывод строки редактора
+  X := sge_ShellIndent;
+  Y := shHeight - sge_ShellIndent - lnHeight;
   FGraphic.Color := FShell.EditorColor;
-  FGraphic.DrawText(X1, Y1, FShellFont, FShell.Editor.Line);
+  FGraphic.DrawText(X, Y, FShellFont, FShell.Editor.Line);
 
-  //Координаты Y и Y1 для курсора и выделения
-  Y1 := h - hline - 4;
-  Y2 := h - 2;
+  //Координаты курсора и выделения
+  Y := shHeight - sge_ShellIndent - lnHeight + 2;
+  Y2 := shHeight - sge_ShellIndent + 2;
 
-  //Выделение
+  //Выделение строки редактора
   if FShell.Editor.SelectCount > 0 then
     begin
-    X1 := 3 + FShellFont.GetStringWidth(FShell.Editor.GetTextBeforePos(FShell.Editor.SelectBeginPos));
-    X2 := 3 + FShellFont.GetStringWidth(FShell.Editor.GetTextBeforePos(FShell.Editor.SelectEndPos));
+    X := sge_ShellIndent + FShellFont.GetStringWidth(FShell.Editor.GetTextBeforePos(FShell.Editor.SelectBeginPos));
+    X2 := sge_ShellIndent + FShellFont.GetStringWidth(FShell.Editor.GetTextBeforePos(FShell.Editor.SelectEndPos));
     FGraphic.Color := FShell.SelectColor;
-    FGraphic.DrawRect(X1, Y1, X2, Y2, gdmClassic);
+    FGraphic.DrawRect(X, Y, X2, Y2, gdmClassic);
     end;
 
-  //Курсор
-  X1 := 3 + FShellFont.GetStringWidth(FShell.Editor.GetTextBeforePos(FShell.Editor.CursorPos));
+  //Курсор строки редактора
+  X := sge_ShellIndent + FShellFont.GetStringWidth(FShell.Editor.GetTextBeforePos(FShell.Editor.CursorPos));
   FGraphic.Color := FShell.CursorColor;
-  FGraphic.DrawLine(X1, Y1, X1, Y2);
+  FGraphic.DrawLine(X, Y, X, Y2);
 
   //Журнал
-  lc := FShell.Journal.Count - 1;
-  c := min(lc, FShell.VisibleLines);
-  X1 := 3;
-  for i := c downto 0 do
+  if FShell.Journal.Count > 0 then
     begin
-    Y1 := h - (hline * (i + 2)) - hline / 1.5;
-    FGraphic.Color := FShell.Journal.Line[lc - i].Color;
-    FGraphic.DrawText(X1, Y1, FShellFont, FShell.Journal.Line[lc - i].Text);
+    X := sge_ShellIndent;
+    Y := shHeight - lnHeight * 2 - sge_ShellIndent * 2;
+    Interval := FShell.GetJournalInterval;
+    for i := Interval.iBegin downto Interval.iEnd do
+      begin
+      FGraphic.Color := FShell.Journal.Line[i].Color;
+      FGraphic.DrawText(X, Y, FShellFont, FShell.Journal.Line[i].Text);
+      Dec(Y, lnHeight);
+      end;
     end;
 
-  //Отключить смешивание цветов
-  FGraphic.Capabilities[gcColorBlend] := False;
+  //Восстановить графику
   FGraphic.PopAttrib;
 end;
 
@@ -839,6 +749,9 @@ end;
 function TSimpleGameEngine.WndProc(hWnd: HWND; Msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT;
 var
   ps: TPAINTSTRUCT;
+  Idx: Byte;
+  Delta: Integer;
+  KeyMethod: TsgeCommandKeyMethod;
 begin
   Result := 0;
   case Msg of
@@ -854,11 +767,15 @@ begin
     WM_SIZE:
       begin
       CorrectViewport;
+      CorrectShellVisibleLines;
       ResizeWindow;
       end;
 
     WM_SIZING:
+      begin
+      CorrectShellVisibleLines;
       ResizingWindow;
+      end;
 
     WM_PAINT:
       begin
@@ -892,19 +809,50 @@ begin
       if wParam = WA_INACTIVE then DeActivateWindow else ActivateWindow;
 
     WM_CHAR:
-      if FShell.Enable then FShell.ProcessChar(chr(wParam), GetKeyboardButtons) else KeyChar(chr(wParam), GetKeyboardButtons);
+      if FShell.Enable then FShell.KeyChar(chr(wParam), GetKeyboardButtons) else KeyChar(chr(wParam), GetKeyboardButtons);
 
     WM_KEYDOWN, WM_SYSKEYDOWN:
-      KeyDown(wParam, GetKeyboardButtons);
+      case GetMessageMode(wParam, ckmDowm) of
+        mmCommand:
+          if (lParam shr 30 <> 1) then FShell.DoCommand(FShell.KeyTable.Key[wParam].Down);
+        mmShell:
+          begin
+          SendTranslateMessage(Msg, wParam, lParam);
+          FShell.KeyDown(wParam, GetKeyboardButtons);
+          end;
+        mmNormal:
+          begin
+          SendTranslateMessage(Msg, wParam, lParam);
+          KeyDown(wParam, GetKeyboardButtons);
+          end;
+      end;
 
     WM_KEYUP, WM_SYSKEYUP:
-      KeyUp(wParam, GetKeyboardButtons);
+      case GetMessageMode(wParam, ckmUp) of
+        mmCommand: FShell.DoCommand(FShell.KeyTable.Key[wParam].Up);
+        mmShell  : ;
+        mmNormal : KeyUp(wParam, GetKeyboardButtons);
+      end;
 
     WM_LBUTTONDOWN, WM_MBUTTONDOWN, WM_RBUTTONDOWN, WM_XBUTTONDOWN:
-      MouseDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons);
+      begin
+      Idx := GetMouseKeyIdx(wParam);
+      case GetMessageMode(Idx, ckmDowm) of
+        mmCommand: FShell.DoCommand(FShell.KeyTable.Key[Idx].Down);
+        mmShell  : FShell.MouseDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons);
+        mmNormal : MouseDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons);
+      end;
+      end;
 
     WM_LBUTTONUP, WM_MBUTTONUP, WM_RBUTTONUP, WM_XBUTTONUP:
-      MouseUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons);
+      begin
+      Idx := GetMouseKeyIdx(wParam);
+      case GetMessageMode(Idx, ckmUp) of
+        mmCommand: FShell.DoCommand(FShell.KeyTable.Key[Idx].Up);
+        mmShell  : ;
+        mmNormal : MouseUp(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons);
+      end;
+      end;
 
     WM_MOUSEMOVE:
       begin
@@ -925,10 +873,29 @@ begin
       end;
 
     WM_LBUTTONDBLCLK, WM_MBUTTONDBLCLK, WM_RBUTTONDBLCLK, WM_XBUTTONDBLCLK:
-      MouseDoubleClick(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons);
+      begin
+      Idx := GetMouseKeyIdx(wParam);
+      case GetMessageMode(Idx, ckmDowm) of
+        mmCommand: FShell.DoCommand(FShell.KeyTable.Key[Idx].Down);
+        mmShell  : FShell.MouseDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons);
+        mmNormal : MouseDoubleClick(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons);
+      end;
+      end;
 
     WM_MOUSEWHEEL:
-      MouseScroll(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons, GetMouseScrollDelta(wParam));
+      begin
+      Delta := GetMouseScrollDelta(wParam);
+      if Delta > 0 then KeyMethod := ckmUp else KeyMethod := ckmDowm;
+      case GetMessageMode(5, KeyMethod) of
+        mmCommand:
+          case KeyMethod of
+            ckmUp  : FShell.DoCommand(FShell.KeyTable.Key[5].Up);
+            ckmDowm: FShell.DoCommand(FShell.KeyTable.Key[5].Down);
+          end;
+        mmShell  : FShell.MouseScroll(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons, GetMouseScrollDelta(wParam));
+        mmNormal : MouseScroll(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), GetMouseButtons(wParam), GetKeyboardButtons, GetMouseScrollDelta(wParam));
+      end;
+      end;
 
     WM_DEVICECHANGE:
       WMDeviceChange;
@@ -954,12 +921,11 @@ begin
   FDirUser := FDirMain + sge_DirUser + '\';                                 //Определить каталог пользователя
 
   //Классы
-  FShell := TsgeShell.Create;                                               //Оболочка
   FJournal := TsgeJournal.Create('');                                       //Журналирование
   FStartParameters := TsgeStartParameters.Create;                           //Стартовые параметры
   FParameters := TsgeParameters.Create;                                     //Настройки
+  FShell := TsgeShell.Create(FParameters, @ProcessError);                   //Оболочка
   FResources := TsgeResources.Create;                                       //Хранилище ресурсов
-  FLanguage := TsgeParameters.Create;                                       //Языковые строки
   FJoysticks := TsgeJoysticks.Create;                                       //Хранилище джойстиков
   FTickEvent := TsgeEvent.Create(50, False, @Tick, -1);                     //Таймер обработки мира
   FJoystickEvent := TsgeEvent.Create(10, False, @JoystickEvent, -1);        //Таймер обработки джойстиков
@@ -1004,7 +970,6 @@ begin
   FFPSCounter.Free;         //Счётчик кадров
   FParameters.Free;         //Параметры приложения
   FStartParameters.Free;    //Стартовые параметры
-  FLanguage.Free;           //Языковые строки
   FJoysticks.Free;          //Хранилище джойстиков
   FJournal.Free;            //Журналирование
 end;
@@ -1034,7 +999,7 @@ begin
     //Вывод в журнал
     if LogJ then if i = 0 then FJournal.LogDetail(Str) else FJournal.Log('             ' + Str);
     //Вывод в оболочку
-    if LogS then if i = 0 then FShell.LogMessage('Error: ' + Str, sltError) else FShell.LogMessage('       ' + Str, sltNote);
+    if LogS then if i = 0 then FShell.LogMessage(Str, sltError) else FShell.LogMessage('  ' + Str, sltNote);
     end;
 
   //Почистить память
@@ -1067,20 +1032,15 @@ end;
 procedure TSimpleGameEngine.LoadLanguage(FileName: String; Mode: TsgeLoadMode);
 begin
   try
-    case Mode of
-      lmReplace: FLanguage.LoadFromFile(FileName);
-      lmAdd    : FLanguage.UpdateFromFile(FileName, True);
-    end;
+    FShell.LoadLanguage(FileName, Mode);
   except
     on E:EsgeException do
-      ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadLanguage_CantLoadLanguage + Err_Separator + FileName + Err_StrSeparator + E.Message);
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantLoadLanguage), E.Message));
   end;
 end;
 
 
 procedure TSimpleGameEngine.InitWindow;
-var
-  s: String;
 begin
   try
     FWindow := TsgeWindow.Create(SGE_Name + SGE_Version, '', 100, 100, 800, 600);
@@ -1088,11 +1048,7 @@ begin
     SetMouseTrackEvent;
   except
     on E: EsgeException do
-      begin
-      s := Err_SGE + Err_Separator + Err_SGE_InitWindow_CantInitWindow;
-      ProcessError(s + Err_StrSeparator + E.Message);
-      raise EsgeException.Create(s);
-      end;
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantInitWindow), E.Message));
   end;
 end;
 
@@ -1100,7 +1056,6 @@ end;
 procedure TSimpleGameEngine.InitGraphic;
 var
   gf: TsgeGraphicFrameArray;
-  s: String;
 begin
   try
     FGraphic := TsgeGraphic.Create(FWindow.DC, FWindow.ClientWidth, FWindow.ClientHeight);
@@ -1121,29 +1076,19 @@ begin
 
   except
     on E: EsgeException do
-      begin
-      s := Err_SGE + Err_Separator + Err_SGE_InitGraphic_CantInitGraphic;
-      ProcessError(s + Err_StrSeparator + E.Message);
-      raise EsgeException.Create(E.Message);
-      end;
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantInitGraphic), E.Message));
   end;
 end;
 
 
 procedure TSimpleGameEngine.InitSound;
-var
-  s: String;
 begin
   try
     FSound := TsgeSound.Create;
     FDefSoundBuffer := TsgeSoundBuffer.CreateBlank;
   except
     on E: EsgeException do
-      begin
-      s := Err_SGE + Err_Separator + Err_SGE_InitSound_CantInitSound;
-      ProcessError(s + Err_StrSeparator + E.Message);
-      raise EsgeException.Create(s);
-      end;
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantInitSound), E.Message));
   end;
 end;
 
@@ -1159,7 +1104,7 @@ begin
     end;
   except
     on E:EsgeException do
-      ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadParameters_CantLoadFromFile + Err_Separator + FileName + Err_StrSeparator + E.Message);
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantLoadParameters), E.Message));
   end;
 end;
 
@@ -1175,7 +1120,7 @@ begin
     end;
   except
     on E:EsgeException do
-      ProcessError(Err_SGE + Err_Separator + Err_SGE_SaveParameters_CantSaveToFile + Err_Separator + FileName + Err_StrSeparator + E.Message);
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantSaveParameters), E.Message));
   end;
 end;
 
@@ -1195,39 +1140,35 @@ var
   Ico: TsgeSystemIcon;
 begin
   if FWindow = nil then
-    begin
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadAppIcon_WindowNotInitialized + Err_Separator + Name);
-    Exit;
-    end;
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_WindowNotInitialized, Name));
 
   Ico := nil;
-
-  case From of
-    lfHinstance:
-      try
+  try
+    case From of
+      lfHinstance:
+        begin
         FDefSystemIcon.LoadFromHinstance(Name);
         Ico := FDefSystemIcon;
-      except
-        on E:EsgeException do
-          ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadAppIcon_CantLoadFromHinstance + Err_Separator + Name + Err_StrSeparator + E.Message);
-      end;
+        end;
 
-    lfResource:
-      begin
-      Ico := TsgeSystemIcon(FResources.TypedObj[Name, rtSystemIcon]);
-      if Ico = nil then
-        ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadAppIcon_CantLoadFromResource + Err_Separator + Name);
-      end;
+      lfResource:
+        begin
+        Ico := TsgeSystemIcon(FResources.TypedObj[Name, rtSystemIcon]);
+        if Ico = nil then
+          raise EsgeException.Create(sgeCreateErrorString('sgeSystemIcon', Err_CantLoadFromResource, Name));
+        end;
 
-    lfFile:
-      try
+      lfFile:
+        begin
         FDefSystemIcon.LoadFromFile(Name);
         Ico := FDefSystemIcon;
-      except
-        on E:EsgeException do
-          ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadAppIcon_CantLoadFromFile + Err_Separator + Name + Err_StrSeparator + E.Message);
-      end;
+        end;
+    end;
+  except
+    on E: EsgeException do
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantLoadAppIcon), E.Message));
   end;
+
 
   if Ico <> nil then
     begin
@@ -1242,38 +1183,33 @@ var
   Cur: TsgeSystemCursor;
 begin
   if FWindow = nil then
-    begin
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadAppCursor_WindowNotInitialized + Err_Separator + Name);
-    Exit;
-    end;
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_WindowNotInitialized, Name));
 
   Cur := nil;
-
-  case From of
-    lfHinstance:
-      try
+  try
+    case From of
+      lfHinstance:
+        begin
         FDefSystemCursor.LoadFromHinstance(Name);
         Cur := FDefSystemCursor;
-      except
-        on E:EsgeException do
-          ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadAppCursor_CantLoadFromHinstance + Err_Separator + Name + Err_StrSeparator + E.Message);
-      end;
+        end;
 
-    lfResource:
-      begin
-      Cur := TsgeSystemCursor(FResources.TypedObj[Name, rtSystemCursor]);
-      if Cur = nil then
-        ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadAppCursor_CantLoadFromResource + Err_Separator + Name);
-      end;
+      lfResource:
+        begin
+        Cur := TsgeSystemCursor(FResources.TypedObj[Name, rtSystemCursor]);
+        if Cur = nil then
+          raise EsgeException.Create(sgeCreateErrorString('sgeSystemCursor', Err_CantLoadFromResource, Name));
+        end;
 
-    lfFile:
-      try
+      lfFile:
+        begin
         FDefSystemCursor.LoadFromFile(Name);
         Cur := FDefSystemCursor;
-      except
-        on E:EsgeException do
-          ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadAppCursor_CantLoadFromFile + Err_Separator + Name + Err_StrSeparator + E.Message);
-      end;
+        end;
+    end;
+  except
+    on E: EsgeException do
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantLoadAppCursor), E.Message));
   end;
 
   if Cur <> nil then FWindow.Cursor := Cur.Handle;
@@ -1291,10 +1227,7 @@ procedure TSimpleGameEngine.Screenshot(FileName: String);
 begin
   //Проверить графику
   if FGraphic = nil then
-    begin
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_Screenshot_GraphicNotInitialized);
-    Exit;
-    end;
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_GraphicNotInitialized));
 
   //Если особый случай, то задать имя по умолчанию
   if FileName = '' then
@@ -1308,205 +1241,15 @@ begin
     FGraphic.ScreenShot(FileName);
   except
     on E:EsgeException do
-      ProcessError(Err_SGE + Err_Separator + Err_SGE_Screenshot_SaveError + Err_Separator + FileName + Err_StrSeparator + E.Message);
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantCreateScreenShot), E.Message));
   end;
 end;
 
 
 procedure TSimpleGameEngine.LoadResourcesFromTable(FileName: String; Mode: TsgeLoadMode);
-var
-  sa, Line: TStringArray;
-  BasePath: String;
-  c, i, sCols, sRows: Integer;
-  Obj: TObject;
-  sMagFilter, sMinFilter: TsgeGraphicSpriteFilter;
-  fAttr: TsgeGraphicFontAttrib;
 begin
-  //Поправить путь на абсолютный
-  FileName := FDirMain + FileName;
-
-  //Проверить есть ли файл
-  if not FileExists(FileName) then
-    begin
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_FileNotFound + Err_Separator + FileName);
-    Exit;
-    end;
-
-  //Прочитать файл
-  if not StringArray_LoadFromFile(@sa, FileName) then
-    begin
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_ReadError + Err_Separator + FileName);
-    Exit;
-    end;
-
-  //Предусмотреть очистку ресурсов
   if Mode = lmReplace then FResources.Clear;
-
-  //Обработать таблицу
-  BasePath := ExtractFilePath(FileName);              //Записать путь к таблице
-  c := StringArray_GetCount(@sa) - 1;                 //Сколько всего строк
-  for i := 0 to c do
-    begin
-    Obj := nil;                                       //Почистить адрес
-    sa[i] := Trim(sa[i]);                             //Убрать лишние пробелы
-    if sa[i] = '' then Continue;                      //Пустая строка
-    if sa[i][1] = '#' then Continue;                  //Символ заметки
-
-    SimpleCommand_Disassemble(@Line, sa[i]);          //Разобрать на части
-    if not StringArray_Equal(@Line, 3) then Continue; //Проверить на наличие 3 частей
-
-    //Проверить на совпадение имени
-    if FResources.IndexOf(Line[1]) <> -1 then
-      begin
-      ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_DuplicateResource + Err_Separator + Line[1]);
-      end;
-
-    case LowerCase(Line[0]) of
-      //Иконка
-      rtSystemIcon:
-        begin
-        try
-          Obj := TsgeSystemIcon.CreateFromFile(BasePath + Line[2]);
-        except
-          on E:EsgeException do
-            ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_SystemIconNotLoaded + Err_Separator + Line[2] + Err_StrSeparator + E.Message);
-        end;
-        if Obj <> nil then FResources.AddItem(Line[1], rtSystemIcon, Obj);
-        end;
-
-      //Курсор
-      rtSystemCursor:
-        begin
-        try
-          Obj := TsgeSystemCursor.CreateFromFile(BasePath + Line[2]);
-        except
-          on E:EsgeException do
-            ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_SystemCursorNotLoaded + Err_Separator + Line[2] + Err_StrSeparator + E.Message);
-        end;
-        if Obj <> nil then FResources.AddItem(Line[1], rtSystemCursor, Obj);
-        end;
-
-      //Системный шрифт
-      rtSystemFont:
-        begin
-        try
-          Obj := TsgeSystemFont.Create(BasePath + Line[2]);
-        except
-          on E:EsgeException do
-            ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_SystemFontNotLoaded + Err_Separator + Line[2] + Err_StrSeparator + E.Message);
-        end;
-        if Obj <> nil then FResources.AddItem(Line[1], rtSystemFont, Obj);
-        end;
-
-      //Спрайт
-      rtGraphicSprite:
-        begin
-        //Cols
-        sCols := 1;
-        if StringArray_Equal(@Line, 4) then
-          if not TryStrToInt(Line[3], sCols) then sCols := 1;
-        if sCols < 1 then sCols := 1;
-        //Rows
-        sRows := 1;
-        if StringArray_Equal(@Line, 5) then
-          if not TryStrToInt(Line[4], sRows) then sRows := 1;
-        if sRows < 1 then sRows := 1;
-        //MagFilter
-        sMagFilter := gsfNearest;
-        if StringArray_Equal(@Line, 6) then
-          if LowerCase(Line[5]) = 'linear' then sMagFilter := gsfLinear;
-        //MinFilter
-        sMinFilter := gsfNearest;
-        if StringArray_Equal(@Line, 7) then
-          if LowerCase(Line[6]) = 'linear' then sMinFilter := gsfLinear;
-        //Создать и добавить в хранилище
-        try
-          Obj := TsgeGraphicSprite.Create(BasePath + Line[2], sCols, sRows, sMagFilter, sMinFilter);
-        except
-          on E:EsgeException do
-            ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_GraphicSpriteNotLoaded + Err_Separator + Line[2] + Err_StrSeparator + E.Message);
-        end;
-        if Obj <> nil then FResources.AddItem(Line[1], rtGraphicSprite, Obj);
-        end;
-
-      //Графический шрифт
-      rtGraphicFont:
-        begin
-        //Size
-        sCols := 12;
-        if StringArray_Equal(@Line, 4) then
-          if not TryStrToInt(Line[3], sCols) then sCols := 1;
-        if sCols < 1 then sCols := 1;
-        //Attrib
-        fAttr := [];
-        if StringArray_Equal(@Line, 5) then
-          begin
-          Line[4] := LowerCase(Line[4]);
-          if Pos('b', Line[4]) <> 0 then Include(fAttr, gfaBold);
-          if Pos('i', Line[4]) <> 0 then Include(fAttr, gfaItalic);
-          if Pos('u', Line[4]) <> 0 then Include(fAttr, gfaUnderline);
-          if Pos('s', Line[4]) <> 0 then Include(fAttr, gfaStrikeOut);
-          end;
-        //Создать и добавить в хранилище
-        try
-          Obj := TsgeGraphicFont.Create(Line[2], sCols, fAttr);
-        except
-          on E:EsgeException do
-            ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_GraphicFontNotLoaded + Err_Separator + Line[2] + Err_StrSeparator + E.Message);
-        end;
-        if Obj <> nil then FResources.AddItem(Line[1], rtGraphicSprite, Obj);
-        end;
-
-      //Звуковой буфер
-      rtSoundBuffer:
-        begin
-        try
-          Obj := TsgeSoundBuffer.Create(BasePath + Line[2]);
-        except
-          on E:EsgeException do
-            ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_SoundBufferNotLoaded + Err_Separator + Line[2] + Err_StrSeparator + E.Message);
-        end;
-        if Obj <> nil then FResources.AddItem(Line[1], rtSoundBuffer, Obj);
-        end;
-
-      //Кадры анимации
-      rtGraphicFrames:
-        begin
-        try
-          Obj := TsgeGraphicFrames.Create(BasePath + Line[2], FResources);
-        except
-          on E:EsgeException do
-            ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_GraphicFramesNotLoaded + Err_Separator + Line[2] + Err_StrSeparator + E.Message);
-        end;
-        if Obj <> nil then FResources.AddItem(Line[1], rtGraphicFrames, Obj);
-        end;
-
-      //Таблица параметров
-      rtParameters:
-        begin
-        try
-          Obj := TsgeParameters.Create;
-          TsgeParameters(Obj).LoadFromFile(BasePath + Line[2]);
-        except
-          on E:EsgeException do
-            begin
-            FreeAndNil(Obj);
-            ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_ParametersNotLoaded + Err_Separator + Line[2] + Err_StrSeparator + E.Message);
-            end;
-        end;
-        if Obj <> nil then FResources.AddItem(Line[1], rtParameters, Obj);
-        end;
-
-
-      //Если не удалось определить тип
-      else ProcessError(Err_SGE + Err_Separator + Err_SGE_LoadResource_CantBeDetermined + Err_Separator + Line[0]);
-    end;
-
-    end;//for i := 0
-
-  //Почистить память
-  StringArray_Clear(@Line);
-  StringArray_Clear(@sa);
+  FResources.LoadFromTable(FileName);
 end;
 
 
@@ -1515,7 +1258,7 @@ begin
   Result := TsgeGraphicSprite(FResources.TypedObj[Name, rtGraphicSprite]);
   if Result = nil then
     begin
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_GetGraphicSprite_SpriteNotFound + Err_Separator + Name);
+    ProcessError(sgeCreateErrorString(_UNITNAME, Err_SpriteNotFound, Name));
     Result := FDefGraphicSprite;
     end;
 end;
@@ -1526,7 +1269,7 @@ begin
   Result := TsgeGraphicFont(FResources.TypedObj[Name, rtGraphicFont]);
   if Result = nil then
     begin
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_GetGraphicFont_FontNotFound + Err_Separator + Name);
+    ProcessError(sgeCreateErrorString(_UNITNAME, Err_FontNotFound, Name));
     Result := FDefGraphicFont;
     end;
 end;
@@ -1537,7 +1280,7 @@ begin
   Result := TsgeSoundBuffer(FResources.TypedObj[Name, rtSoundBuffer]);
   if Result = nil then
     begin
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_GetSoundBuffer_BufferNotFound + Err_Separator + Name);
+    ProcessError(sgeCreateErrorString(_UNITNAME, Err_BufferNotFound, Name));
     Result := FDefSoundBuffer;
     end;
 end;
@@ -1548,7 +1291,7 @@ begin
   Result := TsgeGraphicFrames(FResources.TypedObj[Name, rtGraphicFrames]);
   if Result = nil then
     begin
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_GetGraphicFrames_FramesNotFound + Err_Separator + Name);
+    ProcessError(sgeCreateErrorString(_UNITNAME, Err_FramesNotFound, Name));
     Result := FDefGraphicFrames;
     end;
 end;
@@ -1559,7 +1302,7 @@ begin
   Result := TsgeParameters(FResources.TypedObj[Name, rtParameters]);
   if Result = nil then
     begin
-    ProcessError(Err_SGE + Err_Separator + Err_SGE_GetParameters_ParametersNotFound + Err_Separator + Name);
+    ProcessError(sgeCreateErrorString(_UNITNAME, Err_ParametersNotFound, Name));
     Result := FParameters;
     end;
 end;

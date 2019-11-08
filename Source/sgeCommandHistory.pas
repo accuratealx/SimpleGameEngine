@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeCommandHistory.pas
-Версия            1.0
+Версия            1.1
 Создан            09.12.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс хранения истории введённых команд
@@ -25,6 +25,9 @@ type
     FCommands: TStringArray;  //Массив строк истории
     FMaxLines: Word;          //Максимальное количество строк
     FCurrentIndex: Integer;   //Текущий индекс строки вставки
+
+    function  GetCount: Integer;
+    procedure SetMaxLines(ALines: Word);
   public
     constructor Create(MaxLines: Word = 50);
     destructor  Destroy; override;
@@ -35,11 +38,33 @@ type
     procedure LoadFromFile(FileName: String);
     function  GetPreviousCommand: String;
     function  GetNextCommand: String;
+
+    property MaxLines: Word read FMaxLines write SetMaxLines;
   end;
 
 
 
 implementation
+
+
+const
+  _UNITNAME = 'sgeCommandHistory';
+
+
+
+function TsgeCommandHistory.GetCount: Integer;
+begin
+  Result := StringArray_GetCount(@FCommands);
+end;
+
+
+procedure TsgeCommandHistory.SetMaxLines(ALines: Word);
+begin
+  FMaxLines := ALines;
+  while GetCount > FMaxLines do
+    StringArray_Delete(@FCommands, 0);
+end;
+
 
 constructor TsgeCommandHistory.Create(MaxLines: Word);
 begin
@@ -78,14 +103,14 @@ end;
 procedure TsgeCommandHistory.SaveToFile(FileName: String);
 begin
   if not StringArray_SaveToFile(@FCommands, FileName) then
-    raise EsgeException.Create(Err_sgeCommandHistory + Err_Separator + Err_sgeCommandHistory_CantSaveToFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileWriteError, FileName));
 end;
 
 
 procedure TsgeCommandHistory.LoadFromFile(FileName: String);
 begin
   if not StringArray_LoadFromFile(@FCommands, FileName) then
-    raise EsgeException.Create(Err_sgeCommandHistory + Err_Separator + Err_sgeCommandHistory_CantLoadFromFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileReadError, FileName));
 
   FCurrentIndex := StringArray_GetCount(@FCommands);
 end;

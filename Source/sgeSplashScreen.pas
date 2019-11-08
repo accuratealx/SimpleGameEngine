@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeSplashScreen.pas
-Версия            1.0
+Версия            1.1
 Создан            04.04.2019
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс простой формы-заставки
@@ -41,6 +41,10 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeSplashScreen';
+
+
 constructor TsgeSplashScreen.Create(BmpName: String; LoadFrom: TsgeLoadBitmapFrom);
 var
   b: TBITMAP;
@@ -54,11 +58,11 @@ begin
 
   //Проверить загрузку
   if Bmp = 0 then
-    raise EsgeException.Create(Err_sgeSplashScreen + Err_Separator + Err_sgeSplashScreen_CantloadBitmap + Err_Separator + BmpName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantLoadBitmap, BmpName));
 
   //Узнать размеры
   if GetObject(Bmp, SizeOf(TBITMAP), @b) = 0 then
-    raise EsgeException.Create(Err_sgeSplashScreen + Err_Separator + Err_sgeSplashScreen_CantGetBitmapSize);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantGetBitmapData, BmpName));
 
   //Создать узорную кисть из битмапа
   FBrush := CreatePatternBrush(Bmp);
@@ -70,7 +74,8 @@ begin
   try
     FWindow := TsgeWindow.Create('sgeSplashScreen', 'SplashScreen', 10, 10, 100, 100);
   except
-    raise EsgeException.Create(Err_sgeSplashScreen + Err_Separator + Err_sgeSplashScreen_CantCreateWindow);
+    on E: EsgeException do
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantCreateWindow), E.Message));
   end;
 
   //Установить кисть в качестве узорной заливки окна

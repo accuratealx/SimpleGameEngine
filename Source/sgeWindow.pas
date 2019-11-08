@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeWindow.pas
-Версия            1.12
+Версия            1.13
 Создан            24.01.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание					Окно на WinAPI
@@ -119,6 +119,10 @@ type
 
 
 implementation
+
+
+const
+  _UNITNAME = 'sgeWindow';
 
 
 function TsgeWindow.GetHWNDPos: HWND;
@@ -465,12 +469,12 @@ begin
 
   //Регистрация окна
   if RegisterClassEx(FWindowClass) = 0 then
-    raise EsgeException.Create(Err_sgeWindow + Err_Separator + Err_sgeWindow_CantRegisterClass);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantRegisterClass, WndClassName));
 
   //Создание окна
   FHandle := CreateWindow(FWindowClass.lpszClassName, PChar(Caption), WS_OVERLAPPEDWINDOW, Left, Top, Width, Height, 0, 0, FWindowClass.hInstance, nil);
   if FHandle = 0 then
-    raise EsgeException.Create(Err_sgeWindow + Err_Separator + Err_sgeWindow_CantCreateWindow);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantCreateWindow, Caption));
 
   //Ссылка на системное меню формы
   FSystemMenu := GetSystemMenu(FHandle, False);

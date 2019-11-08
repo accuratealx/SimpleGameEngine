@@ -1,3 +1,101 @@
+Версия 1.19
+
+Доработан механизм формирования строк исключений
+Изменён формат файла языка (Вместо двух (Система и Оболочка), теперь один общий)
+Создан файл Russian.Language с учётом изменений
+В модуле sgeConst удалены неправильные константы и добавлены правильные
+В модуле sgeTypes удалена функция sgeGetErrorCodeByString (Устарела)
+В модуле sgeTypes исправлена функция sgeDecodeErrorString
+В модуле sgeTypes добавлена функция sgeCreateErrorString (Создание строки ошибки)
+В модуле sgeTypes добавлена функция sgeFoldErrorString (Склеить две строки с ошибкой)
+В модуле sgeTypes добавлена функция sgeGetShellMaxVisibleLines
+В модуле sgeTypes добавлена функция sgeGetMouseButtonIdx (Определить номер кнопки из множества)
+В классе TsgeColoredLines исправлено формирование ошибок
+В классе sgeCommandHistory добавлен метод GetCount
+В классе sgeCommandHistory добавлен метод MaxLines
+В классе TsgeCommandHistory исправлено формирование ошибок
+В классе TsgeGraphicFont исправлено формирование ошибок
+В классе TsgeGraphicSprite исправлено формирование ошибок
+В классе TsgeResources исправлено формирование ошибок
+В классе TsgeGraphicFrames исправлено формирование ошибок
+В классе TsgeGraphicAnimation исправлено формирование ошибок
+В классе sgeGraphicAnimation доработана процедура LoadFromFile (Добавлен вызов исключения)
+В классе TsgeGraphic исправлено формирование ошибок
+В классе sgeGraphic удалена процедура DrawTextWithLineBreaks ()
+В классе TsgeJoystick исправлено формирование ошибок
+В классе TsgeKeyTable исправлено формирование ошибок
+В классе sgeParameters исправлено формирование ошибок
+В классе sgeParameters добавлен метод Substitute (Подстановка параметров в строку)
+В модуле sgeGraphicColor добавлена функция sgeGraphicColor_GetRandomColor
+В модуле sgeGraphicColor функция sgeGraphicColor_GetGraphicColor переименована в sgeGraphicColor_GetColor
+В классе TsgeShellCommands исправлено формирование ошибок
+В классе TsgeShell исправлено формирование ошибок
+В классе TsgeStartParameters исправлено формирование ошибок
+В классе TsgeWindow исправлено формирование ошибок
+В классе TsgeSystemIcon исправлено формирование ошибок
+В классе TsgeSystemCursor исправлено формирование ошибок
+В классе TsgeSystemFont исправлено формирование ошибок
+В классе TsgeSoundBuffer исправлено формирование ошибок
+В классе TsgeSoundSource исправлено формирование ошибок
+В классе TsgeSound исправлено формирование ошибок
+В классе TSimpleGameEngine исправлено формирование ошибок
+В классе TSimpleGameEngine удалено поле Flanguage (Теперь один массив языковых строк)
+В классе TSimpleGameEngine исправлена функция GetLocalizedErrorString (С учётом нового формата языковых строк)
+В классе TSimpleGameEngine исправлена функция ProcessError (С учётом нового формата языковых строк)
+В классе TSimpleGameEngine исправлена функция LoadAppIcon
+В классе TSimpleGameEngine исправлена функция LoadAppCursor
+В классе TsgeSplashScreen исправлено формирование ошибок
+В классе TSimpleGameEngine добавлен тип TsgeMessageMode (Режим обработки сообшений)
+В классе TSimpleGameEngine добавлен тип TsgeCommandKeyMethod (Тип действия Нажатие/Отпускание)
+В классе TSimpleGameEngine добавлен добавлена процедура SendTranslateMessage (Отправка себе сообщения WM_CHAR)
+В классе TSimpleGameEngine добавлен добавлена функция GetMessageMode (Определение режима обработки сообщения)
+В классе TSimpleGameEngine добавлен добавлена функция GetMouseKeyIdx (Узнать из множества номер кнопки)
+В классе TSimpleGameEngine удалена функция ProcessMouseDownCommand (Устарела)
+В классе TSimpleGameEngine удалена функция ProcessMouseUpCommand (Устарела)
+В классе TSimpleGameEngine удалена функция ProcessMouseScrollCommand (Устарела)
+В классе TSimpleGameEngine переписана функция ProcessMessage (Слишком громоздкий код, удалено лишнее)
+В классе TSimpleGameEngine доработана функция WndProc (Добавлен анализ режима обработки сообщений)
+Изменён механизм загрузки ресурсов по таблице (Добавлены команды и подстановка паременных)
+В классе TsgeResources добавлена функция LoadResource_SystemIcon
+В классе TsgeResources добавлена функция LoadResource_SystemCursor
+В классе TsgeResources добавлена функция LoadResource_SystemFont
+В классе TsgeResources добавлена функция LoadResource_GraphicFont
+В классе TsgeResources добавлена функция LoadResource_GraphicSprite
+В классе TsgeResources добавлена функция LoadResource_GraphicFrames
+В классе TsgeResources добавлена функция LoadResource_Parameters
+В классе TsgeResources добавлена функция LoadResource_SoundBuffer
+В классе TsgeResources добавлена процедура Command_SetParam
+В классе TsgeResources добавлена процедура Command_DeleteParam
+В классе TsgeResources добавлена процедура Command_ClearParams
+В классе TsgeResources добавлена процедура Command_LoadResource
+В классе TsgeResources добавлена процедура Command_LoadTable
+В классе TsgeResources добавлена процедура LoadFromTable
+В классе TSimpleGameEngine переписана функция LoadResourcesFromTable (Код перенесён в класс TsgeResource)
+Создан каталог Tools для вспомогательных инструментов
+Создан файл 'ResourceTable. Notepad++ colors.xml' (Подсветка таблицы ресурсов)
+В классе sgeGraphic исправлена процедура ScreenShot (Утечка памяти если не удавалось сохранить данные в файл)
+В классе sgeGraphicSprite исправлен конструктор (Не удалялась текстура из памяти OpenGL если не удавалось загрузить файл с изображением)
+В модуле sgeTypes добавлен тип TsgeInterval (Для порядка, можно было использовать TsgePoint)
+В модуле sgeShellCommands изменён результат TsgeShellCommandProc c Integer на String
+В модуле sgeShell добавлен тип TsgeShellErrorHandle (Прототип функции обработки ошибок)
+В класс TsgeShell добавлено свойство ScanMode (Режим сканирования имён клавиш)
+В класс TsgeShell добавлено свойство JournalOffset (Смещение для прокрутки журнала)
+В класс TsgeShell добавлено свойство JournalPageSize (Размер страницы прокрутки журнала)
+В класс TsgeShell добавлено свойство SubstChar (Символ признака переменной, по умолчанию @)
+В класс TsgeShell изменён конструктор, добавлены два параметра (TsgeParameters, TsgeErrorHandler)
+В классе TsgeShell удалены лишние строковые поля
+В класс TsgeShell добавлена процедура LogMessageLocalized (Вывод сообщений с учётом языка, используется в командах)
+В класс TsgeShell доработана процедура DoCommand (Добавлена подстановка параметров перед исполнением и упрощён код)
+В класс TsgeShell доработана процедура KeyDown (Вывод имени нажатой клавиши, прокрутка журнала клавишами PgUp и PgDown)
+В класс TsgeShell доработана процедура MouseDown (Вывод имени нажатой клавиши)
+В класс TsgeShell доработана процедура MouseScroll (Вывод имени нажатой клавиши и прокрутка журнала)
+В классе TSimpleGameEngine переписана процедура DrawShell (Добавлена прокрутка, исправлено количество выводимых строк, отступы)
+Мелкие исправления по коду не влияющие на смысл
+
+
+
+
+
 Версия 1.18
 
 В классе TSimpleGameEngine в конструкторе добавлен метод Randomize и DecimalSeparator

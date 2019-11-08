@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeSound.pas
-Версия            1.2
+Версия            1.3
 Создан            06.08.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс звука
@@ -55,6 +55,8 @@ implementation
 
 
 const
+  _UNITNAME = 'sgeSound';
+
   {$IfDef WIN64}
   OpenAlLibName = 'OpenAL64.dll';
   {$Else}
@@ -142,21 +144,21 @@ constructor TsgeSound.Create;
 begin
   //Загрузить библиотеку
   if not InitOpenAL(OpenAlLibName) then
-    raise EsgeException.Create(Err_sgeSound + Err_Separator + Err_sgeSound_CantLoadOpenALLib);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantLoadOpenALLib));
 
   //Открыть устройство
   FDevice := alcOpenDevice(nil);
   if FDevice = nil then
-    raise EsgeException.Create(Err_sgeSound + Err_Separator + Err_sgeSound_CantOpenDevice);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantOpenDevice));
 
   //Создать контекст
   FContext := alcCreateContext(FDevice, nil);
   if FContext = nil then
-    raise EsgeException.Create(Err_sgeSound + Err_Separator + Err_sgeSound_CantCreateContext);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantCreateContext));
 
   //Выбрать контекст
   if alcMakeContextCurrent(FContext) = ALC_FALSE then
-    raise EsgeException.Create(Err_sgeSound + Err_Separator + Err_sgeSound_CantActivateContext);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantActivateContext));
 
   //Обнулить ошибки
   alGetError;
@@ -177,7 +179,8 @@ begin
   try
     FSource := TsgeSoundSource.Create;
   except
-    raise EsgeException.Create(Err_sgeSound + Err_Separator + Err_sgeSound_CantCreateSource);
+    on E: EsgeException do
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_CantCreateSource), E.Message));
   end;
 
   //Привязать источник к кслушателю

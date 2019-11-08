@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeTypes.pas
-Версия            1.16
+Версия            1.17
 Создан            24.01.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Типы простого игрового движка плюс пару функций
@@ -34,8 +34,14 @@ type
   TsgeKeyboardButtons = set of TsgeKeyboardButton;
 
 
-  //Режим загрузки строк из файла языка
+  //Режим загрузки из файла Замена/Добавление
   TsgeLoadMode = (lmReplace, lmAdd);
+
+
+  TsgeInterval = record
+    iBegin: Integer;
+    iEnd: Integer;
+  end;
 
 
   TsgeGraphicPoint = record
@@ -67,22 +73,55 @@ type
 
 
 
+function  sgeCreateErrorString(UnitName, ErrorMessage: String; Info: String = ''; Separator: Char = ';'): String;
+function  sgeFoldErrorString(ErrorMessage: String; Info: String = ''; Separator: ShortString = #13#10): String;
+function  sgeGetMouseButtonIdx(Buttons: TsgeMouseButtons): Byte;
+function  sgeGetShellMaxVisibleLines(WindowHeight, FontHeight: Integer): Integer;
 function  sgeGetShellBGRect(ScreenW, ScreenH: Single; ImageW, ImageH: Single): TsgeRect;
-
 function  sgeGetGraphicPoint(X, Y: Single): TsgeGraphicPoint;
 function  sgeGetGraphicRect(X1, Y1, X2, Y2: Single): TsgeGraphicRect;
 function  sgeGetPoint(X, Y: Integer): TsgePoint;
 function  sgeGetRect(X1, Y1, X2, Y2: Integer): TsgeRect;
 function  sgeGetUniqueFileName: String;
-procedure sgeDecodeErrorString(ErrStr: String; var EName: String; var ECode: String; var EInfo: String);
-function  sgeGetErrorCodeByString(ErrStr:String): Integer;
-
+procedure sgeDecodeErrorString(ErrStr: String; var EName: String; var ECode: String; var EInfo: String; Separator: Char = ';');
 function  sgeGetOnOffFromParam(Cmd: PStringArray): Byte;
 function  sgeGetRGBAFromParam(Cmd: PStringArray; StartIdx: Byte = 1): TsgeRGBA;
 function  sgeGetRGBAAsStringByGraphicColor(Col: TsgeGraphicColor): String;
 
 
 implementation
+
+
+function sgeCreateErrorString(UnitName, ErrorMessage: String; Info: String; Separator: Char = ';'): String;
+begin
+  Result := UnitName + Separator + ErrorMessage;
+  if Info <> '' then Result := Result + Separator + Info;
+end;
+
+
+function sgeFoldErrorString(ErrorMessage: String; Info: String = ''; Separator: ShortString = #13#10): String;
+begin
+  Result := ErrorMessage;
+  if Info <> '' then Result := Result + Separator + Info;
+end;
+
+
+function sgeGetMouseButtonIdx(Buttons: TsgeMouseButtons): Byte;
+begin
+  Result := 0;
+  if (mbLeft in Buttons) then Result := 0;
+  if (mbMiddle in Buttons) then Result := 1;
+  if (mbRight in Buttons) then Result := 2;
+  if (mbExtra1 in Buttons) then Result := 3;
+  if (mbExtra2 in Buttons) then Result := 4;
+end;
+
+
+function sgeGetShellMaxVisibleLines(WindowHeight, FontHeight: Integer): Integer;
+begin
+  Result := (WindowHeight - sge_ShellIndent * 3 - FontHeight) div FontHeight;
+  if Result < 0 then Result := 0;
+end;
 
 
 //Возврат размеров фоновой картинки
@@ -147,28 +186,17 @@ begin
 end;
 
 
-procedure sgeDecodeErrorString(ErrStr: String; var EName: String; var ECode: String; var EInfo: String);
+procedure sgeDecodeErrorString(ErrStr: String; var EName: String; var ECode: String; var EInfo: String; Separator: Char);
 var
   sa: TStringArray;
 begin
-  StringArray_StringToArray(@sa, ErrStr, Err_Separator);
+  StringArray_StringToArray(@sa, ErrStr, Separator);
   EName := '';
   if StringArray_Equal(@sa, 1) then EName := sa[0];
-  ECode := '0';
+  ECode := '';
   if StringArray_Equal(@sa, 2) then ECode := sa[1];
   EInfo := '';
   if StringArray_Equal(@sa, 3) then EInfo := sa[2];
-  StringArray_Clear(@sa);
-end;
-
-
-function sgeGetErrorCodeByString(ErrStr:String): Integer;
-var
-  sa: TStringArray;
-begin
-  Result := 0;
-  StringArray_StringToArray(@sa, ErrStr, Err_Separator);
-  if StringArray_Equal(@sa, 2) then TryStrToInt(sa[1], Result);
   StringArray_Clear(@sa);
 end;
 

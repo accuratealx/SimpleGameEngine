@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeStartParameters.pas
-Версия            1.3
+Версия            1.4
 Создан            31.05.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Удобные стартовые параметры приложения
@@ -56,6 +56,9 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeStartParameters';
+
 
 function GetCommandLine: PWideChar; stdcall; external 'kernel32.dll' name 'GetCommandLineW';
 
@@ -84,7 +87,7 @@ end;
 function TsgeStartParameters.GetValue(Name: String): String;
 begin
   if not SimpleParameters_Get(@FParameters, Name, Result) then
-    raise EsgeException.Create(Err_sgeStartParameters + Err_Separator + Err_sgeStartParameters_ParameterNotFound + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_ParameterNotFound, Name));
 end;
 
 
@@ -102,7 +105,8 @@ var
   Name: String;
 begin
   if not SimpleParameters_GetNameByIdx(@FParameters, Index, Name) then
-    raise EsgeException.Create(Err_sgeStartParameters + Err_Separator + Err_sgeStartParameters_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
+
   Result := FParameters[Index];
 end;
 

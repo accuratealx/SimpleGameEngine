@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeKeyTable.pas
-Версия            1.3
+Версия            1.4
 Создан            16.12.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Таблица команд привязанных к клавишам
@@ -52,6 +52,8 @@ function sgeGetCommandKey(Up, Down: String): TsgeCommandKey;
 implementation
 
 const
+  _UNITNAME = 'sgeKeyTable';
+
   //Таблица строковых имён клавиш
   TsgeKeyNameTable: array[0..255] of ShortString = (
     'MouseL',           //0
@@ -227,7 +229,7 @@ var
 begin
   Idx := IndexOf(Name);
   if Idx = -1 then
-    raise EsgeException.Create(Err_sgeKeyTable + Err_Separator + Err_sgeKeyTable_KeyNotFound + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_KeyNameNotFound, Name));
 
   FKeys[Idx] := Akey;
 end;
@@ -239,7 +241,7 @@ var
 begin
   Idx := IndexOf(Name);
   if Idx = -1 then
-    raise EsgeException.Create(Err_sgeKeyTable + Err_Separator + Err_sgeKeyTable_KeyNotFound + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_KeyNameNotFound, Name));
 
   Result := FKeys[Idx];
 end;
@@ -288,7 +290,7 @@ var
 begin
   Idx := IndexOf(Name);
   if Idx = -1 then
-    raise EsgeException.Create(Err_sgeKeyTable + Err_Separator + Err_sgeKeyTable_KeyNotFound + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_KeyNameNotFound, Name));
 
   Delete(Idx);
 end;

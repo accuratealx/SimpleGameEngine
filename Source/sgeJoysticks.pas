@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeJoysticks.pas
-Версия            1.0
+Версия            1.1
 Создан            10.03.2019
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс хранилища подключённых джойстиков
@@ -46,6 +46,10 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeJoysticks';
+
+
 
 function TsgeJoysticks.GetCount: Byte;
 begin
@@ -82,7 +86,7 @@ end;
 function TsgeJoysticks.GetJoystick(Index: Byte): TsgeJoystick;
 begin
   if Index > GetCount - 1 then
-    raise EsgeException.Create(Err_sgeJoysticks + Err_Separator + Err_sgeJoysticks_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   Result := FJoyArray[Index];
 end;

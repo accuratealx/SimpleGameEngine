@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeResources.pas
-Версия            1.3
+Версия            1.5
 Создан            30.06.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Хранилище загруженных ресурсов
@@ -14,19 +14,30 @@ unit sgeResources;
 interface
 
 uses
-  sgeConst, sgeTypes,
+  StringArray, SimpleCommand,
+  sgeConst, sgeTypes, sgeParameters,
   SysUtils;
 
 
 const
-  rtGraphicSprite     = 'graphicsprite';
-  rtGraphicFont       = 'graphicfont';
-  rtGraphicFrames     = 'graphicframes';
-  rtSystemFont        = 'systemfont';
-  rtSystemIcon        = 'systemicon';
-  rtSystemCursor      = 'systemcursor';
-  rtSoundBuffer       = 'soundbuffer';
-  rtParameters        = 'parameters';
+  //Типы ресурсов
+  rtSystemFont        = 'sysfont';
+  rtSystemIcon        = 'sysicon';
+  rtSystemCursor      = 'syscursor';
+  rtGraphicSprite     = 'sprite';
+  rtGraphicFont       = 'font';
+  rtGraphicFrames     = 'frames';
+  rtSoundBuffer       = 'buffer';
+  rtParameters        = 'params';
+
+
+  //Имена команд
+  rcSetParameter    = 'setparam';
+  rcDeleteParameter = 'delparam';
+  rcClearParameters = 'clearparams';
+  rcLoadResource    = 'loadres';
+  rcLoadTable       = 'loadtable';
+
 
 
 type
@@ -61,6 +72,23 @@ type
     function  IndexOf(Name: String; rType: String): Integer;
     function  IndexOf(Obj: TObject): Integer;
 
+    function  LoadResource_SystemIcon(FileName: String): TObject;
+    function  LoadResource_SystemCursor(FileName: String): TObject;
+    function  LoadResource_SystemFont(FileName: String): TObject;
+    function  LoadResource_GraphicFont(FileName: String; Line: PStringArray): TObject;
+    function  LoadResource_GraphicSprite(FileName: String; Line: PStringArray): TObject;
+    function  LoadResource_GraphicFrames(FileName: String): TObject;
+    function  LoadResource_Parameters(FileName: String): TObject;
+    function  LoadResource_SoundBuffer(FileName: String): TObject;
+
+    procedure Command_SetParam(Prm: TsgeParameters; Line: PStringArray);
+    procedure Command_DeleteParam(Prm: TsgeParameters; Line: PStringArray);
+    procedure Command_ClearParams(Prm: TsgeParameters);
+    procedure Command_LoadResource(BasePath: String; Line: PStringArray);
+    procedure Command_LoadTable(BasePath: String; Line: PStringArray);
+
+    procedure LoadFromTable(FullFileName: String);
+
     property Count: Integer read GetCount;
     property Item[Index: Integer]: TsgeResource read GetItem write SetItem;
     property TypedItem[Name: String; rType: String]: TsgeResource read GetTypedItem write SetTypedItem;
@@ -71,6 +99,15 @@ type
 
 
 implementation
+
+uses
+  sgeSystemIcon, sgeSystemCursor, sgeSystemFont, sgeGraphicSprite, sgeGraphicFont, sgeGraphicFrames,
+  sgeSoundBuffer;
+
+
+const
+  _UNITNAME = 'sgeResources';
+
 
 
 function TsgeResources.GetCount: Integer;
@@ -85,7 +122,7 @@ var
 begin
   c := GetCount - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeResources + Err_Separator + Err_sgeResources_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   FResources[Index] := AItem;
 end;
@@ -97,7 +134,7 @@ var
 begin
   c := GetCount - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeResources + Err_Separator + Err_sgeResources_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   Result := FResources[Index];
 end;
@@ -109,7 +146,7 @@ var
 begin
   Idx := IndexOf(Name, rType);
   if Idx = -1 then
-    raise EsgeException.Create(Err_sgeResources + Err_Separator + Err_sgeResources_TypedResourceNotFound + Err_Separator + Name + ', ' + rType);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_ResourceNotFound, Name + ', ' + rType));
 
   FResources[Idx] := AItem;
 end;
@@ -121,7 +158,7 @@ var
 begin
   Idx := IndexOf(Name, rType);
   if Idx = -1 then
-    raise EsgeException.Create(Err_sgeResources + Err_Separator + Err_sgeResources_TypedResourceNotFound + Err_Separator + Name + ', ' + rType);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_ResourceNotFound, Name + ', ' + rType));
 
   Result := FResources[Idx];
 end;
@@ -193,9 +230,8 @@ var
 begin
   c := GetCount;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeResources + Err_Separator + Err_sgeResources_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
-  //Почистить память от объекта
   FResources[Index].Obj.Free;
 
   Dec(c, 2);
@@ -211,7 +247,7 @@ var
 begin
   Idx := IndexOf(Name);
   if Idx = -1 then
-    raise EsgeException.Create(Err_sgeResources + Err_Separator + Err_sgeResources_ResourceNotFound + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_ResourceNotFound, Name));
 
   Delete(Idx);
 end;
@@ -223,7 +259,7 @@ var
 begin
   Idx := IndexOf(Name, rType);
   if Idx = -1 then
-    raise EsgeException.Create(Err_sgeResources + Err_Separator + Err_sgeResources_ResourceNotFound + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_ResourceNotFound, Name));
 
   Delete(Idx);
 end;
@@ -275,6 +311,269 @@ begin
       Break;
       end;
 
+end;
+
+
+function TsgeResources.LoadResource_SystemIcon(FileName: String): TObject;
+begin
+  Result := TsgeSystemIcon.CreateFromFile(FileName);
+end;
+
+
+function TsgeResources.LoadResource_SystemCursor(FileName: String): TObject;
+begin
+  Result := TsgeSystemCursor.CreateFromFile(FileName);
+end;
+
+
+function TsgeResources.LoadResource_SystemFont(FileName: String): TObject;
+begin
+  Result := TsgeSystemFont.Create(FileName);
+end;
+
+
+function TsgeResources.LoadResource_GraphicFont(FileName: String; Line: PStringArray): TObject;
+var
+  Size: Integer;
+  fAttr: TsgeGraphicFontAttrib;
+  s: String;
+begin
+  //Size
+  Size := 12;
+  if StringArray_Equal(Line, 5) then
+    if not TryStrToInt(Line^[4], Size) then Size := 1;
+  if Size < 1 then Size := 1;
+
+  //Attrib
+  fAttr := [];
+  if StringArray_Equal(@Line, 6) then
+    begin
+    s := LowerCase(Line^[5]);
+    if Pos('b', s) <> 0 then Include(fAttr, gfaBold);
+    if Pos('i', s) <> 0 then Include(fAttr, gfaItalic);
+    if Pos('u', s) <> 0 then Include(fAttr, gfaUnderline);
+    if Pos('s', s) <> 0 then Include(fAttr, gfaStrikeOut);
+    end;
+
+  Result := TsgeGraphicFont.Create(FileName, Size, fAttr);
+end;
+
+
+function TsgeResources.LoadResource_GraphicSprite(FileName: String; Line: PStringArray): TObject;
+var
+  Cols, Rows: Integer;
+  MagFilter, MinFilter: TsgeGraphicSpriteFilter;
+begin
+  //Cols
+  Cols := 1;
+  if StringArray_Equal(Line, 5) then
+    if not TryStrToInt(Line^[4], Cols) then Cols := 1;
+  if Cols < 1 then Cols := 1;
+
+  //Rows
+  Rows := 1;
+  if StringArray_Equal(Line, 6) then
+    if not TryStrToInt(Line^[5], Rows) then Rows := 1;
+  if Rows < 1 then Rows := 1;
+
+  //MagFilter
+  MagFilter := gsfNearest;
+  if StringArray_Equal(Line, 7) then
+    if LowerCase(Line^[6]) = 'linear' then MagFilter := gsfLinear;
+
+  //MinFilter
+  MinFilter := gsfNearest;
+  if StringArray_Equal(Line, 8) then
+    if LowerCase(Line^[7]) = 'linear' then MinFilter := gsfLinear;
+
+  Result := TsgeGraphicSprite.Create(FileName, Cols, Rows, MagFilter, MinFilter);
+end;
+
+
+function TsgeResources.LoadResource_GraphicFrames(FileName: String): TObject;
+begin
+  Result := TsgeGraphicFrames.Create(FileName, Self);
+end;
+
+
+function TsgeResources.LoadResource_Parameters(FileName: String): TObject;
+begin
+  Result := TsgeParameters.Create;
+  TsgeParameters(Result).LoadFromFile(FileName);
+end;
+
+
+function TsgeResources.LoadResource_SoundBuffer(FileName: String): TObject;
+begin
+  Result := TsgeSoundBuffer.Create(FileName);
+end;
+
+
+procedure TsgeResources.Command_SetParam(Prm: TsgeParameters; Line: PStringArray);
+begin
+  if not StringArray_Equal(Line, 3) then
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_NotEnoughParameters));
+
+  if not Prm.SetString(Line^[1], Line^[2]) then Prm.Add(Line^[1], Line^[2]);
+end;
+
+
+procedure TsgeResources.Command_DeleteParam(Prm: TsgeParameters; Line: PStringArray);
+begin
+  if not StringArray_Equal(Line, 2) then
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_NotEnoughParameters));
+
+  Prm.Delete(Line^[1]);
+end;
+
+
+procedure TsgeResources.Command_ClearParams(Prm: TsgeParameters);
+begin
+  Prm.Clear;
+end;
+
+
+procedure TsgeResources.Command_LoadResource(BasePath: String; Line: PStringArray);
+var
+  Idx: Integer;
+  nm, rt, fn: String;
+  ResObj: TObject;
+begin
+  //Проверить количество частей
+  if not StringArray_Equal(Line, 4) then
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_NotEnoughParameters));
+
+  //Проверить на одинаковое имя
+  nm := Line^[2];
+  Idx := IndexOf(nm);
+  if Idx <> -1 then
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_DuplicateResource, nm));
+
+  //Подготовить переменные
+  ResObj := nil;
+  rt := '';
+  fn := BasePath + Line^[3];
+
+  //Создать ресурс
+  case LowerCase(Line^[1]) of
+    rtGraphicSprite:
+      begin
+      ResObj := LoadResource_GraphicSprite(fn, Line);
+      rt := rtGraphicSprite;
+      end;
+
+    rtGraphicFont:
+      begin
+      ResObj := LoadResource_GraphicFont(fn, Line);
+      rt := rtGraphicFont;
+      end;
+
+    rtGraphicFrames:
+      begin
+      ResObj := LoadResource_GraphicFrames(fn);
+      rt := rtGraphicFrames;
+      end;
+
+    rtSystemFont:
+      begin
+      ResObj := LoadResource_SystemFont(fn);
+      rt := rtSystemFont;
+      end;
+
+    rtSystemIcon:
+      begin
+      ResObj := LoadResource_SystemIcon(fn);
+      rt := rtSystemIcon;
+      end;
+
+    rtSystemCursor:
+      begin
+      ResObj := LoadResource_SystemCursor(fn);
+      rt := rtSystemCursor;
+      end;
+
+    rtSoundBuffer:
+      begin
+      ResObj := LoadResource_SoundBuffer(fn);
+      rt := rtSoundBuffer;
+      end;
+
+    rtParameters:
+      begin
+      ResObj := LoadResource_Parameters(fn);
+      rt := rtParameters;
+      end;
+
+    else
+      raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_UnknownResource, Line^[1]));
+  end;
+
+  //Добавить в хранилище
+  if ResObj <> nil then AddItem(nm, rt, ResObj);
+end;
+
+
+procedure TsgeResources.Command_LoadTable(BasePath: String; Line: PStringArray);
+begin
+  if not StringArray_Equal(Line, 2) then
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_NotEnoughParameters));
+
+  LoadFromTable(BasePath + Line^[1]);
+end;
+
+
+procedure TsgeResources.LoadFromTable(FullFileName: String);
+var
+  Params: TsgeParameters;
+  sa, Line: TStringArray;
+  BasePath: String;
+  i, c: Integer;
+begin
+  //Проверить файл
+  if not FileExists(FullFileName) then
+    raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_LoadResourceTableError, FullFileName), sgeCreateErrorString(_UNITNAME, Err_FileNotFound)));
+
+  //Прочитать
+  if not StringArray_LoadFromFile(@sa, FullFileName) then
+    raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_LoadResourceTableError, FullFileName), sgeCreateErrorString(_UNITNAME, Err_FileReadError)));
+
+
+  try
+    //Подготовить переменные
+    BasePath := ExtractFilePath(FullFileName);
+    Params := TsgeParameters.Create;
+
+    //Пробежать по строкам
+    c := StringArray_GetCount(@sa) - 1;
+    for i := 0 to c do
+      begin
+      sa[i] := Trim(sa[i]);                         //Отрезать лишнее
+      if sa[i] = '' then Continue;                  //Пусто
+      if sa[i][1] = '#' then Continue;              //Заметка
+      sa[i] := Params.Substitute(sa[i], '%', '%');  //Подставить в строку переменные
+      SimpleCommand_Disassemble(@Line, sa[i]);      //Разобрать
+
+      try
+        case LowerCase(Line[0]) of
+          rcClearParameters : Command_ClearParams(Params);
+          rcSetParameter    : Command_SetParam(Params, @Line);
+          rcDeleteParameter : Command_DeleteParam(Params, @Line);
+          rcLoadTable       : Command_LoadTable(BasePath, @Line);
+          rcLoadResource    : Command_LoadResource(BasePath, @Line);
+          else
+            raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_UnknownCommand, Line[0]));
+        end;
+      except
+        on E: EsgeException do
+          raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_LoadResourceTableError, FullFileName + ' [' + IntToStr(i + 1) + ']'), E.Message));
+      end;
+      end;
+
+  finally
+    StringArray_Clear(@sa);
+    StringArray_Clear(@Line);
+    Params.Free;
+  end;
 end;
 
 

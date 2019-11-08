@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeGraphicFrames.pas
-Версия            1.0
+Версия            1.2
 Создан            31.10.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс с набором плиток анимации
@@ -63,6 +63,11 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeGraphicFrames';
+
+
+
 function TsgeGraphicFrames.GetCount: Integer;
 begin
   Result := Length(FFrames);
@@ -75,7 +80,7 @@ var
 begin
   c := Length(FFrames);
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   FFrames[Index] := AFrame;
 end;
@@ -87,7 +92,7 @@ var
 begin
   c := Length(FFrames);
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   Result := FFrames[Index];
 end;
@@ -150,7 +155,7 @@ var
 begin
   c := Length(FFrames);
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   for i := 0 to c - 2 do           //Переместить кадры
     FFrames[i] := FFrames[i + 1];
@@ -164,7 +169,7 @@ var
 begin
   c := Length(FFrames);
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   SetLength(FFrames, c + 1);      //Добавить 1 кадр
   for i := c downto Index + 1 do  //Сместить кадры
@@ -186,64 +191,66 @@ begin
   SimpleCommand_Disassemble(@Parts, Str, ';');    //Разобрать на части через ;
   Cnt := StringArray_GetCount(@Parts);            //Узнать сколько частей
   if Cnt < 1 then
-    raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_NoPartsToLoad);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_NoPartsToLoad));
 
-  QueryPerformanceFrequency(OneSecondFrequency);  //Узнать количество тактов процессора
-  Dec(Cnt);
-  SetLength(TempFrames, 0);                       //Обнулить массив
-  for i := 0 to Cnt do                            //Пробежать по кадрам
-    begin
-    //Почистить запись
-    Fr.SpriteName := '';
-    Fr.Sprite := nil;
-    Fr.Col := 0;
-    Fr.Row := 0;
-    Fr.Time := 0;
+  try
+    QueryPerformanceFrequency(OneSecondFrequency);  //Узнать количество тактов процессора
+    Dec(Cnt);
+    SetLength(TempFrames, 0);                       //Обнулить массив
+    for i := 0 to Cnt do                            //Пробежать по кадрам
+      begin
+      //Почистить запись
+      Fr.SpriteName := '';
+      Fr.Sprite := nil;
+      Fr.Col := 0;
+      Fr.Row := 0;
+      Fr.Time := 0;
 
-    //Разобрать кадр на части
-    SimpleCommand_Disassemble(@tFrm, Parts[i]);
+      //Разобрать кадр на части
+      SimpleCommand_Disassemble(@tFrm, Parts[i]);
 
-    //Проверитьт на наличие 4 частей
-    if not StringArray_Equal(@tFrm, 4) then
-      raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_WrongFrameFormat + Err_Separator + Parts[i]);
+      //Проверитьт на наличие 4 частей
+      if not StringArray_Equal(@tFrm, 4) then
+        raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_WrongDataFormat, Parts[i]));
 
-    //Определить имя кадра
-    Fr.SpriteName := tFrm[0];
-    Fr.Sprite := TsgeGraphicSprite(Resources.TypedObj[tFrm[0], rtGraphicSprite]);
-    if Fr.Sprite = nil then
-      raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_SpriteNotFound + Err_Separator + tFrm[0]);
+      //Определить имя кадра
+      Fr.SpriteName := tFrm[0];
+      Fr.Sprite := TsgeGraphicSprite(Resources.TypedObj[tFrm[0], rtGraphicSprite]);
+      if Fr.Sprite = nil then
+        raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_SpriteNotFound, tFrm[0]));
 
-    //Определить номер столбца
-    if not TryStrToInt(tFrm[1], aCol) then
-      raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_UnableToDetermineColumn + Err_Separator + tFrm[1]);
-    Fr.Col := aCol;
+      //Определить номер столбца
+      if not TryStrToInt(tFrm[1], aCol) then
+        raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_UnableToDetermineColumn, tFrm[1]));
+      Fr.Col := aCol;
 
-    //Определить номер строки
-    if not TryStrToInt(tFrm[2], aRow) then
-      raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_UnableToDetermineRow + Err_Separator + tFrm[2]);
-    Fr.Row := aRow;
+      //Определить номер строки
+      if not TryStrToInt(tFrm[2], aRow) then
+        raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_UnableToDetermineRow, tFrm[2]));
+      Fr.Row := aRow;
 
-    //Определить время видимости в строке милисекунды
-    if not TryStrToInt64(tFrm[3], Fr.Time) then
-      raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_UnableToDetermineTime + Err_Separator + tFrm[3]);
-    if Fr.Time < 1 then Fr.Time := 0;
-    Fr.Time := Round((OneSecondFrequency / 1000) * Fr.Time);
+      //Определить время видимости в строке милисекунды
+      if not TryStrToInt64(tFrm[3], Fr.Time) then
+        raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_UnableToDetermineTime, tFrm[3]));
+      if Fr.Time < 1 then Fr.Time := 0;
+      Fr.Time := Round((OneSecondFrequency / 1000) * Fr.Time);
 
-    //Добавить во временный массив
-    c := Length(TempFrames);
-    SetLength(TempFrames, c + 1);
-    TempFrames[c] := Fr;
-    end;
+      //Добавить во временный массив
+      c := Length(TempFrames);
+      SetLength(TempFrames, c + 1);
+      TempFrames[c] := Fr;
+      end;
 
-  //Удалить старые кадры
-  Clear;
+    //Удалить старые кадры
+    Clear;
 
-  //Заменить указатель на новый массив
-  FFrames := TempFrames;
+    //Заменить указатель на новый массив
+    FFrames := TempFrames;
 
-  //Почистить память
-  StringArray_Clear(@Parts);
-  StringArray_Clear(@tFrm);
+  finally
+    StringArray_Clear(@Parts);
+    StringArray_Clear(@tFrm);
+  end;
 end;
 
 
@@ -269,7 +276,7 @@ var
   s: String;
 begin
   if not StringArray_LoadFromFile(@sa, FileName) then
-    raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_UnableLoadFromFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileReadError, FileName));
 
   //Обработать файл
   s := '';
@@ -303,12 +310,15 @@ begin
   if not StringArray_SaveToFile(@sa, FileName) then
     begin
     StringArray_Clear(@sa);
-    raise EsgeException.Create(Err_sgeGraphicFrames + Err_Separator + Err_sgeGraphicFrames_UnableSaveToFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileWriteError, FileName));
     end;
 
   //Почистить память
   StringArray_Clear(@sa);
 end;
+
+
+
 
 
 end.

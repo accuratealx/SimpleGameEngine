@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeGraphic.pas
-Версия            1.18
+Версия            1.20
 Создан            26.02.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс графики
@@ -15,7 +15,6 @@ unit sgeGraphic;
 interface
 
 uses
-  StringArray,
   sgeConst, sgeTypes, sgeGraphicFont, sgeGraphicSprite, sgeGraphicColor, sgeGraphicFrames, sgeGraphicAnimation,
   dglOpenGL, Windows, Classes, Math;
 
@@ -142,7 +141,6 @@ type
     procedure DrawAnimation(X, Y: Single; Animation: TsgeGraphicAnimation; Angle, Scale: Single;  Mode: TsgeGraphicDrawMode = gdmNormal);
 
     procedure DrawText(X, Y: Single; Font: TsgeGraphicFont; Text: String = '');
-    procedure DrawTextWithLineBreaks(X, Y: Single; Font: TsgeGraphicFont; Text: String = '');
 
     procedure ScreenShot(FileName: String);
 
@@ -163,6 +161,11 @@ type
 
 
 implementation
+
+
+const
+  _UNITNAME = 'sgeGraphic';
+
 
 
 function TsgeGraphic.GetInfo(Index: TsgeGraphicInfo): String;
@@ -379,7 +382,7 @@ end;
 procedure TsgeGraphic.SetVerticalSync(AEnable: Boolean);
 begin
   if wglSwapIntervalEXT = nil then
-    raise EsgeException.Create(Err_sgeGraphic + Err_Separator + Err_sgeGraphic_VerticalSyncNotSupport);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_VerticalSyncNotSupported));
 
   if AEnable then wglSwapIntervalEXT(1) else wglSwapIntervalEXT(0);
 end;
@@ -388,7 +391,7 @@ end;
 function TsgeGraphic.GetVerticalSync: Boolean;
 begin
   if wglGetSwapIntervalEXT = nil then
-    raise EsgeException.Create(Err_sgeGraphic + Err_Separator + Err_sgeGraphic_VerticalSyncNotSupport);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_VerticalSyncNotSupported));
 
   Result := (wglGetSwapIntervalEXT() = 1);
 end;
@@ -504,7 +507,7 @@ begin
 
   //Проверить загрузилась ли Opengl32.dll
   if not Assigned(GL_LibHandle) then
-    raise EsgeException.Create(Err_sgeGraphic + Err_Separator + Err_sgeGraphic_CantLoadOpenGLLib);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantLoadOpenGLLib));
 
   //Прочитать адреса функций
   ReadOpenGLCore;
@@ -528,18 +531,18 @@ begin
 
   //Проверить подобрался ли формат пикселя
   if PixelFormat = 0 then
-    raise EsgeException.Create(Err_sgeGraphic + Err_Separator + Err_sgeGraphic_CantSelectPixelFormat);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantSelectPixelFormal));
 
   //Попробовать установить нужный формат пикселя и проверить
   if SetPixelFormat(FDC, PixelFormat, @PFD) = LongBool(0) then
-    raise EsgeException.Create(Err_sgeGraphic + Err_Separator + Err_sgeGraphic_CantSetPixelFormat);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantSetPixelFormat));
 
   //Создать контекст OpenGL
   FGLRC := wglCreateContext(FDC);
 
   //Проверить создался ли контекст
   if FGLRC = 0 then
-    raise EsgeException.Create(Err_sgeGraphic + Err_Separator + Err_sgeGraphic_CantCreateContex);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantCreateContext));
 
   //Установка начальных значений
   wglMakeCurrent(FDC, FGLRC);                                 //Выбрать контекст OpenGL
@@ -575,7 +578,7 @@ end;
 procedure TsgeGraphic.Activate;
 begin
   if not wglMakeCurrent(FDC, FGLRC) then
-    raise EsgeException.Create(Err_sgeGraphic + Err_Separator + Err_sgeGraphic_CantActivateContext);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantActivateContext));
 end;
 
 
@@ -996,29 +999,6 @@ begin
 end;
 
 
-procedure TsgeGraphic.DrawTextWithLineBreaks(X, Y: Single; Font: TsgeGraphicFont; Text: String);
-var
-  sa: TStringArray;
-  i, c: Integer;
-begin
-  StringArray_StringToArray(@sa, Text);
-
-  glPushAttrib(GL_LIST_BIT);
-  glListBase(Font.GLHandle);
-
-  c := StringArray_GetCount(@sa) - 1;
-  for i := 0 to c do
-    begin
-    glRasterPos2f(X, Y + Font.Height + i * Font.Height);
-    glCallLists(Length(sa[i]), GL_UNSIGNED_BYTE, PAnsiChar(sa[i]));
-    end;
-
-  glPopAttrib;
-
-  StringArray_Clear(@sa);
-end;
-
-
 procedure TsgeGraphic.ScreenShot(FileName: String);
 var
   BFH: TBitmapFileHeader;
@@ -1072,18 +1052,18 @@ begin
 
   //Запись в файл
   try
-    F := TFileStream.Create(FileName, fmCreate or fmOpenWrite);
-    F.Write(BFH, SizeOf(BFH));                        //Заголовок файла
-    F.Write(BIH, SizeOf(BIH));                        //Описание битмапа
-    F.Write(DATA[0], Size);                           //Записать данные
-    F.Free;
-  except
+    try
+      F := TFileStream.Create(FileName, fmCreate or fmOpenWrite);
+      F.Write(BFH, SizeOf(BFH));                        //Заголовок файла
+      F.Write(BIH, SizeOf(BIH));                        //Описание битмапа
+      F.Write(DATA[0], Size);                           //Записать данные
+    except
+      raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileWriteError, FileName));
+    end;
+  finally
     SetLength(DATA, 0);
-    raise EsgeException.Create(Err_sgeGraphic + Err_Separator + Err_sgeGraphic_CantCreateScreenShot + Err_Separator + FileName);
+    F.Free;
   end;
-
-  //Очистить память
-  SetLength(DATA, 0);
 end;
 
 

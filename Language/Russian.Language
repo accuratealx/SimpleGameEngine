@@ -1,0 +1,690 @@
+#  31.10.2019 Творческий человек (accuratealx@gmail.com)
+#  Языковой файл Simple Game Engine 1.17
+#
+#
+#  Оболочка
+#    Shell:Hint = Help string
+#    Shell:ScanModeOn = Scan mode On
+#    Shell:ScanModeOff = Scan mode Off
+#    Shell:KeyName = Key name
+
+#  Модули
+#    Unit:[UnitName] = [String]	//Unit:Game = Игра
+# 
+#  Ошибки
+#    Error:[Name] = [String]		//Error:CantLoadMap = Не могу загрузить карту  
+#
+#  Команды
+#    Cmd:[String] = Всего		/Cmd:Count = Всего
+#
+#  Помошь по командам
+#    Help:[CmdName].Info = [Info]						//Help:LoadMap.Info = Загрузить карту
+#    Help:[CmdName].Syntax = [Syntax]				//Help:LoadMap.Syntax = LoadMap [FileName] <Mode>
+#    Help:[CmdName].ParamCount = [Number]		//Help:LoadMap.ParamCount = 1
+#    Help:[CmdName].Param.1 = [Param 1]			//Help:LoadMap.Param.1 = FileName - Имя файла
+#    Help:[CmdName].Param.N = [Param N]			//Help:LoadMap.Param.2 = Mode - Режим загрузки (Fast/Slow)
+#    Help:[CmdName].Hint = [Hint]						//Help:LoadMap.Hint = Дополнительные данные
+#
+#  Описание:
+#  Строки начинающиеся с символа "#" пропускаются.
+#
+
+
+#Оболочка
+Shell:Hint = Введите "Help CmdName" для показа информации, "CmdList" для списка команд
+Shell:ScanModeOn = Режим сканирования Включён
+Shell:ScanModeOff = Режим сканирования Выключён
+Shell:KeyName = Имя клавиши
+
+
+#Команды
+Cmd:AttachList = Список привязок
+Cmd:CommandList = Список комманд
+Cmd:Count = Всего
+Cmd:End = Конец
+Cmd:Found = Найдено
+Cmd:GraphicInfo = Графический адаптер
+Cmd:Help = Помощь
+Cmd:Hint = Подсказка
+Cmd:Info = Описание
+Cmd:KeyList = Список клавиш
+Cmd:ParameterList = Список параметров
+Cmd:Parameters = Параметры
+Cmd:Renderer = Визуализатор
+Cmd:ResourceList = Список ресурсов
+Cmd:SetList = Список наборов
+Cmd:Shader = Версия шейдера
+Cmd:StartParameters = Стартовые параметры
+Cmd:Syntax = Синтаксис
+Cmd:Vendor = Производитель
+Cmd:Version = Версия
+
+
+#Модули
+Unit:SGE = Система
+Unit:sgeColoredLines = Цветные линии
+Unit:sgeCommandHistory = История комманд
+Unit:sgeEvent = Событие
+Unit:sgeGraphic = Графика
+Unit:sgeGraphicAnimation = Анимация
+Unit:sgeGraphicFont = Шрифт
+Unit:sgeGraphicFrames = Кадры анимации
+Unit:sgeGraphicSprite = Спрайт
+Unit:sgeJournal = Журнал
+Unit:sgeJoystick = Джойстик
+Unit:sgeJoysticks = Джойстики
+Unit:sgeKeyTable = Таблица клавиш
+Unit:sgeParameters = Параметры
+Unit:sgeResources = Ресурсы
+Unit:sgeShell = Оболочка
+Unit:sgeShellCommand = Команды оболочки
+Unit:sgeSound = Звук
+Unit:sgeSoundBuffer = Звуковой буфер
+Unit:sgeSoundSource = Звуковой источник
+Unit:sgeSplashScreen = Заставка
+Unit:sgeStartParameters = Стартовые параметры
+Unit:sgeSystemCursor = Системный курсор
+Unit:sgeSystemFont = Системный шрифт
+Unit:sgeSystemIcon = Системная иконка
+Unit:sgeWindow = Окно
+
+
+#Ошибки
+Error:BufferNotFound = Буфер не найден
+Error:CantAccessMemory = Невозможно получить доступ к памяти
+Error:CantActivateContext =	Невозможно активировать контекст
+Error:CantAddFontToSystem = Невозможно добавить шрифт в систему
+Error:CantAllocGLMemory = Невозможно выделить память у OpenGL
+Error:CantChangeDebug = Невозможно изменить режим отладки
+Error:CantChangeDrawControl = Невозможно изменить режим вывода графики
+Error:CantChangePriority = Невозможно изменить приоритет
+Error:CantCreateBitmapFromScan = Невозможно создать битмап из буфера данных
+Error:CantCreateContex = Невозможно создать контекст
+Error:CantCreateGLFont = Невозможно создать шрифт OpenGL
+Error:CantCreateScreenShot = Невозможно сделать скриншот
+Error:CantCreateSource = Невозможно сделать источник звука
+Error:CantCreateWindow = Невозможно создать окно
+Error:CantCreateWindowsFont = Невозможно создать системный шрифт
+Error:CantGetBitmapData = Невозможно узнать данные битмапа
+Error:CantGetDeviceInfo = Невозможно узнать информацию об устройстве
+Error:CantGetHeight = Невозможно определить высоту
+Error:CantGetWidth = Невозможно определить ширину
+Error:CantInitGraphic =	Графика не инициализирована
+Error:CantInitSound = Невозможно инициализировать звук
+Error:CantInitWindow = Невозможно создать окно
+Error:CantLoadAppCursor = Невозможно загрузить курсор приложения
+Error:CantLoadAppIcon = Невозможно загрузить иконку приложения
+Error:CantLoadFromHinstance = Невозможно загрузить из приложения
+Error:CantLoadFromResource = Невозможно загрузить из ресурсов
+Error:CantLoadLanguage = Невозможно загрузить язык
+Error:CantLoadOpenALLib = Невозможно загрузить OpenAL
+Error:CantLoadOpenGLLib = Невозможно загрузить OpenGL
+Error:CantLoadParameters = Невозможно загрузить параметры
+Error:CantOpenDevice = Невозможно открыть устройство
+Error:CantReadData = Невозможно прочесть данные
+Error:CantReadPriority = Невозможно прочитать приоритет
+Error:CantRegisterClass = Невозможно зарегестрировать класс
+Error:CantSaveParameters = Невозможно сохранить параметры
+Error:CantSelectPixelFormat = Невозможно выбрать формат пикселя
+Error:CantSetPixelFormat = Невозможно установить формат пикселя
+Error:CantStartEvent = Невозможно запустить событие
+Error:CantloadBitmap = Невозможно загрузить битмап
+Error:CommandError = Ошибка при выполнении команды
+Error:CommandExist = Команда существует
+Error:CommandNotFound = Команда не найдена
+Error:DeviceNotAttach = Устройство не присоеденено
+Error:DuplicateResource = Дубликат ресурса
+Error:EmptyPointer = Пустой указатель
+Error:FileNotFound = Файл не найден
+Error:FileReadError = Ошибка чтения файла
+Error:FileWriteError = Ошибка записи файла
+Error:FontNotFound = Файл не найден
+Error:FramesNotFound = Кадры не найдены
+Error:GraphicsNotInitialized = Графика не инициализирована
+Error:ImageIsEmpty = Пустое изображение
+Error:IndexOutOfBounds = Индекс вне диапазона
+Error:KeyNameNotFound = Имя клавиши не найдено
+Error:LoadResourceError = Ресурс не загружен
+Error:LoadResourceTableError = Ошибка загрузки таблицы
+Error:MissingContext = Отсутствует контекст
+Error:NoPartsToLoad = Нет частей для загрузки
+Error:NotEnoughParameters = Недостаточно параметров
+Error:OutOfMemory = Недостаточно памяти
+Error:ParameterNotFound = Параметр не найден
+Error:ParametersNotFound = Параметры не найдены
+Error:ReachedBuffersLimit = Достигнут предел звуковых буферов
+Error:ReachedSourceLimit = Достигнут предел звуковых источников
+Error:ReloadMethodDoesNotExist = Ресурс не имеет метода Reload
+Error:ResourceExist = Ресурс существует
+Error:ResourceNotFound = Ресурс не найден
+Error:SoundNotInitialized = Звук не инициализирован
+Error:SpriteNotFound = Спрайт не найден
+Error:UnableToCreateDirectory = Невозможно создать каталог
+Error:UnableToDetermineColumn = Невозможно определить столбец
+Error:UnableToDetermineMode = Невозможно определить режим
+Error:UnableToDetermineRow = Невозможно определить строку
+Error:UnableToDetermineTime = Невозможно определить время
+Error:UnableToDetermineValue = Невозможно определить значение
+Error:UnexpectedError = Неожиданная ошибка
+Error:UnknownCommand = Неизвестная команда
+Error:UnknownResource = Неизвестный ресурс
+Error:UnsupportedFormat = Неподдерживаемый формат
+Error:VerticalSyncNotSupported = Вертикальная синхронизация не поддерживается
+Error:WindowNotInitialized = Окно не инициализировано
+Error:WrongDataFormat = Неправильный формат данных
+
+
+
+
+
+#Команды
+#Name
+Help:Name.Info = Изменить имя пользователя
+Help:Name.Syntax = Name <NewName>
+Help:Name.ParamCount = 1
+Help:Name.Param.1 = NewName - Новое имя
+
+#Stop
+Help:Stop.Info = Закрыть приложение
+Help:Stop.Syntax = Stop
+
+#Close
+Help:Close.Info = Закрыть приложение
+Help:Close.Syntax = Close
+
+#Quit
+Help:Quit.Info = Закрыть приложение
+Help:Quit.Syntax = Quit
+
+#Version
+Help:Version.Info = Вывести версию движка
+Help:Version.Syntax = Version
+
+#Run
+Help:Run.Info = Выполнить скрипт
+Help:Run.Syntax = Run [FileName]
+Help:Run.ParamCount = 1
+Help:Run.Param.1 = FileName - Имя файла
+
+#Exec
+Help:Exec.Info = Выполнить скрипт
+Help:Exec.Syntax = Exec [FileName]
+Help:Exec.ParamCount = 1
+Help:Exec.Param.1 = FileName - Имя файла
+
+#Write
+Help:Write.Info = Вывести строку
+Help:Write.Syntax = Write <Message>
+Help:Write.ParamCount = 1
+Help:Write.Param.1 = Message - Текст для вывода
+
+#Echo
+Help:Echo.Info = Вывести строку
+Help:Echo.Syntax = Echo <Message>
+Help:Echo.ParamCount = 1
+Help:Echo.Param.1 = Message - Текст для вывода
+
+#Print
+Help:Print.Info = Вывести строку
+Help:Print.Syntax = Print <Message>
+Help:Print.ParamCount = 1
+Help:Print.Param.1 = Message - Текст для вывода
+
+#Writec
+Help:Writec.Info = Вывести цветную строку
+Help:Writec.Syntax = Write [R] [G] [B] [A] [Message]
+Help:Writec.ParamCount = 5
+Help:Writec.Param.1 = R - Доля красного (0..255)
+Help:Writec.Param.2 = G - Доля зелёного (0..255)
+Help:Writec.Param.3 = B - Доля синего (0..255)
+Help:Writec.Param.4 = A - Видимость цвета (0..255)
+Help:Writec.Param.5 = Message - Текст для вывода
+
+#Echoс
+Help:Echoc.Info = Вывести цветную строку
+Help:Echoc.Syntax = Echoс [R] [G] [B] [A] [Message]
+Help:Echoc.ParamCount = 5
+Help:Echoc.Param.1 = R - Доля красного (0..255)
+Help:Echoc.Param.2 = G - Доля зелёного (0..255)
+Help:Echoc.Param.3 = B - Доля синего (0..255)
+Help:Echoc.Param.4 = A - Видимость цвета (0..255)
+Help:Echoc.Param.5 = Message - Текст для вывода
+     
+#Printс
+Help:Printc.Info = Вывести цветную строку
+Help:Printc.Syntax = Printс [R] [G] [B] [A] [Message]
+Help:Printc.ParamCount = 5
+Help:Printc.Param.1 = R - Доля красного (0..255)
+Help:Printc.Param.2 = G - Доля зелёного (0..255)
+Help:Printc.Param.3 = B - Доля синего (0..255)
+Help:Printc.Param.4 = A - Видимость цвета (0..255)
+Help:Printc.Param.5 = Message - Текст для вывода
+
+#Help
+Help:Help.Info = Вывести информацию о команде
+Help:Help.Syntax = Help [CmdName]
+Help:Help.ParamCount = 1
+Help:Help.Param.1 = CmdName - Имя команды для поиска
+
+#Debug
+Help:Debug.Info = Включить/выключить режим отладки
+Help:Debug.Syntax = LockCursor <On/Off>
+Help:Debug.ParamCount = 1
+Help:Debug.Param.1 = On/Off - Включить/выключить
+
+#Tick
+Help:Tick.Info = Включить/выключить системные тики
+Help:Tick.Syntax = Tick <On/Off>
+Help:Tick.ParamCount = 1
+Help:Tick.Param.1 = On/Off - Включить/выключить
+
+#TickDelay
+Help:TickDelay.Info = Изменить задержку между системными тиками
+Help:TickDelay.Syntax = TickDelay <Number>
+Help:TickDelay.ParamCount = 1
+Help:TickDelay.Param.1 = Number - Задержка
+
+#StartParams
+Help:StartParams.Info = Вывести список стартовых параметров
+Help:StartParams.Syntax = StartParams
+
+#LoadLanguage
+Help:LoadLanguage.Info = Загрузить файл языка
+Help:LoadLanguage.Syntax = LoadLanguage [FileName] <Mode>
+Help:LoadLanguage.ParamCount = 2
+Help:LoadLanguage.Param.1 = FileName - Имя файла
+Help:LoadLanguage.Param.2 = Mode - Режим загрузки ("Add" Добавить, "Replace" Заменить)
+
+#CmdList
+Help:CmdList.Info = Вывести список команд
+Help:CmdList.Syntax = CmdList <Mask>
+Help:CmdList.ParamCount = 1
+Help:CmdList.Param.1 = Mask - Подстрока для поиска
+
+#CmdSave
+Help:CmdSave.Info = Сохранить историю введённых команд в файл
+Help:CmdSave.Syntax = CmdSave [FileName]
+Help:CmdSave.ParamCount = 1
+Help:CmdSave.Param.1 = FileName - Имя файла
+
+#CmdLoad
+Help:CmdLoad.Info = Загрузить историю введённых команд из файла
+Help:CmdLoad.Syntax = CmdLoad [FileName]
+Help:CmdLoad.ParamCount = 1
+Help:CmdLoad.Param.1 = FileName - Имя файла
+
+#CmdLines
+Help:CmdLines.Info = Изменить размер истории комманд
+Help:CmdLines.Syntax = CmdLines <Number>
+Help:CmdLines.ParamCount = 1
+Help:CmdLines.Param.1 = Number - Количество строк
+
+#Set
+Help:Set.Info = Создать/удалить набор команд
+Help:Set.Syntax = Set [Name] <Cmd1; Cmd2; CmdN>
+Help:Set.ParamCount = 1
+Help:Set.Param.1 = Name - Имя набора
+Help:Set.Param.2 = Cmd1; CmdN - Последовательность команд
+Help:Set.Hint = При отсутствии команд набор удаляется
+
+#SetClear
+Help:SetClear.Info = Очистить все наборы
+Help:SetClear.Syntax = SetClear
+
+#SetList
+Help:SetList.Info = Вывести список наборов
+Help:SetList.Syntax = SetList <Mask>
+Help:SetList.ParamCount = 1
+Help:SetList.Param.1 = Mask - Подстрока для поиска
+
+#SetSave
+Help:SetSave.Info = Сохранить наборы команд в файл
+Help:SetSave.Syntax = SetsSave [FileName]
+Help:SetSave.ParamCount = 1
+Help:SetSave.Param.1 = FileName - Имя файла
+
+#Clear
+Help:Clear.Info = Очистить журнал оболочки
+Help:Clear.Syntax = Clear
+
+#Shell
+Help:Shell.Info = Показать/скрыть оболочку
+Help:Shell.Syntax = Shell <On/Off>
+Help:Shell.ParamCount = 1
+Help:Shell.Param.1 = On/Off - Включить/выключить
+
+#LogErrors
+Help:LogErrors.Info = Показать/скрыть ошибки
+Help:LogErrors.Syntax = LogErrors <On/Off>
+Help:LogErrors.ParamCount = 1
+Help:LogErrors.Param.1 = On/Off - Включить/выключить
+
+#StrictSearch
+Help:StrictSearch.Info = Включить/выключить строгий поиск команд
+Help:StrictSearch.Syntax = StrictSearch <On/Off>
+Help:StrictSearch.ParamCount = 1
+Help:StrictSearch.Param.1 = On/Off - Включить/выключить
+
+#SetsSearch
+Help:SetsSearch.Info = Включить/выключить поиск по наборам команд
+Help:SetsSearch.Syntax = SetsSearch <On/Off>
+Help:SetsSearch.ParamCount = 1
+Help:SetsSearch.Param.1 = On/Off - Включить/выключить
+
+#BGColor
+Help:BGColor.Info = Установить цвет фона
+Help:BGColor.Syntax = BGColor <[R] [G] [B] [A]>
+Help:BGColor.ParamCount = 4
+Help:BGColor.Param.1 = R - Доля красного (0..255)
+Help:BGColor.Param.2 = G - Доля зелёного (0..255)
+Help:BGColor.Param.3 = B - Доля синего (0..255)
+Help:BGColor.Param.4 = A - Видимость цвета (0..255)
+
+#EditColor
+Help:EditColor.Info = Установить цвет строки ввода
+Help:EditColor.Syntax = EditColor <[R] [G] [B] [A]>
+Help:EditColor.ParamCount = 4
+Help:EditColor.Param.1 = R - Доля красного (0..255)
+Help:EditColor.Param.2 = G - Доля зелёного (0..255)
+Help:EditColor.Param.3 = B - Доля синего (0..255)
+Help:EditColor.Param.4 = A - Видимость цвета (0..255)
+
+#CurColor
+Help:CurColor.Info = Установить цвет курсора
+Help:CurColor.Syntax = CurColor <[R] [G] [B] [A]>
+Help:CurColor.ParamCount = 4
+Help:CurColor.Param.1 = R - Доля красного (0..255)
+Help:CurColor.Param.2 = G - Доля зелёного (0..255)
+Help:CurColor.Param.3 = B - Доля синего (0..255)
+Help:CurColor.Param.4 = A - Видимость цвета (0..255)
+
+#SelColor
+Help:SelColor.Info = Установить цвет выделения текста
+Help:SelColor.Syntax = SelColor <[R] [G] [B] [A]>
+Help:SelColor.ParamCount = 4
+Help:SelColor.Param.1 = R - Доля красного (0..255)
+Help:SelColor.Param.2 = G - Доля зелёного (0..255)
+Help:SelColor.Param.3 = B - Доля синего (0..255)
+Help:SelColor.Param.4 = A - Видимость цвета (0..255)
+
+#TextColor
+Help:TextColor.Info = Установить цвет текста
+Help:TextColor.Syntax = TextColor <[R] [G] [B] [A]>
+Help:TextColor.ParamCount = 4
+Help:TextColor.Param.1 = R - Доля красного (0..255)
+Help:TextColor.Param.2 = G - Доля зелёного (0..255)
+Help:TextColor.Param.3 = B - Доля синего (0..255)
+Help:TextColor.Param.4 = A - Видимость цвета (0..255)
+
+#NoteColor
+Help:NoteColor.Info = Установить цвет подсказки
+Help:NoteColor.Syntax = NoteColor <[R] [G] [B] [A]>
+Help:NoteColor.ParamCount = 4
+Help:NoteColor.Param.1 = R - Доля красного (0..255)
+Help:NoteColor.Param.2 = G - Доля зелёного (0..255)
+Help:NoteColor.Param.3 = B - Доля синего (0..255)
+Help:NoteColor.Param.4 = A - Видимость цвета (0..255)
+
+#ErrColor
+Help:ErrColor.Info = Установить цвет ошибки
+Help:ErrColor.Syntax = ErrColor <[R] [G] [B] [A]>
+Help:ErrColor.ParamCount = 4
+Help:ErrColor.Param.1 = R - Доля красного (0..255)
+Help:ErrColor.Param.2 = G - Доля зелёного (0..255)
+Help:ErrColor.Param.3 = B - Доля синего (0..255)
+Help:ErrColor.Param.4 = A - Видимость цвета (0..255)
+
+#LogSave
+Help:LogSave.Info = Сохранить протокол в файл
+Help:LogSave.Syntax = LogSave [FileName]
+Help:LogSave.ParamCount = 1
+Help:LogSave.Param.1 = FileName - Имя файла
+
+#LogLines
+Help:LogLines.Info = Изменить количество строк журнала оболочки
+Help:LogLines.Syntax = LogLines <Number>
+Help:LogLines.ParamCount = 1
+Help:LogLines.Param.1 = Number - Количество строк
+
+#VisLines
+Help:VisLines.Info = Изменить количество видимых строк оболочки
+Help:VisLines.Syntax = VisLines <Number>
+Help:VisLines.ParamCount = 1
+Help:VisLines.Param.1 = Number - Количество строк
+
+#BGSprite
+Help:BGSprite.Info = Изменить фоновое изображение оболочки
+Help:BGSprite.Syntax = BGSprite <SprName>
+Help:BGSprite.ParamCount = 1
+Help:BGSprite.Param.1 = SprName - Имя спрайта в таблице ресурсов
+
+#ScanMode
+Help:ScanMode.Info = Включить/выключить режим сканирования клавиш
+Help:ScanMode.Syntax = ScanMode <On/Off>
+Help:ScanMode.ParamCount = 1
+Help:ScanMode.Param.1 = On/Off - Включить/выключить
+
+#LogPageSize
+Help:LogPageSize.Info = Изментиь размер страницы журнала оболочки
+Help:LogPageSize.Syntax = LogPageSize <Number>
+Help:LogPageSize.ParamCount = 1
+Help:LogPageSize.Param.1 = Number - Количество
+
+#SubstChar
+Help:SubstChar.Info = Изментиь символ признака переменной
+Help:SubstChar.Syntax = SubstChar <Char>
+Help:SubstChar.ParamCount = 1
+Help:SubstChar.Param.1 = Char - Символ признака
+
+#FullScreen
+Help:FullScreen.Info = Переключить полноэкранный режим
+Help:FullScreen.Syntax = FullScreen
+
+#LockCursor
+Help:LockCursor.Info = Ограничить перемещение курсора
+Help:LockCursor.Syntax = LockCursor <On/Off>
+Help:LockCursor.ParamCount = 1
+Help:LockCursor.Param.1 = On/Off - Включить/выключить
+
+#SysCursor
+Help:SysCursor.Info =  Включить/выключить системный курсора
+Help:SysCursor.Syntax = SysCursor <On/Off>
+Help:SysCursor.ParamCount = 1
+Help:SysCursor.Param.1 = On/Off - Включить/выключить
+
+#Width
+Help:Width.Info = Установить клиентскую ширину окна
+Help:Width.Syntax = Width <Number>
+Help:Width.ParamCount = 1
+Help:Width.Param.1 = Number - Ширина в пикселях
+
+#Height
+Help:Height.Info = Установить клиентскую высоту окна
+Help:Height.Syntax = Height <Number>
+Help:Height.ParamCount = 1
+Help:Height.Param.1 = Number - Высота в пикселях
+
+#Caption
+Help:Caption.Info = Установить заголовок окна
+Help:Caption.Syntax = Caption <Str>
+Help:Caption.ParamCount = 1
+Help:Caption.Param.1 = Str - Новый заголовок
+
+#StayOnTop
+Help:StayOnTop.Info =  Включить/выключить поверх всех окон
+Help:StayOnTop.Syntax = StayOnTop <On/Off>
+Help:StayOnTop.ParamCount = 1
+Help:StayOnTop.Param.1 = On/Off - Включить/выключить
+
+#ScreenShot
+Help:ScreenShot.Info = Сделать снимок экрана
+Help:ScreenShot.Syntax = ScreenShot <Name>
+Help:ScreenShot.ParamCount = 1
+Help:ScreenShot.Param.1 = Name - Имя файла без расширения
+
+#MaxFPS
+Help:MaxFPS.Info = Установить максимальное количество кадров в секунду
+Help:MaxFPS.Syntax = MaxFPS <Number>
+Help:MaxFPS.ParamCount = 1
+Help:MaxFPS.Param.1 = Number - Количество кадров
+
+#VSync
+Help:VSync.Info = Включить/выключить вертикальную синхронизацию
+Help:VSync.Syntax = VSync <On/Off>
+Help:VSync.ParamCount = 1
+Help:VSync.Param.1 = On/Off - Включить/выключить
+
+#GraphInfo
+Help:GraphInfo.Info = Вывод информации о видеокарте
+Help:GraphInfo.Syntax = GraphInfo
+
+#Draw
+Help:Draw.Info = Включить/выключить отрисовку
+Help:Draw.Syntax = Draw <On/Off>
+Help:Draw.ParamCount = 1
+Help:Draw.Param.1 = On/Off - Включить/выключить
+
+#Attach
+Help:Attach.Info = Привязать команду к клавише
+Help:Attach.Syntax = Attach [KeyName] <<+-*>Command>
+Help:Attach.ParamCount = 2
+Help:Attach.Param.1 = KeyName - Имя клавиши
+Help:Attach.Param.2 = <+-*>Command - Команда. ("+" Нажатие, "-" Отпускание, "*" Нажатие и отпускание)
+Help:Attach.Hint = При отсутствии команды клавиша освобождается
+
+#AttachClear
+Help:AttachClear.Info = Отвязать все клавиши от команд
+Help:AttachClear.Syntax = AttachClear
+
+#AttachList
+Help:AttachList.Info = Вывести список привязанных клавиш
+Help:AttachList.Syntax = AttachList <Mask>
+Help:AttachList.ParamCount = 1
+Help:AttachList.Param.1 = Mask - Подстрока для поиска
+
+#AttachSave
+Help:AttachSave.Info = Сохранить привязку клавиш в файл
+Help:AttachSave.Syntax = AttachSave [FileName]
+Help:AttachSave.ParamCount = 1
+Help:AttachSave.Param.1 = FileName - Имя файла
+
+#KeyList
+Help:KeyList.Info = Вывести список названий клавиш
+Help:KeyList.Syntax = KeyList <Mask>
+Help:KeyList.ParamCount = 1
+Help:KeyList.Param.1 = Mask - Подстрока для поиска
+
+#Joysticks
+Help:Joysticks.Info = Включить/выключить опрос джойстиков
+Help:Joysticks.Syntax = Joysticks <On/Off>
+Help:Joysticks.ParamCount = 1
+Help:Joysticks.Param.1 = On/Off - Включить/выключить
+
+#JoyDelay
+Help:JoyDelay.Info = Изменить задержку между опросами джойстиков
+Help:JoyDelay.Syntax = JoyDelay <Number>
+Help:JoyDelay.ParamCount = 1
+Help:JoyDelay.Param.1 = Number - Задержка
+
+#FontName
+Help:FontName.Info = Изменить имя шрифта
+Help:FontName.Syntax = FontName <Name>
+Help:FontName.ParamCount = 1
+Help:FontName.Param.1 = Name - Новое имя
+
+#FontSize
+Help:FontSize.Info = Изменить размер шрифта
+Help:FontSize.Syntax = FontSize <Size>
+Help:FontSize.ParamCount = 1
+Help:FontSize.Param.1 = Size - Размер
+
+#FontAttrib
+Help:FontAttrib.Info = Изменить атрибуты шрифта
+Help:FontAttrib.Syntax = FontAttrib <[]/B/I/U/S>
+Help:FontAttrib.ParamCount = 1
+Help:FontAttrib.Param.1 = []/B/I/U/S - Атрибуты ([], Bold, Italic, Underline, StrikeOut)
+
+#ParamClear
+Help:ParamClear.Info = Очистить список параметров
+Help:ParamClear.Syntax = ParamClear
+
+#ParamList
+Help:ParamList.Info = Вывести список параметров
+Help:ParamList.Syntax = KeyList <Mask>
+Help:ParamList.ParamCount = 1
+Help:ParamList.Param.1 = Mask - Подстрока для поиска
+
+#ParamSet
+Help:ParamSet.Info = Изменить параметр
+Help:ParamSet.Syntax = ParamSet [Name] <Value>
+Help:ParamSet.ParamCount = 2
+Help:ParamSet.Param.1 = Name - Имя параметра
+Help:ParamSet.Param.2 = Value - Значение параметра
+Help:ParamSet.Hint = При отсутствии параметра, добавляется
+
+#ParamDel
+Help:ParamDel.Info = Удалить параметр
+Help:ParamDel.Syntax = ParamDel [Name]
+Help:ParamDel.ParamCount = 1
+Help:ParamDel.Param.1 = Name - Имя параметра
+Help:ParamDel.Hint = При отсутствии параметра, добавляется
+
+#ParamSave
+Help:ParamSave.Info = Сохранить параметры в файл
+Help:ParamSave.Syntax = ParamSave [FileName] <U/A>
+Help:ParamSave.ParamCount = 2
+Help:ParamSave.Param.1 = FileName - Имя файла
+Help:ParamSave.Param.2 = U/A - Модификаторы ("U" Обновить, "A" Обновить и добавить)
+
+#ParamLoad
+Help:ParamLoad.Info = Загрузить параметры из файла
+Help:ParamLoad.Syntax = ParamLoad [FileName] <U/A>
+Help:ParamLoad.ParamCount = 2
+Help:ParamLoad.Param.1 = FileName - Имя файла
+Help:ParamLoad.Param.2 = U/A - Модификаторы ("U" Обновить, "A" Обновить и добавить)
+
+#ResList
+Help:ResList.Info = Вывести список ресурсов
+Help:ResList.Syntax = ResList <Mask>
+Help:ResList.ParamCount = 1
+Help:ResList.Param.1 = Mask - Подстрока для поиска
+
+#ResReload
+Help:ResReload.Info = Перезагрузить ресурс
+Help:ResReload.Syntax = ResReload [Name]
+Help:ResReload.ParamCount = 1
+Help:ResReload.Param.1 = Name - Имя ресурса
+
+#ResDelete
+Help:ResDelete.Info = Удалить ресурс
+Help:ResDelete.Syntax = ResDelete [Name]
+Help:ResDelete.ParamCount = 1
+Help:ResDelete.Param.1 = Name - Имя ресурса
+
+#ResClear
+Help:ResClear.Info = Очистить ресурсы
+Help:ResClear.Syntax = ResClear
+
+#ResLoad
+Help:ResLoad.Info = Перезагрузить ресурс
+Help:ResLoad.Syntax = ResLoad [Type] [Name] [FileName] <Parameters>
+Help:ResLoad.ParamCount = 4
+Help:ResLoad.Param.1 = Type - Тип ресурса
+Help:ResLoad.Param.2 = Name - Имя ресурса
+Help:ResLoad.Param.3 = FileName - Имя файла
+Help:ResLoad.Param.4 = Parameters - Дополнительные параметры
+
+#ResLoadTable
+Help:ResLoadTable.Info = Загрузить таблицу ресурсов
+Help:ResLoadTable.Syntax = ResLoadTable [FileName] <Mode>
+Help:ResLoadTable.ParamCount = 2
+Help:ResLoadTable.Param.1 = FileName - Имя файла
+Help:ResLoadTable.Param.2 = Mode - Режим загрузки ("Add" Добавить, "Replace" Заменить)
+
+#ResRename
+Help:ResRename.Info = Переименовать ресурс
+Help:ResRename.Syntax = ResRename [OldName] [NewName]
+Help:ResRename.ParamCount = 2
+Help:ResRename.Param.1 = OldName - Текущее имя ресурса
+Help:ResRename.Param.2 = NewName - Новое имя ресурса
+

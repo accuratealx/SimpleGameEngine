@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeShellCommands.pas
-Версия            1.2
+Версия            1.4
 Создан            09.12.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Хранилище указателей на команды оболочки
@@ -20,7 +20,7 @@ uses
 
 type
   //Указатель на функцию
-  TsgeShellCommandProc = function(Cmd: PStringArray): Integer;
+  TsgeShellCommandProc = function(Cmd: PStringArray): String;
 
 
   //Запись для хранения одной команды
@@ -66,6 +66,10 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeShellCommands';
+
+
 function TsgeShellCommands.GetCount: Integer;
 begin
   Result := Length(FCommands);
@@ -78,7 +82,7 @@ var
 begin
   c := GetCount - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeShellCommands + Err_Separator + Err_sgeShellCommands_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   FCommands[Index] := Cmd;
 end;
@@ -90,7 +94,7 @@ var
 begin
   c := GetCount - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeShellCommands + Err_Separator + Err_sgeShellCommands_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   Result := FCommands[Index];
 end;
@@ -149,7 +153,7 @@ begin
   //Проверить на существование
   Idx := IndexOf(Cmd.Name);
   if Idx <> -1 then
-    raise EsgeException.Create(Err_sgeShellCommands + Err_Separator + Err_sgeShellCommands_CommandExist + Err_Separator + Cmd.Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CommandExist, Cmd.Name));
 
   //Добавить
   Idx := GetCount;
@@ -177,7 +181,7 @@ var
 begin
   c := GetCount - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeShellCommands + Err_Separator + Err_sgeShellCommands_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   SetLength(FCommands, c + 1);
   for i := c downto Index + 1 do
@@ -193,7 +197,7 @@ var
 begin
   c := GetCount - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeShellCommands + Err_Separator + Err_sgeShellCommands_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   for i := Index to c - 1 do
     FCommands[i] := FCommands[i + 1];
