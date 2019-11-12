@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeShell.pas
-Версия            1.9
+Версия            1.10
 Создан            09.12.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Оболочка для движка
@@ -347,7 +347,7 @@ end;
 procedure TsgeShell.LogMessageLocalized(LngConst: String; Postfix: ShortString; rType: TsgeShellLineType);
 begin
   FLanguage.GetString('Cmd:' + LngConst, LngConst);
-  LogMessage(LngConst, rType);
+  LogMessage(LngConst + Postfix, rType);
 end;
 
 

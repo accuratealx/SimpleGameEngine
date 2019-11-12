@@ -16,15 +16,8 @@ uses
   sgeLineEditor, sgeParameters, sgeResources, sgeShell, sgeShellCommands, 
   sgeShellFunctions, sgeSound, sgeSoundBuffer, sgeSoundSource, 
   sgeSplashScreen, sgeStartParameters, sgeSystemCursor, sgeSystemFont, 
-  sgeSystemIcon, sgeTypes, sgeViewBox, sgeWindow, SimpleGameEngine, sgeFade, 
-  LazarusPackageIntf;
+  sgeSystemIcon, sgeTypes, sgeViewBox, sgeWindow, SimpleGameEngine, sgeFade;
 
 implementation
 
-procedure Register;
-begin
-end;
-
-initialization
-  RegisterPackage('SGE', @Register);
 end.

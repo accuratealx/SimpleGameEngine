@@ -33,24 +33,24 @@ var
 
 
 
-function GetUserLoadFileName(Str: String): String;
+function GetUserLoadFileName(FileName: String): String;
 begin
-  Result := '';
-  if FileExists(Str) then Result := Str;
-  if FileExists(SGE.DirUser + Str) then Result := SGE.DirUser + Str;
+  Result := FileName;
+  if FileExists(SGE.DirMain + FileName) then Result := SGE.DirMain + FileName;
+  if FileExists(SGE.DirUser + FileName) then Result := SGE.DirUser + FileName;
 end;
 
 
-function GetUserSaveFileName(Str: String): String;
+function GetUserSaveFileName(FileName: String): String;
 var
   Dir: String;
 begin
-  Dir := ExtractFilePath(Str);
+  Dir := ExtractFilePath(FileName);
   try
     ForceDirectories(Dir);
-    Result := Str;
+    Result := FileName;
   except
-    Result := SGE.DirUser + Str;
+    Result := SGE.DirUser + FileName;
   end;
 end;
 
@@ -69,9 +69,10 @@ end;
 Параметры:
  NewName - Новое имя
 }
-function sge_ShellFunctions_System_Name(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_Name(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   if StringArray_Equal(Cmd, 2) then
     begin
     if Cmd^[1] <> '' then SGE.UserName := Cmd^[1];
@@ -85,9 +86,10 @@ end;
 Синтаксис:
   Stop
 }
-function sge_ShellFunctions_System_Stop(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_Stop(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   SGE.Stop;
 end;
 
@@ -98,9 +100,10 @@ end;
 Синтаксис:
   Version
 }
-function sge_ShellFunctions_System_Version(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_Version(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   SGE.Shell.LogMessage(SGE_Name + ' ' + SGE_Version);
 end;
 
@@ -112,34 +115,22 @@ end;
   Run [FileName]
 Параметры:
   FileName - Имя файла
-Ошибки:
-  1 - Файл не найден
-  2 - Ошибка чтения
 }
-function sge_ShellFunctions_System_Run(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_Run(Cmd: PStringArray): String;
 var
   sa: TStringArray;
   c, i: Integer;
   fn: String;
 begin
-  Result := 0;
+  Result := '';
 
   //Подготовить имя файла
-  fn := '';
-  if FileExists(SGE.DirMain + Cmd^[1]) then fn := SGE.DirMain + Cmd^[1];
-  if FileExists(SGE.DirUser + Cmd^[1]) then fn := SGE.DirUser + Cmd^[1];
-
-  //Проверить на существование
-  if fn = '' then
-    begin
-    Result := 1;
-    Exit;
-    end;
+  fn := GetUserLoadFileName(Cmd^[1]);
 
   //Загрузка из файла
   if not StringArray_LoadFromFile(@sa, fn) then
     begin
-    Result := 2;
+    Result := sgeCreateErrorString('CmdSystemRun', Err_FileReadError, fn);
     Exit;
     end;
 
@@ -166,12 +157,12 @@ end;
 Параметры:
   Message - Сообщение
 }
-function sge_ShellFunctions_System_Write(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_Write(Cmd: PStringArray): String;
 var
   i, c: Integer;
   s: String;
 begin
-  Result := 0;
+  Result := '';
 
   s := '';
   c := StringArray_GetCount(Cmd) - 1;
@@ -193,12 +184,12 @@ end;
   R G B A - Цвет строки
   Message - Сообщение
 }
-function sge_ShellFunctions_System_Writec(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_Writec(Cmd: PStringArray): String;
 var
   i, c: Integer;
   s: String;
 begin
-  Result := 0;
+  Result := '';
 
   s := '';
   c := StringArray_GetCount(Cmd) - 1;
@@ -220,12 +211,12 @@ end;
 Параметры:
   CmdName - Имя команды
 }
-function sge_ShellFunctions_System_Help(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_Help(Cmd: PStringArray): String;
 var
   hInfo, hSyntax, hHint, cName, s: String;
-  PrmCnt, ErrCnt, i: Integer;
+  PrmCnt, i: Integer;
 begin
-  Result := 0;
+  Result := '';
 
   //Проверить количество параметров
   if not StringArray_Equal(Cmd, 2) then
@@ -239,55 +230,43 @@ begin
   hSyntax := '';
   hHint := '';
   PrmCnt := 0;
-  ErrCnt := 0;
   cName := LowerCase(Cmd^[1]);
 
   //Поиск языковых констант
-  SGE.Shell.Language.GetString(cName + ':Info', hInfo);
-  SGE.Shell.Language.GetString(cName + ':Syntax', hSyntax);
-  SGE.Shell.Language.GetString(cName + ':Hint', hHint);
-  SGE.Shell.Language.GetInteger(cName + ':ParamCount', PrmCnt);
-  SGE.Shell.Language.GetInteger(cName + ':ErrorCount', ErrCnt);
+  SGE.Shell.Language.GetString('Help:' + cName + '.Info', hInfo);
+  SGE.Shell.Language.GetString('Help:' + cName + '.Syntax', hSyntax);
+  SGE.Shell.Language.GetString('Help:' + cName + '.Hint', hHint);
+  SGE.Shell.Language.GetInteger('Help:' + cName + '.ParamCount', PrmCnt);
 
   //Вывод сведений
   SGE.Shell.LogMessage('');
-  SGE.Shell.LogMessage('Help: ' + Cmd^[1], sltNote);
+  SGE.Shell.LogMessageLocalized('Help', ': ' + Cmd^[1]);
   if hInfo <> '' then
     begin
-    SGE.Shell.LogMessage('Info:', sltNote);
+    SGE.Shell.LogMessageLocalized('Info', ':');
     SGE.Shell.LogMessage('  ' + hInfo);
     end;
   if hSyntax <> '' then
     begin
-    SGE.Shell.LogMessage('Syntax:', sltNote);
+    SGE.Shell.LogMessageLocalized('Syntax', ':');
     SGE.Shell.LogMessage('  ' + hSyntax);
     end;
   if PrmCnt > 0 then
     begin
-    SGE.Shell.LogMessage('Parameters:', sltNote);
+    SGE.Shell.LogMessageLocalized('Parameters', ':');
     for i := 0 to PrmCnt do
       begin
       s := '';
-      SGE.Shell.Language.GetString(cName + ':Param.' + IntToStr(i), s);
+      SGE.Shell.Language.GetString('Help:' + cName + '.Param.' + IntToStr(i), s);
       if s <> '' then SGE.Shell.LogMessage('  ' + s);
-      end;
-    end;
-  if ErrCnt > 0 then
-    begin
-    SGE.Shell.LogMessage('Errors:', sltNote);
-    for i := 0 to ErrCnt do
-      begin
-      s := '';
-      SGE.Shell.Language.GetString(cName + ':Error.' + IntToStr(i), s);
-      if s <> '' then SGE.Shell.LogMessage('  ' + IntToStr(i) + ' - ' + s);
       end;
     end;
   if hHint <> '' then
     begin
-    SGE.Shell.LogMessage('Hint:', sltNote);
+    SGE.Shell.LogMessageLocalized('Hint', ':');
     SGE.Shell.LogMessage('  ' + hHint);
     end;
-  SGE.Shell.LogMessage('End.', sltNote);
+  SGE.Shell.LogMessageLocalized('End');
 end;
 
 
@@ -298,15 +277,14 @@ end;
   Debug <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_System_Debug(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_Debug(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if SGE.Debug then SGE.Shell.LogMessage('Debug = On') else SGE.Shell.LogMessage('Debug = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdSystemDebug', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.Debug := True;
     3: SGE.Debug := False;
   end;
@@ -320,15 +298,14 @@ end;
   Tick <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_System_Tick(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_Tick(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if SGE.TickEnable then SGE.Shell.LogMessage('Tick = On') else SGE.Shell.LogMessage('Tick = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdSystemTick', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.TickEnable := True;
     3: SGE.TickEnable := False;
   end;
@@ -342,18 +319,18 @@ end;
   TickDelay <Number>
 Параметры:
   Number - Задержка
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_System_TickDelay(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_TickDelay(Cmd: PStringArray): String;
 var
   i: Integer;
 begin
-  Result := 0;
+  Result := '';
+
   if StringArray_Equal(Cmd, 2) then
     begin
     i := 1;
-    if not TryStrToInt(Cmd^[1], i) then Result := 1 else SGE.TickDelay := i;
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdSystemTickDelay', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+      else SGE.TickDelay := i;
     end else SGE.Shell.LogMessage('TickDelay = ' + IntToStr(SGE.TickDelay));
 end;
 
@@ -364,16 +341,16 @@ end;
 Синтаксис:
   StartParams
 }
-function sge_ShellFunctions_System_StartParams(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_System_StartParams(Cmd: PStringArray): String;
 var
   i, c: Integer;
   s, Value: String;
 begin
-  Result := 0;
+  Result := '';
 
   //Вывод шапки
   SGE.Shell.LogMessage('');
-  SGE.Shell.LogMessage('Start parameters: ', sltNote);
+  SGE.Shell.LogMessageLocalized('StartParameters', ':');
 
   //Перебор параметров
   c := SGE.StartParameters.Count - 1;
@@ -386,7 +363,49 @@ begin
     end;
 
   //Вывод хвоста
-  SGE.Shell.LogMessage('Count: ' + IntToStr(c + 1), sltNote);
+  SGE.Shell.LogMessageLocalized('Count', ': ' + IntToStr(c + 1));
+end;
+
+
+{
+Описание:
+  Загрузить файл языка
+Синтаксис:
+  LoadLanguage [FileName] <Mode>
+Параметры:
+  FileName - Имя файла
+  Mode     - Режим загрузки
+    Add     - Добавить строки
+    Replace - Заменить строки
+}
+function sge_ShellFunctions_System_LoadLanguage(Cmd: PStringArray): String;
+var
+  fn: String;
+  Mode: TsgeLoadMode;
+begin
+  Result := '';
+
+  //Подготовить имя файла
+  fn := GetUserLoadFileName(Cmd^[1]);
+
+  //Определить режим
+  Mode := lmReplace;
+  if StringArray_Equal(Cmd, 3) then
+    case LowerCase(Cmd^[2]) of
+      'add'    : Mode := lmAdd;
+      'replace': Mode := lmReplace;
+      else begin
+      Result := sgeCreateErrorString('CmdSystemLoadLanguage', Err_UnableToDetermineMode, Cmd^[2]);
+      Exit;
+      end;
+    end;
+
+  //Загрузить
+  try
+    SGE.LoadLanguage(fn, Mode);
+  except
+    Result := sgeCreateErrorString('CmdSystemLoadLanguage', Err_FileReadError, fn);
+  end;
 end;
 
 
@@ -401,20 +420,20 @@ end;
 Параметры:
   Mask - Подстрока для поиска
 }
-function sge_ShellFunctions_Command_List(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Command_List(Cmd: PStringArray): String;
 var
   i, c, Idx, Cnt: Integer;
   Mask, s, cName: String;
   isAdd: Boolean;
 begin
-  Result := 0;
+  Result := '';
 
   //Подготовить маску
   if StringArray_Equal(Cmd, 2) then Mask := LowerCase(Cmd^[1]) else Mask := '';
 
   //Вывод шапки
   SGE.Shell.LogMessage('');
-  SGE.Shell.LogMessage('Command list: ' + Mask, sltNote);
+  SGE.Shell.LogMessageLocalized('CommandList', ': ' + Mask);
 
   //Перебор массива
   Cnt := 0;
@@ -441,13 +460,13 @@ begin
       begin
       Inc(Cnt);
       s := '';
-      SGE.Shell.Language.GetString(cName + ':Info', s);
+      SGE.Shell.Language.GetString('Help:' + cName + '.Info', s);
       SGE.Shell.LogMessage(cName + ' - ' + s);
       end;
     end;
 
   //Вывод хвоста
-  SGE.Shell.LogMessage('Count: ' + IntToStr(Cnt), sltNote);
+  SGE.Shell.LogMessageLocalized('Count', ': ' + IntToStr(Cnt));
 end;
 
 
@@ -458,14 +477,12 @@ end;
   CmdSave [FileName]
 Параметры:
   FileName - Имя файла
-Ошибки:
-  1 - Ошибка записи
 }
-function sge_ShellFunctions_Command_Save(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Command_Save(Cmd: PStringArray): String;
 var
   fn: String;
 begin
-  Result := 0;
+  Result := '';
 
   //Определить имя файла
   fn := GetUserSaveFileName(Cmd^[1]);
@@ -474,7 +491,7 @@ begin
   try
     SGE.Shell.CommandHistory.SaveToFile(fn);
   except
-    Result := 1;
+    Result := sgeCreateErrorString('CmdCommandSave', Err_FileWriteError, fn);
   end;
 end;
 
@@ -486,32 +503,45 @@ end;
   CmdLoad [FileName]
 Параметры:
   FileName - Имя файла
-Ошибки:
-  1 - Файл не найден
-  2 - Ошибка чтения
 }
-function sge_ShellFunctions_Command_Load(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Command_Load(Cmd: PStringArray): String;
 var
   fn: String;
 begin
-  Result := 0;
+  Result := '';
 
   //Подготовить имя файла
   fn := GetUserLoadFileName(Cmd^[1]);
-
-  //Проверить имя
-  if fn = '' then
-    begin
-    Result := 1;
-    Exit;
-    end;
 
   //Загрузить
   try
     SGE.Shell.CommandHistory.LoadFromFile(fn);
   except
-    Result := 2;
+    Result := sgeCreateErrorString('CmdCommandLoad', Err_FileReadError, fn);;
   end;
+end;
+
+
+{
+Описание:
+  Установить максимальное количество введённых команд
+Синтаксис:
+  CmdLines <Number>
+Параметры:
+  Number - Количество строк
+}
+function sge_ShellFunctions_Command_Lines(Cmd: PStringArray): String;
+var
+  i: Integer;
+begin
+  Result := '';
+
+  if StringArray_Equal(Cmd, 2) then
+    begin
+    i := 1;
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdCommandLines', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+      else SGE.Shell.CommandHistory.MaxLines := i;
+    end else SGE.Shell.LogMessage('CmdLines = ' + IntToStr(SGE.Shell.CommandHistory.MaxLines));
 end;
 
 
@@ -530,12 +560,13 @@ end;
   При отсутсвии параметров, набор удаляется
   При повторной установке содержимое заменяется
 }
-function sge_ShellFunctions_Set_Set(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Set_Set(Cmd: PStringArray): String;
 var
   Idx: Integer;
   sName, sPrm: String;
 begin
-  Result := 0;
+  Result := '';
+
   sName := Trim(Cmd^[1]);
   if StringArray_Equal(Cmd, 3) then
     begin
@@ -552,9 +583,10 @@ end;
 Синтаксис:
   SetClear
 }
-function sge_ShellFunctions_Set_Clear(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Set_Clear(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   SGE.Shell.Sets.Clear;
 end;
 
@@ -567,20 +599,20 @@ end;
 Параметры:
   Mask - Подстрока для поиска
 }
-function sge_ShellFunctions_Set_List(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Set_List(Cmd: PStringArray): String;
 var
   i, c, Idx, Cnt: Integer;
   Mask, cName: String;
   isAdd: Boolean;
 begin
-  Result := 0;
+  Result := '';
 
   //Подготовить маску
   if StringArray_Equal(Cmd, 2) then Mask := LowerCase(Cmd^[1]) else Mask := '';
 
   //Вывод шапки
   SGE.Shell.LogMessage('');
-  SGE.Shell.LogMessage('Set list: ' + Mask, sltNote);
+  SGE.Shell.LogMessageLocalized('SetList', ': ' + Mask);
 
   //Перебор массива
   Cnt := 0;
@@ -611,7 +643,7 @@ begin
     end;
 
   //Вывод хвоста
-  SGE.Shell.LogMessage('Count: ' + IntToStr(Cnt), sltNote);
+  SGE.Shell.LogMessageLocalized('Count', ': ' + IntToStr(Cnt));
 end;
 
 
@@ -622,16 +654,14 @@ end;
   SetSave [FileName]
 Параметры:
   FileName - Имя файла
-Ошибки:
-  1 - Ошибка записи
 }
-function sge_ShellFunctions_Set_Save(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Set_Save(Cmd: PStringArray): String;
 var
   sa: TStringArray;
   i, c: Integer;
   fn: String;
 begin
-  Result := 0;
+  Result := '';
 
   //Задать имя файла
   fn := GetUserSaveFileName(Cmd^[1]);
@@ -642,7 +672,7 @@ begin
     StringArray_Add(@sa, 'Set ' + SGE.Shell.Sets.Parameter[i].Name + ' '#39 + SimpleCommand_SecureString(SGE.Shell.Sets.Parameter[i].Value, #1) + #39);
 
   //Сохранить в файл
-  if not StringArray_SaveToFile(@sa, fn) then Result := 1;
+  if not StringArray_SaveToFile(@sa, fn) then Result := sgeCreateErrorString('CmdSetSave', Err_FileWriteError, fn);
 
   //Почистить память
   StringArray_Clear(@sa);
@@ -658,9 +688,10 @@ end;
 Синтаксис:
   Clear
 }
-function sge_ShellFunctions_Shell_Clear(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_Clear(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   SGE.Shell.Journal.Clear;
 end;
 
@@ -672,15 +703,14 @@ end;
   Shell <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Shell_Shell(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_Shell(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if SGE.Shell.Enable then SGE.Shell.LogMessage('Shell = On') else SGE.Shell.LogMessage('Shell = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdShellShell', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.Shell.Enable := True;
     3: SGE.Shell.Enable := False;
   end;
@@ -694,15 +724,14 @@ end;
   LogErrors <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Shell_LogErrors(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_LogErrors(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if SGE.Shell.LogErrors then SGE.Shell.LogMessage('LogErrors = On') else SGE.Shell.LogMessage('LogErrors = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdShellLogErrors', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.Shell.LogErrors := True;
     3: SGE.Shell.LogErrors := False;
   end;
@@ -719,12 +748,13 @@ end;
 Ошибки:
   1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Shell_StrictSearch(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_StrictSearch(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if SGE.Shell.StrictSearch then SGE.Shell.LogMessage('StrictSearch = On') else SGE.Shell.LogMessage('StrictSearch = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdShellStrictSearch', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.Shell.StrictSearch := True;
     3: SGE.Shell.StrictSearch := False;
   end;
@@ -738,15 +768,14 @@ end;
   SetsSearch <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Shell_SetsSearch(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_SetsSearch(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if SGE.Shell.SetsSearch then SGE.Shell.LogMessage('SetsSearch = On') else SGE.Shell.LogMessage('SetsSearch = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdShellSetsSearch', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.Shell.SetsSearch := True;
     3: SGE.Shell.SetsSearch := False;
   end;
@@ -760,15 +789,14 @@ end;
   BGColor <R G B A>
 Параметры:
   R G B A - Цвет
-Ошибки:
-  1 - Не хватает параметров
 }
-function sge_ShellFunctions_Shell_BGColor(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_BGColor(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case StringArray_GetCount(Cmd) of
     1:  SGE.Shell.LogMessage('BGColor = ' + sgeGetRGBAAsStringByGraphicColor(SGE.Shell.BGColor));
-    2..4: Result := 1;
+    2..4: Result := sgeCreateErrorString('CmdShellBGColor', Err_NotEnoughParameters);
     else SGE.Shell.BGColor := sgeGraphicColor_RGBAToColor(sgeGetRGBAFromParam(Cmd));
   end;
 end;
@@ -781,15 +809,14 @@ end;
   EditColor <R G B A>
 Параметры:
   R G B A - Цвет
-Ошибки:
-  1 - Не хватает параметров
 }
-function sge_ShellFunctions_Shell_EditColor(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_EditColor(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case StringArray_GetCount(Cmd) of
     1:  SGE.Shell.LogMessage('EditColor = ' + sgeGetRGBAAsStringByGraphicColor(SGE.Shell.EditorColor));
-    2..4: Result := 1;
+    2..4: Result := sgeCreateErrorString('CmdShellEditColor', Err_NotEnoughParameters);
     else SGE.Shell.EditorColor := sgeGraphicColor_RGBAToColor(sgeGetRGBAFromParam(Cmd));
   end;
 end;
@@ -802,15 +829,14 @@ end;
   CurColor <R G B A>
 Параметры:
   R G B A - Цвет
-Ошибки:
-  1 - Не хватает параметров
 }
-function sge_ShellFunctions_Shell_CurColor(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_CurColor(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case StringArray_GetCount(Cmd) of
     1:  SGE.Shell.LogMessage('CurColor = ' + sgeGetRGBAAsStringByGraphicColor(SGE.Shell.CursorColor));
-    2..4: Result := 1;
+    2..4: Result := sgeCreateErrorString('CmdShellCurColor', Err_NotEnoughParameters);
     else SGE.Shell.CursorColor := sgeGraphicColor_RGBAToColor(sgeGetRGBAFromParam(Cmd));
   end;
 end;
@@ -823,15 +849,14 @@ end;
   SelColor <R G B A>
 Параметры:
   R G B A - Цвет
-Ошибки:
-  1 - Не хватает параметров
 }
-function sge_ShellFunctions_Shell_SelColor(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_SelColor(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case StringArray_GetCount(Cmd) of
     1:  SGE.Shell.LogMessage('SelColor = ' + sgeGetRGBAAsStringByGraphicColor(SGE.Shell.SelectColor));
-    2..4: Result := 1;
+    2..4: Result := sgeCreateErrorString('CmdShellSelColor', Err_NotEnoughParameters);
     else SGE.Shell.SelectColor := sgeGraphicColor_RGBAToColor(sgeGetRGBAFromParam(Cmd));
   end;
 end;
@@ -844,15 +869,14 @@ end;
   TextColor <R G B A>
 Параметры:
   R G B A - Цвет
-Ошибки:
-  1 - Не хватает параметров
 }
-function sge_ShellFunctions_Shell_TextColor(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_TextColor(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case StringArray_GetCount(Cmd) of
     1:  SGE.Shell.LogMessage('TextColor = ' + sgeGetRGBAAsStringByGraphicColor(SGE.Shell.TextColor));
-    2..4: Result := 1;
+    2..4: Result := sgeCreateErrorString('CmdShellTextColor', Err_NotEnoughParameters);
     else SGE.Shell.TextColor := sgeGraphicColor_RGBAToColor(sgeGetRGBAFromParam(Cmd));
   end;
 end;
@@ -865,15 +889,14 @@ end;
   NoteColor <R G B A>
 Параметры:
   R G B A - Цвет
-Ошибки:
-  1 - Не хватает параметров
 }
-function sge_ShellFunctions_Shell_NoteColor(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_NoteColor(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case StringArray_GetCount(Cmd) of
     1:  SGE.Shell.LogMessage('NoteColor = ' + sgeGetRGBAAsStringByGraphicColor(SGE.Shell.NoteColor));
-    2..4: Result := 1;
+    2..4: Result := sgeCreateErrorString('CmdShellNoteColor', Err_NotEnoughParameters);
     else SGE.Shell.NoteColor := sgeGraphicColor_RGBAToColor(sgeGetRGBAFromParam(Cmd));
   end;
 end;
@@ -886,15 +909,14 @@ end;
   ErrColor <R G B A>
 Параметры:
   R G B A - Цвет
-Ошибки:
-  1 - Не хватает параметров
 }
-function sge_ShellFunctions_Shell_ErrColor(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_ErrColor(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case StringArray_GetCount(Cmd) of
     1:  SGE.Shell.LogMessage('ErrColor = ' + sgeGetRGBAAsStringByGraphicColor(SGE.Shell.ErrorColor));
-    2..4: Result := 1;
+    2..4: Result := sgeCreateErrorString('CmdShellErrColor', Err_NotEnoughParameters);
     else SGE.Shell.ErrorColor := sgeGraphicColor_RGBAToColor(sgeGetRGBAFromParam(Cmd));
   end;
 end;
@@ -907,14 +929,12 @@ end;
   LogSave [FileName]
 Параметры:
   FileName - Имя файла
-Ошибки:
-  1 - Ошибка записи
 }
-function sge_ShellFunctions_Shell_LogSave(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_LogSave(Cmd: PStringArray): String;
 var
   fn: String;
 begin
-  Result := 0;
+  Result := '';
 
   //Опредлить имя файла
   fn := GetUserSaveFileName(Cmd^[1]);
@@ -923,7 +943,7 @@ begin
   try
     SGE.Shell.Journal.SaveToFile(fn);
   except
-    Result := 1;
+    Result := sgeCreateErrorString('CmdShellLogSave', Err_FileWriteError, fn);
   end;
 end;
 
@@ -935,18 +955,18 @@ end;
   LogLines <Number>
 Параметры:
   Number - Количество строк
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Shell_LogLines(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_LogLines(Cmd: PStringArray): String;
 var
   i: Integer;
 begin
-  Result := 0;
+  Result := '';
+
   if StringArray_Equal(Cmd, 2) then
     begin
     i := 0;
-    if not TryStrToInt(Cmd^[1], i) then Result := 1 else SGE.Shell.Journal.MaxLines := i;
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdShellLogLines', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+      else SGE.Shell.Journal.MaxLines := i;
     end else SGE.Shell.LogMessage('LogLines = ' + IntToStr(SGE.Shell.Journal.MaxLines));
 end;
 
@@ -958,30 +978,26 @@ end;
   VisLines <Number>
 Параметры:
   Number - Количество строк
-Ошибки:
-  1 - Графика не инициализирована
-  2 - Невозможно определить значение
 }
-function sge_ShellFunctions_Shell_VisLines(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_VisLines(Cmd: PStringArray): String;
 var
   i, ml: Integer;
 begin
-  Result := 0;
+  Result := '';
 
   if SGE.Graphic = nil then
     begin
-    Result := 1;
+    Result := sgeCreateErrorString('CmdShellVisLines', Err_GraphicNotInitialized);
     Exit;
     end;
 
   if StringArray_Equal(Cmd, 2) then
     begin
     i := 0;
-    if not TryStrToInt(Cmd^[1], i) then Result := 2 else
-      begin
-      ml := SGE.Window.ClientHeight div SGE.ShellFont.Height;
-      if i < 1 then i := 1;
-      if i > ml - 1 then i := ml - 1;
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdShellVisLines', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+      else begin
+      ml := sgeGetShellMaxVisibleLines(SGE.Window.ClientHeight, SGE.ShellFont.Height);
+      if i > ml then i := ml;
       SGE.Shell.VisibleLines := i;
       end;
     end else SGE.Shell.LogMessage('VisLines = ' + IntToStr(SGE.Shell.VisibleLines));
@@ -996,12 +1012,13 @@ end;
 Параметры:
   SprName - Имя спрайта в таблице ресурсов
 }
-function sge_ShellFunctions_Shell_BGSprite(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Shell_BGSprite(Cmd: PStringArray): String;
 var
   idx: Integer;
   s: String;
 begin
-  Result := 0;
+  Result := '';
+
   if StringArray_Equal(Cmd, 2) then
     begin
     SGE.Shell.BGSprite := TsgeGraphicSprite(SGE.Resources.TypedObj[Cmd^[1], rtGraphicSprite]);
@@ -1014,6 +1031,70 @@ begin
 end;
 
 
+{
+Описание:
+  Включить/выключить режим сканирования клавиш
+Синтаксис:
+  ScanMode <On/Off>
+Параметры:
+  On/Off - Включить/выключить
+}
+function sge_ShellFunctions_Shell_ScanMode(Cmd: PStringArray): String;
+begin
+  Result := '';
+
+  case sgeGetOnOffFromParam(Cmd) of
+    0: if SGE.Shell.ScanMode then SGE.Shell.LogMessage('ScanMode = On') else SGE.Shell.LogMessage('ScanMode = Off');
+    1: Result := sgeCreateErrorString('CmdShellScanMode', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
+    2: SGE.Shell.ScanMode := True;
+    3: SGE.Shell.ScanMode := False;
+  end;
+end;
+
+
+{
+Описание:
+  Установить размер страницы прокрутки для журнала
+Синтаксис:
+  LogPageSize <Number>
+Параметры:
+  Number - Количество строк
+}
+function sge_ShellFunctions_Shell_LogPageSize(Cmd: PStringArray): String;
+var
+  i: Integer;
+begin
+  Result := '';
+
+  if StringArray_Equal(Cmd, 2) then
+    begin
+    i := 1;
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdShellLogPageSize', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+      else begin
+      if i < 1 then i := 1;
+      SGE.Shell.JournalPageSize := i;
+      end;
+    end else SGE.Shell.LogMessage('LogPageSize = ' + IntToStr(SGE.Shell.JournalPageSize));
+end;
+
+
+{
+Описание:
+  Установить символ признака переменной
+Синтаксис:
+  SubstChar <Char>
+Параметры:
+  Char - Символ признака
+}
+function sge_ShellFunctions_Shell_SubstChar(Cmd: PStringArray): String;
+begin
+  Result := '';
+
+  if StringArray_Equal(Cmd, 2) then SGE.Shell.SubstChar := Cmd^[1]
+    else SGE.Shell.LogMessage('SubstChar = ' + SGE.Shell.SubstChar);
+end;
+
+
 
 
 
@@ -1023,9 +1104,10 @@ end;
 Синтаксис:
   FullScreen
 }
-function sge_ShellFunctions_Window_FullScreen(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Window_FullScreen(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   SGE.FullScreen;
 end;
 
@@ -1037,15 +1119,14 @@ end;
   LockCursor <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Window_LockCursor(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Window_LockCursor(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if SGE.Window.ClipCursor then SGE.Shell.LogMessage('LockCursor = On') else SGE.Shell.LogMessage('LockCursor = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdWindowLockCursor', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.Window.ClipCursor := True;
     3: SGE.Window.ClipCursor := False;
   end;
@@ -1059,15 +1140,14 @@ end;
   SysCursor <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Window_SysCursor(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Window_SysCursor(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if SGE.Window.ShowCursor then SGE.Shell.LogMessage('SysCursor = On') else SGE.Shell.LogMessage('SysCursor = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdWindowSysCursor', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.Window.ShowCursor := True;
     3: SGE.Window.ShowCursor := False;
   end;
@@ -1081,19 +1161,20 @@ end;
   Width <Number>
 Параметры:
   Number - Ширина в пикселях
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Window_Width(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Window_Width(Cmd: PStringArray): String;
 var
   i: Integer;
 begin
-  Result := 0;
+  Result := '';
+
   if StringArray_Equal(Cmd, 2) then
     begin
     i := 0;
-    if not TryStrToInt(Cmd^[1], i) then Result := 1 else SGE.Window.ClientWidth := i;
-    end else SGE.Shell.LogMessage('Width = ' + IntToStr(SGE.Window.ClientWidth));
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdWindowWidth', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+      else SGE.Window.ClientWidth := i;
+    end
+    else SGE.Shell.LogMessage('Width = ' + IntToStr(SGE.Window.ClientWidth));
 end;
 
 
@@ -1104,19 +1185,20 @@ end;
   Height <Number>
 Параметры:
   Number - Высота в пикселях
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Window_Height(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Window_Height(Cmd: PStringArray): String;
 var
   i: Integer;
 begin
-  Result := 0;
+  Result := '';
+
   if StringArray_Equal(Cmd, 2) then
     begin
     i := 0;
-    if not TryStrToInt(Cmd^[1], i) then Result := 1 else SGE.Window.ClientHeight := i;
-    end else SGE.Shell.LogMessage('Height = ' + IntToStr(SGE.Window.ClientHeight));
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdWindowHeigth', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+      else SGE.Window.ClientHeight := i;
+    end
+    else SGE.Shell.LogMessage('Height = ' + IntToStr(SGE.Window.ClientHeight));
 end;
 
 
@@ -1128,9 +1210,10 @@ end;
 Параметры:
   Str - Новый заголовок
 }
-function sge_ShellFunctions_Window_Caption(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Window_Caption(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   if StringArray_Equal(Cmd, 2) then SGE.Window.Caption := Cmd^[1] else
     SGE.Shell.LogMessage('Caption = ' + SGE.Window.Caption);
 end;
@@ -1143,15 +1226,14 @@ end;
   StayOnTop <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Window_StayOnTop(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Window_StayOnTop(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if wsTopMost in SGE.Window.Style then SGE.Shell.LogMessage('StayOnTop = On') else SGE.Shell.LogMessage('StayOnTop = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdWindowStayOnTop', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.Window.Style := SGE.Window.Style + [wsTopMost];
     3: SGE.Window.Style := SGE.Window.Style - [wsTopMost];
   end;
@@ -1165,28 +1247,33 @@ end;
 Описание:
   Сделать снимок экрана
 Синтаксис:
-  ScreenShot
-Ошибки:
-  1 - Графика не инициализирована
-  2 - Невозможно создать каталог
-  3 - Ошибка записи
+  ScreenShot <Name>
+Параметры:
+  Name - Имя файла
 }
-function sge_ShellFunctions_Graphic_ScreenShot(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Graphic_ScreenShot(Cmd: PStringArray): String;
+var
+  Name, Fn, Dir: String;
 begin
-  Result := 0;
+  Result := '';
+
+  //Подготовить имя
+  if StringArray_Equal(Cmd, 2) then Name := Cmd^[1] else Name := sgeGetUniqueFileName;
+  Fn := SGE.DirShots + Name + '.' + sge_ExtShots;
 
   //Проверить класс графики
   if SGE.Graphic = nil then
     begin
-    Result := 1;
+    Result := sgeCreateErrorString('CmdGraphicScreenShot', Err_GraphicNotInitialized, Fn);
     Exit;
     end;
 
   //Попробывать создать каталог
+  Dir := ExtractFilePath(Fn);
   try
-    ForceDirectories(SGE.DirShots)
+    ForceDirectories(Dir)
   except
-    Result := 2;
+    Result := sgeCreateErrorString('CmdGraphicScreenShot', Err_UnableToCreateDirectory, Dir);
     Exit;
   end;
 
@@ -1194,7 +1281,7 @@ begin
   try
     SGE.Graphic.ScreenShot(SGE.DirShots + sgeGetUniqueFileName + '.' + sge_ExtShots);
   except
-    Result := 3;
+    Result := sgeCreateErrorString('CmdGraphicScreenShot', Err_FileWriteError, Fn);
   end;
 end;
 
@@ -1206,18 +1293,18 @@ end;
   MaxFPS <Number>
 Параметры:
   Number - Количество строк
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Graphic_MaxFPS(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Graphic_MaxFPS(Cmd: PStringArray): String;
 var
   i: Integer;
 begin
-  Result := 0;
+  Result := '';
+
   if StringArray_Equal(Cmd, 2) then
     begin
     i := 0;
-    if not TryStrToInt(Cmd^[1], i) then Result := 1 else SGE.MaxFPS := i;
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdGraphicMaxFPS', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+      else SGE.MaxFPS := i;
     end else SGE.Shell.LogMessage('MaxFPS = ' + IntToStr(SGE.MaxFPS));
 end;
 
@@ -1229,30 +1316,26 @@ end;
   VSync <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Графика не инициализирована
-  2 - Невозможно определить значение
-  3 - Вертикальная синхронизация не поддерживается
 }
-function sge_ShellFunctions_Graphic_VSync(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Graphic_VSync(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
 
   if SGE.Graphic = nil then
     begin
-    Result := 1;
+    Result := sgeCreateErrorString('CmdGraphicVSync', Err_GraphicNotInitialized);
     Exit;
     end;
 
   try
     case sgeGetOnOffFromParam(Cmd) of
       0: if SGE.DrawControl = dcSync then SGE.Shell.LogMessage('VSync = On') else SGE.Shell.LogMessage('VSync = Off');
-      1: Result := 2;
+      1: Result := sgeCreateErrorString('CmdGraphicVSync', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
       2: SGE.DrawControl := dcSync;
       3: SGE.DrawControl := dcProgram;
     end;
   except
-    Result := 3;
+    Result := sgeCreateErrorString('CmdGraphicVSync', Err_VerticalSyncNotSupported);
   end;
 end;
 
@@ -1265,27 +1348,27 @@ end;
 Ошибки:
   1 - Графика не инициализирована
 }
-function sge_ShellFunctions_Graphic_Info(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Graphic_Info(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
 
   if SGE.Graphic = nil then
     begin
-    Result := 1;
+    Result := sgeCreateErrorString('CmdGraphicInfo', Err_GraphicNotInitialized);
     Exit;
     end;
 
   SGE.Shell.LogMessage('');
-  SGE.Shell.LogMessage('Graphic info:', sltNote);
-  SGE.Shell.LogMessage('Vendor:', sltNote);
+  SGE.Shell.LogMessageLocalized('GraphicInfo', ':');
+  SGE.Shell.LogMessageLocalized('Vendor', ':');
   SGE.Shell.LogMessage('  ' + SGE.Graphic.Info[giVendor]);
-  SGE.Shell.LogMessage('Renderer:', sltNote);
+  SGE.Shell.LogMessageLocalized('Renderer', ':');
   SGE.Shell.LogMessage('  ' + SGE.Graphic.Info[giRenderer]);
-  SGE.Shell.LogMessage('Version:', sltNote);
+  SGE.Shell.LogMessageLocalized('Version', ':');
   SGE.Shell.LogMessage('  ' + SGE.Graphic.Info[giVersion]);
-  SGE.Shell.LogMessage('Shader:', sltNote);
+  SGE.Shell.LogMessageLocalized('Shader', ':');
   SGE.Shell.LogMessage('  ' + SGE.Graphic.Info[giShading]);
-  SGE.Shell.LogMessage('End.', sltNote);
+  SGE.Shell.LogMessageLocalized('End');
 end;
 
 
@@ -1296,15 +1379,14 @@ end;
   Draw <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Graphic_Draw(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Graphic_Draw(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if SGE.DrawEnable then SGE.Shell.LogMessage('Draw = On') else SGE.Shell.LogMessage('Draw = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdGraphicDraw', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.DrawEnable := True;
     3: SGE.DrawEnable := False;
   end;
@@ -1322,10 +1404,8 @@ end;
 Параметры:
   Key - Название кнопки
   Command - Команда
-Ошибки:
-  1 - Не найдено имя клавиши
 }
-function sge_ShellFunctions_Attach_Attach(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Attach_Attach(Cmd: PStringArray): String;
 const
   ModeDown  = 0;
   ModeUp    = 1;
@@ -1336,7 +1416,7 @@ var
   sKey, sCmd: String;
   K: TsgeCommandKey;
 begin
-  Result := 0;
+  Result := '';
 
   //Подготовить переменные
   sKey := Cmd^[1];
@@ -1344,7 +1424,7 @@ begin
   //Проверить на пустую строку
   if sKey = '' then
     begin
-    Result := 1;
+    Result := sgeCreateErrorString('CmdAttachAttach', Err_KeyNameNotFound, sKey);
     Exit;
     end;
 
@@ -1368,7 +1448,7 @@ begin
   KeyIdx := SGE.Shell.KeyTable.IndexOf(sKey);
   if KeyIdx = -1 then
     begin
-    Result := 1;
+    Result := sgeCreateErrorString('CmdAttachAttach', Err_KeyNameNotFound, sKey);
     Exit;
     end;
 
@@ -1382,16 +1462,15 @@ begin
     sCmd := Trim(Cmd^[2]);
 
     //Привязать
-    if Length(sCmd) > 0 then
-      case Mode of
-        ModeDown : K.Down := sCmd;
-        ModeUp   : K.Up := sCmd;
-        ModeBouth:
-          begin
-          K.Down := sCmd;
-          K.Up := sCmd;
-          end;
-      end;
+    case Mode of
+      ModeDown : K.Down := sCmd;
+      ModeUp   : K.Up := sCmd;
+      ModeBouth:
+        begin
+        K.Down := sCmd;
+        K.Up := sCmd;
+        end;
+    end;
 
     //Изменить значение
     SGE.Shell.KeyTable.Key[KeyIdx] := K;
@@ -1405,9 +1484,10 @@ end;
 Синтаксис:
   AttachClear
 }
-function sge_ShellFunctions_Attach_Clear(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Attach_Clear(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   SGE.Shell.KeyTable.Clear;
 end;
 
@@ -1420,14 +1500,14 @@ end;
 Параметры:
   Mask - Подстрока для поиска
 }
-function sge_ShellFunctions_Attach_List(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Attach_List(Cmd: PStringArray): String;
 var
   i, Idx, Cnt: Integer;
   Mask, Name, D, U: String;
   isAdd: Boolean;
   sa: TStringArray;
 begin
-  Result := 0;
+  Result := '';
 
   //Подготовить маску
   if StringArray_Equal(Cmd, 2) then Mask := LowerCase(Cmd^[1]) else Mask := '';
@@ -1465,11 +1545,11 @@ begin
 
   //Вывод списка
   SGE.Shell.LogMessage('');
-  SGE.Shell.LogMessage('Attach list: ' + Mask, sltNote);
+  SGE.Shell.LogMessageLocalized('AttachList', ': ' + Mask);
   Cnt := StringArray_GetCount(@sa) - 1;
   for i := 0 to Cnt do
     SGE.Shell.LogMessage(sa[i]);
-  SGE.Shell.LogMessage('Count: ' + IntToStr(Cnt + 1), sltNote);
+  SGE.Shell.LogMessageLocalized('Count', ': ' + IntToStr(Cnt + 1));
 
   //Почистить память
   StringArray_Clear(@sa);
@@ -1483,16 +1563,14 @@ end;
   AttachSave [FileName]
 Параметры:
   FileName - Имя файла
-Ошибки:
-  1 - Ошибка записи
 }
-function sge_ShellFunctions_Attach_Save(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Attach_Save(Cmd: PStringArray): String;
 var
   sa: TStringArray;
   i: Integer;
   Name, s, fn: String;
 begin
-  Result := 0;
+  Result := '';
 
   //Подготовить имя файла
   fn := GetUserSaveFileName(Cmd^[1]);
@@ -1512,7 +1590,7 @@ begin
     end;
 
   //Сохранить в файл
-  if not StringArray_SaveToFile(@sa, fn) then Result := 1;
+  if not StringArray_SaveToFile(@sa, fn) then Result := sgeCreateErrorString('CmdAttachSave', Err_FileWriteError, fn);
 
   //Почистить память
   StringArray_Clear(@sa);
@@ -1527,20 +1605,20 @@ end;
 Параметры:
   Mask - Подстрока для поиска
 }
-function sge_ShellFunctions_Attach_KeyList(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Attach_KeyList(Cmd: PStringArray): String;
 var
   i, Idx, Cnt: Integer;
   Mask, cName: String;
   isAdd: Boolean;
 begin
-  Result := 0;
+  Result := '';
 
   //Подготовить маску
   if StringArray_Equal(Cmd, 2) then Mask := LowerCase(Cmd^[1]) else Mask := '';
 
   //Вывод шапки
   SGE.Shell.LogMessage('');
-  SGE.Shell.LogMessage('Key list: ' + Mask, sltNote);
+  SGE.Shell.LogMessageLocalized('KeyList', ': ' + Mask);
 
   //Перебор массива
   Cnt := 0;
@@ -1572,7 +1650,7 @@ begin
     end;
 
   //Вывод хвоста
-  SGE.Shell.LogMessage('Count: ' + IntToStr(Cnt), sltNote);
+  SGE.Shell.LogMessageLocalized('Count', ': ' + IntToStr(Cnt));
 end;
 
 
@@ -1586,15 +1664,14 @@ end;
   Joysticks <On/Off>
 Параметры:
   On/Off - Включить/выключить
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Joysticks_Joysticks(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Joysticks_Joysticks(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   case sgeGetOnOffFromParam(Cmd) of
     0: if SGE.JoysticksEnable then SGE.Shell.LogMessage('Joysticks = On') else SGE.Shell.LogMessage('Joysticks = Off');
-    1: Result := 1;
+    1: Result := sgeCreateErrorString('CmdJoysticksJoystics', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
     2: SGE.JoysticksEnable := True;
     3: SGE.JoysticksEnable := False;
   end;
@@ -1608,18 +1685,18 @@ end;
   JoyDelay <Number>
 Параметры:
   Number - Задержка
-Ошибки:
-  1 - Невозможно определить значение
 }
-function sge_ShellFunctions_Joysticks_Delay(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Joysticks_Delay(Cmd: PStringArray): String;
 var
   i: Integer;
 begin
-  Result := 0;
+  Result := '';
+
   if StringArray_Equal(Cmd, 2) then
     begin
     i := 1;
-    if not TryStrToInt(Cmd^[1], i) then Result := 1 else SGE.JoysticksDelay := i;
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdJoysticksDelay', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+      else SGE.JoysticksDelay := i;
     end else SGE.Shell.LogMessage('JoyDelay = ' + IntToStr(SGE.JoysticksDelay));
 end;
 
@@ -1634,16 +1711,14 @@ end;
   FontName <Name>
 Параметры:
  NewName - Имя шрифта
-Ошибки:
-  1 - Графика не инициализирована
 }
-function sge_ShellFunctions_Font_Name(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Font_Name(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
 
   if SGE.Graphic = nil then
     begin
-    Result := 1;
+    Result := sgeCreateErrorString('CmdFontName', Err_GraphicNotInitialized);
     Exit;
     end;
 
@@ -1661,26 +1736,23 @@ end;
   FontSize <Size>
 Параметры:
   Size - Размер
-Ошибки:
-  1 - Графика не инициализирована
-  2 - Невозможно определить значение
 }
-function sge_ShellFunctions_Font_Size(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Font_Size(Cmd: PStringArray): String;
 var
   i: Integer;
 begin
-  Result := 0;
+  Result := '';
 
   if SGE.Graphic = nil then
     begin
-    Result := 1;
+    Result := sgeCreateErrorString('CmdFontSize', Err_GraphicNotInitialized);
     Exit;
     end;
 
   if StringArray_Equal(Cmd, 2) then
     begin
     i := 0;
-    if not TryStrToInt(Cmd^[1], i) then Result := 2
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdFontSize', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
       else begin
       //Изменить высоту шрифта
       if i < 1 then i := 1;
@@ -1701,19 +1773,17 @@ end;
   FontAttrib <[]/B/I/U/S>
 Параметры:
   []/B/I/U/S - Атрибуты шрифта
-Ошибки:
-  1 - Графика не инициализирована
 }
-function sge_ShellFunctions_Font_Attrib(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Font_Attrib(Cmd: PStringArray): String;
 var
   fa: TsgeGraphicFontAttrib;
   s: String;
 begin
-  Result := 0;
+  Result := '';
 
   if SGE.Graphic = nil then
     begin
-    Result := 1;
+    Result := sgeCreateErrorString('CmdFontAttrib', Err_GraphicNotInitialized);
     Exit;
     end;
 
@@ -1749,9 +1819,10 @@ end;
 Синтаксис:
   ParamClear
 }
-function sge_ShellFunctions_Parameters_Clear(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Parameters_Clear(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
+
   SGE.Parameters.Clear;
 end;
 
@@ -1764,20 +1835,20 @@ end;
 Параметры:
   Mask - Подстрока для поиска
 }
-function sge_ShellFunctions_Parameters_List(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Parameters_List(Cmd: PStringArray): String;
 var
   i, c, Idx, Cnt: Integer;
   Mask, cName: String;
   isAdd: Boolean;
 begin
-  Result := 0;
+  Result := '';
 
   //Подготовить маску
   if StringArray_Equal(Cmd, 2) then Mask := LowerCase(Cmd^[1]) else Mask := '';
 
   //Вывод шапки
   SGE.Shell.LogMessage('');
-  SGE.Shell.LogMessage('Parameter list: ' + Mask, sltNote);
+  SGE.Shell.LogMessageLocalized('ParameterList', ': ' + Mask);
 
   //Перебор массива
   Cnt := 0;
@@ -1807,7 +1878,7 @@ begin
     end;
 
   //Вывод хвоста
-  SGE.Shell.LogMessage('Count: ' + IntToStr(Cnt), sltNote);
+  SGE.Shell.LogMessageLocalized('Count', ': ' + IntToStr(Cnt));
 end;
 
 
@@ -1822,12 +1893,12 @@ end;
 Дополнительно:
   Параметр добавляется при отсутствии в массиве
 }
-function sge_ShellFunctions_Parameters_Set(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Parameters_Set(Cmd: PStringArray): String;
 var
   Idx: Integer;
   Name, Value: String;
 begin
-  Result := 0;
+  Result := '';
 
   //Подготовить имя и значение
   Name := Cmd^[1];
@@ -1852,14 +1923,12 @@ end;
   ParamDel [Name]
 Параметры:
   Name  - Имя параметра
-Ошибки:
-  1 - Параметр не найден
 }
-function sge_ShellFunctions_Parameters_Delete(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Parameters_Delete(Cmd: PStringArray): String;
 begin
-  Result := 0;
+  Result := '';
 
-  if not SGE.Parameters.Delete(Cmd^[1]) then Result := 1;
+  if not SGE.Parameters.Delete(Cmd^[1]) then Result := sgeCreateErrorString('CmdParametersDelete', Err_ParameterNotFound, Cmd^[1]);
 end;
 
 
@@ -1871,10 +1940,8 @@ end;
 Параметры:
   FileName - Имя файла
   U/A      - Модификаторы ("U" Обновить, "A" Обновить и добавить)
-Ошибки:
-  1 - Ошибка записи
 }
-function sge_ShellFunctions_Parameters_Save(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Parameters_Save(Cmd: PStringArray): String;
 const
   mSave = 0;
   mUpdate = 1;
@@ -1883,7 +1950,7 @@ var
   fn, s: String;
   Mode: Byte;
 begin
-  Result := 0;
+  Result := '';
 
   //Определить имя файла
   fn := GetUserSaveFileName(Cmd^[1]);
@@ -1905,7 +1972,7 @@ begin
       mUpdateAdd: SGE.Parameters.UpdateInFile(fn, True);
     end;
   except
-    Result := 2;
+    Result := sgeCreateErrorString('CmdParametersSave', Err_FileWriteError, fn);
   end;
 end;
 
@@ -1918,11 +1985,8 @@ end;
 Параметры:
   FileName - Имя файла
   U/A      - Модификаторы ("U" Обновить, "A" Обновить и добавить)
-Ошибки:
-  1 - Файл не найден
-  2 - Ошибка чтения
 }
-function sge_ShellFunctions_Parameters_Load(Cmd: PStringArray): Integer;
+function sge_ShellFunctions_Parameters_Load(Cmd: PStringArray): String;
 const
   mLoad = 0;
   mUpdate = 1;
@@ -1931,17 +1995,10 @@ var
   fn, s: String;
   Mode: Byte;
 begin
-  Result := 0;
+  Result := '';
 
   //Определить имя файла
   fn := GetUserLoadFileName(Cmd^[1]);
-
-  //Проверить имя файла
-  if fn = '' then
-    begin
-    Result := 1;
-    Exit;
-    end;
 
   //Определить режим
   Mode := mLoad;
@@ -1960,7 +2017,7 @@ begin
       mUpdateAdd: SGE.Parameters.UpdateFromFile(fn, True);
     end;
   except
-    Result := 2;
+    Result := sgeCreateErrorString('CmdParametersLoad', Err_FileReadError, fn);;
   end;
 end;
 
@@ -1985,7 +2042,7 @@ begin
   with SGE.Shell.Commands do
     begin
     //Системные
-    {Add('System', 'Name', @sge_ShellFunctions_System_Name, 0);
+    Add('System', 'Name', @sge_ShellFunctions_System_Name, 0);
     Add('System', 'Stop', @sge_ShellFunctions_System_Stop, 0);
     Add('System', 'Close', @sge_ShellFunctions_System_Stop, 0);
     Add('System', 'Quit', @sge_ShellFunctions_System_Stop, 0);
@@ -2003,11 +2060,13 @@ begin
     Add('System', 'Tick', @sge_ShellFunctions_System_Tick, 0);
     Add('System', 'TickDelay', @sge_ShellFunctions_System_TickDelay, 0);
     Add('System', 'StartParams', @sge_ShellFunctions_System_StartParams, 0);
+    Add('System', 'LoadLanguage', @sge_ShellFunctions_System_LoadLanguage, 1);
 
     //Команды
     Add('Command', 'CmdList', @sge_ShellFunctions_Command_List, 0);
     Add('Command', 'CmdSave', @sge_ShellFunctions_Command_Save, 1);
     Add('Command', 'CmdLoad', @sge_ShellFunctions_Command_Load, 1);
+    Add('Command', 'CmdLines', @sge_ShellFunctions_Command_Lines, 0);
 
     //Наборы
     Add('Set', 'Set', @sge_ShellFunctions_Set_Set, 1);
@@ -2032,6 +2091,9 @@ begin
     Add('Shell', 'LogLines', @sge_ShellFunctions_Shell_LogLines, 0);
     Add('Shell', 'VisLines', @sge_ShellFunctions_Shell_VisLines, 0);
     Add('Shell', 'BGSprite', @sge_ShellFunctions_Shell_BGSprite, 0);
+    Add('Shell', 'ScanMode', @sge_ShellFunctions_Shell_ScanMode, 0);
+    Add('Shell', 'LogPageSize', @sge_ShellFunctions_Shell_LogPageSize, 0);
+    Add('Shell', 'SubstChar', @sge_ShellFunctions_Shell_SubstChar, 0);
 
     //Окно
     Add('Window', 'FullScreen', @sge_ShellFunctions_Window_FullScreen, 0);
@@ -2071,7 +2133,7 @@ begin
     Add('Parameters', 'ParamSet', @sge_ShellFunctions_Parameters_Set, 1);
     Add('Parameters', 'ParamDel', @sge_ShellFunctions_Parameters_Delete, 1);
     Add('Parameters', 'ParamSave', @sge_ShellFunctions_Parameters_Save, 1);
-    Add('Parameters', 'ParamLoad', @sge_ShellFunctions_Parameters_Load, 1);}
+    Add('Parameters', 'ParamLoad', @sge_ShellFunctions_Parameters_Load, 1);
     end;
 end;
 

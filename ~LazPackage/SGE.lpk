@@ -3,7 +3,7 @@
   <Package Version="4">
     <PathDelim Value="\"/>
     <Name Value="SGE"/>
-    <Type Value="RunAndDesignTime"/>
+    <Type Value="RunTimeOnly"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -12,7 +12,7 @@
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
-    <Version Major="1" Minor="18"/>
+    <Version Major="1" Minor="19"/>
     <Files Count="44">
       <Item1>
         <Filename Value="..\Source\SimpleTools\ComplexContainers.pas"/>
