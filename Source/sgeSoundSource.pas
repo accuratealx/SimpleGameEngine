@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeSoundSource.pas
-Версия            1.1
+Версия            1.2
 Создан            12.08.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Источник звука
@@ -92,6 +92,10 @@ type
 
 
 implementation
+
+
+const
+  _UNITNAME = 'sgeSoundSource';
 
 
 procedure TsgeSoundSource.SetGain(AGain: Single);
@@ -278,7 +282,7 @@ constructor TsgeSoundSource.Create;
 begin
   //Проверить указатель на функцию
   if not Assigned(alGenSources) then
-    raise EsgeException.Create(Err_sgeSoundSource + Err_Separator + Err_sgeSoundSource_SoundNotInitialized);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_SoundNotInitialized));
 
   //Обнулить ошибки
   alGetError;
@@ -286,9 +290,9 @@ begin
   //Запросить буфер
   alGenSources(1, @FHandle);
   case alGetError() of
-    AL_INVALID_VALUE    : raise EsgeException.Create(Err_sgeSoundSource + Err_Separator + Err_sgeSoundSource_ReachedTheLimitOfSources);
-    AL_OUT_OF_MEMORY    : raise EsgeException.Create(Err_sgeSoundSource + Err_Separator + Err_sgeSoundSource_OutOfMemory);
-    AL_INVALID_OPERATION: raise EsgeException.Create(Err_sgeSoundSource + Err_Separator + Err_sgeSoundSource_ThereIsNoContextForCreatingTheSource);
+    AL_INVALID_VALUE    : raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_ReachedSourceLimit));
+    AL_OUT_OF_MEMORY    : raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_OutOfMemory));
+    AL_INVALID_OPERATION: raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_MissingContext));
   end;
 
   //Прочитать текущие координаты

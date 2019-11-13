@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeSystemCursor.pas
-Версия            1.4
+Версия            1.5
 Создан            14.06.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс системного сурсора *.cur, *.ani для формы
@@ -49,6 +49,9 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeSystemCursor';
+
 
 procedure TsgeSystemCursor.DeleteCursor;
 begin
@@ -90,7 +93,7 @@ var
 begin
   H := LoadCursorFromFile(PChar(FileName));
   if H = 0 then
-    raise EsgeException.Create(Err_sgeSystemCursor + Err_Separator + Err_sgeSystemCursor_CantLoadCursorFromFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileReadError, FileName));
 
   DeleteCursor;
   FHandle := H;
@@ -102,7 +105,7 @@ var
 begin
   H := LoadCursor(HINSTANCE, PChar(Name));
   if H = 0 then
-    raise EsgeException.Create(Err_sgeSystemCursor + Err_Separator + Err_sgeSystemCursor_CantLoadCursorFromHinstance + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantLoadFromHinstance, Name));
 
   DeleteCursor;
   FHandle := H;

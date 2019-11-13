@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeSystemFont.pas
-Версия            1.0
+Версия            1.1
 Создан            05.05.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс добавления шрифта из файла в папку Windows\Fonts на время работы программы
@@ -41,7 +41,10 @@ implementation
 
 
 const
+  _UNITNAME = 'sgeSystemFont';
+
   FR_PRIVATE = 16;
+
 
 
 function AddFontResourceEx(lpszFilename: LPCTSTR; fl: DWORD; pdv: PVOID): LongInt; external gdi32 name 'AddFontResourceExA';
@@ -53,7 +56,7 @@ function RemoveFontResourceEx(lpFileName: LPCTSTR; fl: DWORD; pdv: PVOID): LongB
 procedure TsgeSystemFont.LoadFont(FileName: String);
 begin
   if AddFontResourceEx(PChar(FileName), FR_PRIVATE, nil) = 0 then
-    raise EsgeException.Create(Err_sgeSystemFont + Err_Separator + Err_sgeSystemFont_CantAddFontToSystem + Err_Separator + FFileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantAddFontToSystem, FileName));
 end;
 
 

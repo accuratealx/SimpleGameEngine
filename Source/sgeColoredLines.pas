@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeColoredLines.pas
-Версия            1.1
+Версия            1.2
 Создан            09.12.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Массив цветных линий
@@ -58,6 +58,11 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeColoredLines';
+
+
+
 function TsgeColoredLines.GetCount: Integer;
 begin
   Result := Length(FLines);
@@ -70,7 +75,7 @@ var
 begin
   c := GetCount - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeColoredLines + Err_Separator + Err_sgeColoredLines_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   FLines[Index] := ALine;
 end;
@@ -82,7 +87,7 @@ var
 begin
   c := GetCount - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeColoredLines + Err_Separator + Err_sgeColoredLines_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   Result := FLines[Index];
 end;
@@ -142,7 +147,7 @@ var
 begin
   c := GetCount - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeColoredLines + Err_Separator + Err_sgeColoredLines_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   for i := Index to c - 1 do
     FLines[i] := FLines[i + 1];
@@ -157,7 +162,7 @@ var
 begin
   c := GetCount - 1;
   if (Index < 0) or (Index > c) then
-    raise EsgeException.Create(Err_sgeColoredLines + Err_Separator + Err_sgeColoredLines_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   SetLength(FLines, c + 1);
   for i := c downto Index + 1 do
@@ -179,7 +184,7 @@ begin
   if not StringArray_SaveToFile(@sa, FileName) then
     begin
     StringArray_Clear(@sa);
-    raise EsgeException.Create(Err_sgeColoredLines + Err_Separator + Err_sgeColoredLines_CantSaveToFile + Err_Separator + FileName);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_FileWriteError, FileName));
     end;
 
   StringArray_Clear(@sa);

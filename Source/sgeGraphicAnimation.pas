@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeGraphicAnimation.pas
-Версия            1.1
+Версия            1.2
 Создан            01.11.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс анимации
@@ -64,6 +64,10 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeGraphicAnimation';
+
+
 procedure TsgeGraphicAnimation.PreCreate;
 begin
   FNeedFreeFrames := False;
@@ -106,7 +110,7 @@ end;
 procedure TsgeGraphicAnimation.SetCurrentFrameIndex(AIndex: Cardinal);
 begin
   if AIndex > FFrames.Count - 1 then
-    raise EsgeException.Create(Err_sgeGraphicAnimation + Err_Separator + Err_sgeGraphicAnimation_IndexOutOfBounds + Err_Separator + IntToStr(AIndex));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(AIndex)));
 
   FCurrentFrameIndex := AIndex;
 end;
@@ -165,16 +169,22 @@ end;
 
 procedure TsgeGraphicAnimation.LoadFromFile(FileName: String; Resources: TsgeResources);
 begin
-  if FNeedFreeFrames then
-    begin
-    FFrames.LoadFromFile(FileName, Resources);
-    Reset;
-    end else
-    begin
-    FNeedFreeFrames := True;
-    FFrames := TsgeGraphicFrames.Create(FileName, Resources);
-    Reset;
-    end;
+  try
+    if FNeedFreeFrames then
+      begin
+      FFrames.LoadFromFile(FileName, Resources);
+      Reset;
+      end else
+      begin
+      FNeedFreeFrames := True;
+      FFrames := TsgeGraphicFrames.Create(FileName, Resources);
+      Reset;
+      end;
+
+  except
+    on E: EsgeException do
+      raise EsgeException.Create(sgeFoldErrorString(sgeCreateErrorString(_UNITNAME, Err_FileReadError, FileName), E.Message));
+  end;
 end;
 
 

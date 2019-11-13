@@ -1,295 +1,466 @@
-Версия 1.18
+Р’РµСЂСЃРёСЏ 1.19
 
-В классе TSimpleGameEngine в конструкторе добавлен метод Randomize и DecimalSeparator
-В классе TSimpleGameEngine доработана функция SetJoystickEnable (Сканирование после активации таймерного события)
-В классе TsgeJoysticks удалён конструктор (Теперь при создании класса не происходит сканирования устройств)
-В классе TSimpleGameEngine добавлена виртуальная функция CloseWindow (Перехват закрытия окна)
-В классе TSimpleGameEngine в функции WndProc добавлена реакция на WM_CLOSE
-В классе TSimpleGameEngine доработана функции DrawShell (Пользовательские настройки графики больше не влияют на отображение оболочки)
-В модуле sgeTypes доработана функция sgeGetOnOffFromParam (добавлен анализ на 1, 0, Yes, No, True, False, Enable, Disable)
-В классе TsgeGraphic добавлена функция DrawCircle (Реализация через SinCos, пока оставлю так, до лучшего решения)
-В классе TsgeStartParameters переписана функция GetNormalParamString (Неправильно обрезала первый параметр)
-В классе TsgeStartParameters добавлено свойство ParamSeparator (Разделитель между параметрами)
-В классе TsgeStartParameters добавлено свойство ValueSeparator (Разделитель между именем параметра и значением)
-В классе SimpleGameEngine исправлена функция LoadResourcesFromTable (Непарвильно определялось количество тайлов спрайта при отсутствии значений в таблице)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_StartParam_List (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Parameters_Clear (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Parameters_List (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Parameters_Set (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Parameters_Delete (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Parameters_Save (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Parameters_Load (Команда оболочки)
-В модуле sgeShellFunctions исправлена функция sge_ShellFunctions_Shell_VisLines (Падала при отрицательных значениях)
-В модуле SimpleGameEngine Исправлена функция WndProc (Убрано изменение VisLines при изменении размеров окна. Неправильное поведение при сворачивании, нужно подумать как обойти)
-В модуле sgeShellFunctions исправлены функции которые создавали файлы на диске (Теперь можно указывать полный путь. Ранее всегда сохранялось в каталог пользователя)
-В модуле sgeGraphicColors добавлена константа GC_Transparent (Прозрачный цвет)
-В классе TsgeGraphic исправлена функция GetTextureRect (Неправильно определялась координата Y2, синтаксическая ошибка)
-В классе TsgeShellCommands доработана процедура Add (Добавлена проверка на существоание команды)
-В классе TsgeResources добавлена функция IndexOf (Поиск индекса объекта по его указателю)
-В классе TSimpleGameEngine добавлено свойство FOneSecondFrequency (Количество такстов процессора в 1 секунду)
-В классе TSimpleGameEngine исправлена процедура ProcessMessage (Невозможно было определить из wparam какая клавиша мыши отпускалась)
-В классе TSimpleGameEngine добавлена процедура LoadResourcesFromTable (Добавлена проверка на совпадение имени)
-В классе TSimpleGameEngine добавлена процедура CorrectViewport (Изменение области вывода графики)
-В классе TSimpleGameEngine добавлена реакция окна на изменение размеров и перемещения (Теперь при движении окна или изменении размеров происходит перерисовка)
-В классе TSimpleGameEngine добавлена процедура ResizingWindow (Вызывается в процессе изменения размеров окна)
-В классе TsgeShell добавлено свойство BGSprite (Фоновая картинка)
-В классе TSimpleGameEngine доработана процедура DrawShell (Добавлен вывод фоновой картинки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_BGSprite
-В классе TsgeLineEditor исправлена функция ProcessKey (При вставке из буфера обмена не удалялся выделенный текст)
-В классе TsgeShell переписана функция GetMatchList (Теперь возвращается список команд и наборов в виде TStringArray)
-В классе TsgeShell добавлено свойство SortMatchList
-В классе TsgeShell доработана функция ProcessKey (Теперь Ctrl+TAB выводит список подходящих команд в оболочку)
-В классе TsgeShell доработана функция ProcessKey (При нажатии TAB или Shift+TAB происходит поочерёдный вывод совпавших команд в строку редактора. Если в команде есть обязательные параметры, то в строку редактора добавляется пробел)
-В модуле sgeShellFunctions функция sge_ShellFunctions_StartParam_List переименована в sge_ShellFunctions_System_StartParams
-В модуле sgeTypes доработана функция sgeGetRGBAFromParam (Теперь можно указать стартовый индекс первой доли цвета)
-В классе TsgeShell доработана функция DoCommand (Теперь в оболочку не выводится код ошибки если есть строка с описанием в файле языка)
-Модуль sgeGraphicColors переименован в sgeGraphicColor
-В модуле StringArray исправлена процедура StringArray_Sort (Исправлено падение при обратной сортировке, когда элементов меньше двух)
-В классе TSimpleGameEngine добавлено свойство AutoScanJoysticks (Автосканирование джойстиков при подключении)
-В классе TsgeWindow добавлен стиль wsDoubleClick
-В классе TsgeWindow в методе ChangeWindowStyle добавлен код учитывающий двойной клик на окне
-Добавлен модуль sgeFade
-В модуль sgeFade добавлен класс TsgeFade (Помощник затемнения)
-В классе TSimpleGameEngine добавлена процедура DrawFade (Вывод затемнения)
-В классе TSimpleGameEngine добавлена процедура FadeStart
-В классе TSimpleGameEngine добавлена процедура FadeStop
-Добавлен файл SGE.lpk (Теперь можно движок подключать к проекту в виде пакета)
-Мелкие исправления по коду не влияющие на смысл
-
-
-
-
-
-Версия 1.17
-
-Проведена реорганизация папок проекта
-В классе TsgeWindow изменён тип TsgeWindowState на TsgeWindowViewMode и связанный код
-В классе TsgeWindow удалено свойство Parent и связанный код
-В модуле sgeTypes перименован тип TsgeKeyboardButtonsSet в TsgeKeyboardButtons
-В модуле TSimpleGameEngine переименован тип TsgeMouseButtonsSet в TsgeMouseButtons
-В классе TSimpleGameEngine в методе RegisterShellCommands добавлена регистрация функции sge_ShellFunctions_Shell_ErrColor
-В классе TSimpleGameEngine добавлено свойство UserName
-В классе TSimpleGameEngine свойство KeyTable перенесено в класс TsgeShell и связанный код
-В классе TsgeShell добавлено свойство StrictSearch - Строгий поиск совпадений от начала
-В классе TsgeShell добавлено свойство SetsSearch - Искать совпадения в наборах по TAB
-В классе TsgeShell функция GetSuitableCommands заменена на GetMatchList
-В классе TsgeShell в методе ProcessKey исправлен вывод по TAB
-В классе TSimpleGameEngine добавлена функция ProcessMouseDownCommand
-В классе TSimpleGameEngine добавлена функция ProcessMouseUpCommand
-В классе TSimpleGameEngine добавлена функция ProcessMouseScrollCommand
-В классе TSimpleGameEngine в методе ProcessMessage реализовано выполнение команд привязанных к мыше
-В модуле sgeShellFunctions переписана функция sge_ShellFunctions_System_CmdList (Команда оболочки)
-В модуле sgeShellFunctions переписана функция sge_ShellFunctions_Sets_List (Команда оболочки)
-В модуле sgeShellFunctions переписана функция sge_ShellFunctions_Keys_AttachList (Команда оболочки)
-В модуле sgeShellFunctions переписана функция sge_ShellFunctions_Keys_List (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_System_Name (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_StrictSearch (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_SetsSearch (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Sets_Save (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Keys_AttachSave (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Window_Width (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Window_Height (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Window_Caption (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Window_StayOnTop (Команда оболочки)
-В модуле sgeShellFunctions функция sge_ShellFunctions_System_CmdList перименована в sge_ShellFunctions_Command_List
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Command_Save (Команда оболочки)
-В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Command_Load (Команда оболочки)
-В модуле sgeSound добавлена поддержка 32 битной библиотеки OpenAL
-В Классе sgeWindow в функции ChangeWindowStyle исправлено создание стиля (при убирании заголовка окна Camtasia переставала снимать окно из-за стиля WS_POPUP)
-В классе TSimpleGameEngine в процедуре ProcessError предусмотрен вывод многострочных ошибок
-В классе TSimpleGameEngine функции исправлены на вывод многострочных ошибок
-В классе TsgeGraphic переделано свойство RenderBuffer, обращения к драйверу заменено на обращение к полю класса. (Была нагрузка 100% на одно ядро)
-В классе TsgeGraphicSprite добавлено 2 свойства GLPixelWidth и GLPixelHeight (Размер одного пикселя в OpenGL)
-в классе TsgeGraphic функция DrawWinText переименована в DrawText
-в классе TsgeGraphic добавлена функция DrawTextWithLineBreaks (Вывод многострочного текста)
-В классе TsgeGraphic полностью преписаны методы вывода спрайтов, плиток, анимации и т.д.
-В классе TSimpleGameEngine в процедуре LoadResourcesFromTable добавлен параметр Mode (Режим загрузки ресурсов)
-Добавлен модуль sgeJoystick
-В модуль sgeJoystick добавлен класс TsgeJoystick (Работа с джойстиком)
-Добавлен модуль sgeJoysticks
-В модуль sgeJoysticks добавлен класс TsgeJoysticks (Хранилище подключённых джойстиков)
-В классе TSimpleGameEngine добавлена процедура FullScreen
-В классе TSimpleGameEngine добавлена поддержка джойстиков
-В классе TSimpleGameEngine добавлено свойство JoysticksDelay
-В классе TSimpleGameEngine добавлено свойство JoysticksEnable
-В классе TSimpleGameEngine добавлено процедура JoystickScan (Вызов после сканирования джойстиков)
-В классе TSimpleGameEngine добавлено процедура JoystickInput (Вызов после опроса состояния кнопок и осей)
-В классе TSimpleGameEngine добавлено свойство CursorPos (Координаты курсора над формой)
-В классе TsgeEvent добавлено свойство MinPeriod
-В классе TsgeEvent добавлено свойство MaxPeriod
-В классе TsgeEvent доработан механизм проверки правильного диапазона
-В классе TsgeGraphicFont добавлена проверка на размер шрифта (не может быть меньше 1)
-В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_VisLines (Проверка на наличие класса графика)
-В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Graphic_ScreenShot (Проверка на наличие класса графика)
-В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Graphic_VSync (Проверка на наличие класса графика)
-В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Graphic_Info (Проверка на наличие класса графика)
-В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_Write (Вывод всех частей)
-В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_Writeс (Вывод всех частей)
-В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Command_List (Добавлен вывод описания функций)
-В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Sets_List (Добавлен вывод значений набора)
-В модуле sgeShellFunctions переписана функция sge_ShellFunctions_Attach_KeyList
-Перенесена функция RegisterShellCommand из класса TSimpleGameEngine в модуль sgeShellFunctions c именем sgeShellFunctions_RegisterCommand (Красивее код)
-Мелкие исправления по коду не влияющие на смысл
-
-
-
-
-
-Версия 1.16
-
-В классе TSimpleGameEngine в процедуре InitGraphic изменён создаваемый шрифт на моноширный "Courier New"
-Добавлен модуль sgeLineEditor
-В модуль sgeLineEditor добавлен класс TsgeLineEditor (Однострочный редактор текста)
-Добавлен модуль sgeCommandHistory
-В модуль sgeCommandHistory добавлен класс TsgeCommandHistory (История введённых комманд)
-Добавлен модуль sgeColoredLines
-В модуле sgeColoredLines добавлен класс TsgeColoredLines (цветные строки для журнала оболочки)
-Добавлен модуль sgeShellCommands
-В модуль sgeShellCommands добавлен класс TsgeShellCommands (Массив команд оболочки)
-В Классе TSimpleGameEngine добавлено свойство AutoEraseBackground (Автоочистка экрана перед рисованием)
-В Классе TsgeColoredLines добавлено свойство MaxLines
-Добавлен модуль sgeShell
-В модуль sgeShell добавлен класс TsgeShell (оболочка ввода команд)
-Добавлен модуль sgeShellFunctions
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_System_Stop (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_System_Version (Вывод версии движка)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Sets_Set (Установка/удаление набора)
-В классе TsgeGraphic добавлено свойство VerticalSync
-В Классе TSimpleGameEngine удалено поле FDefGraphicAnimation
-В Классе TSimpleGameEngine удалена функция GetAnimation
-В Классе TSimpleGameEngine удалено свойстао DefGraphicAnimation
-В Классе TSimpleGameEngine в методе LoadResourceFromTable удалена возможность загружить анимации
-В модуль sgeTypes добавлена функция sgeGetOnOffFromParam (Определение On/Off)
-В модуль sgeTypes добавлена функция sgeGetRGBAFromParam (Возврат TsgeRGBA из строки)
-В модуль sgeTypes добавлена функция sgeGetRGBAAsStringByGraphicColor(Возврат строки "R G B A" из цвета)
-В Классе TSimpleGameEngine в методе ProcessMessage изменён способ выборки сообщений (Происходит обработка всей очереди)
-Добавлен модуль sgeKeyTable
-В модуль sgeKeyTable добавлен класс TsgeKeyTable (Массив команд на клавишах клавиатуры)
-В Классе TSimpleGameEngine в процедуре ProcessMessage добавлен обработчик команд на клавишах
-В классе TsgeShell добавлена функция GetSuitableCommands (Поиск подходящих команд)
-В классе TsgeShell в функции ProcessKey Добавлена обработка клавиши TAB (Вывод подходящих команд)
-В классе TsgeShellCommands добавлена процедура Sort (Для красоты)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_System_Run (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_System_Write (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_System_Writec (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_System_CmdList (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_System_Help (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_System_Debug (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Sets_Set (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Sets_Clear (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Sets_List (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_Clear (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_Shell (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_LogErrors (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_BGColor (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_EditColor (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_CurColor (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_SelColor (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_TextColor (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_NoteColor (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_ErrColor (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_LogSave (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_LogLines (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_VisLines (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Window_FullScreen (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Window_LockCursor (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Graphic_ScreenShot (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Graphic_MaxFPS (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Graphic_VSync (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Graphic_Info (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Keys_Attach (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Keys_AttachClear (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Keys_AttachList (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Keys_List (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Window_SysCursor (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_Graphic_Draw (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_System_Tick (Команда оболочки)
-В модуль sgeShellFunctions добавлена функция sge_ShellFunctions_System_TickDelay (Команда оболочки)
-В Классе TSimpleGameEngine добавлена процедура SetMouseTrackEvent (Запуск отслеживания нестандартных событий мыши)
-В Классе TSimpleGameEngine добавлен виртуальный метод MouseLeave (Уход мыши из клиентской области)
-В Классе TSimpleGameEngine добавлен виртуальный метод MouseReturn (Возврат мыши на клиентскую область)
-В Классе TsgeGraphic в свойстве Capabilities добавлена константа gcScissor
-В Классе TsgeGraphic добавлена процедура SetScissor
+Р”РѕСЂР°Р±РѕС‚Р°РЅ РјРµС…Р°РЅРёР·Рј С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ СЃС‚СЂРѕРє РёСЃРєР»СЋС‡РµРЅРёР№
+РР·РјРµРЅС‘РЅ С„РѕСЂРјР°С‚ С„Р°Р№Р»Р° СЏР·С‹РєР° (Р’РјРµСЃС‚Рѕ РґРІСѓС… (РЎРёСЃС‚РµРјР° Рё РћР±РѕР»РѕС‡РєР°), С‚РµРїРµСЂСЊ РѕРґРёРЅ РѕР±С‰РёР№)
+РЎРѕР·РґР°РЅ С„Р°Р№Р» Russian.Language СЃ СѓС‡С‘С‚РѕРј РёР·РјРµРЅРµРЅРёР№
+Р’ РјРѕРґСѓР»Рµ sgeConst СѓРґР°Р»РµРЅС‹ РЅРµРїСЂР°РІРёР»СЊРЅС‹Рµ РєРѕРЅСЃС‚Р°РЅС‚С‹ Рё РґРѕР±Р°РІР»РµРЅС‹ РїСЂР°РІРёР»СЊРЅС‹Рµ
+Р’ РјРѕРґСѓР»Рµ sgeTypes СѓРґР°Р»РµРЅР° С„СѓРЅРєС†РёСЏ sgeGetErrorCodeByString (РЈСЃС‚Р°СЂРµР»Р°)
+Р’ РјРѕРґСѓР»Рµ sgeTypes РёСЃРїСЂР°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeDecodeErrorString
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeCreateErrorString (РЎРѕР·РґР°РЅРёРµ СЃС‚СЂРѕРєРё РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeFoldErrorString (РЎРєР»РµРёС‚СЊ РґРІРµ СЃС‚СЂРѕРєРё СЃ РѕС€РёР±РєРѕР№)
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeGetShellMaxVisibleLines
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeGetMouseButtonIdx (РћРїСЂРµРґРµР»РёС‚СЊ РЅРѕРјРµСЂ РєРЅРѕРїРєРё РёР· РјРЅРѕР¶РµСЃС‚РІР°)
+Р’ РєР»Р°СЃСЃРµ TsgeColoredLines РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ sgeCommandHistory РґРѕР±Р°РІР»РµРЅ РјРµС‚РѕРґ GetCount
+Р’ РєР»Р°СЃСЃРµ sgeCommandHistory РґРѕР±Р°РІР»РµРЅ РјРµС‚РѕРґ MaxLines
+Р’ РєР»Р°СЃСЃРµ TsgeCommandHistory РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeGraphicFont РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeGraphicSprite РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeResources РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeGraphicFrames РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeGraphicAnimation РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ sgeGraphicAnimation РґРѕСЂР°Р±РѕС‚Р°РЅР° РїСЂРѕС†РµРґСѓСЂР° LoadFromFile (Р”РѕР±Р°РІР»РµРЅ РІС‹Р·РѕРІ РёСЃРєР»СЋС‡РµРЅРёСЏ)
+Р’ РєР»Р°СЃСЃРµ TsgeGraphic РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ sgeGraphic СѓРґР°Р»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° DrawTextWithLineBreaks ()
+Р’ РєР»Р°СЃСЃРµ TsgeJoystick РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeKeyTable РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ sgeParameters РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ sgeParameters РґРѕР±Р°РІР»РµРЅ РјРµС‚РѕРґ Substitute (РџРѕРґСЃС‚Р°РЅРѕРІРєР° РїР°СЂР°РјРµС‚СЂРѕРІ РІ СЃС‚СЂРѕРєСѓ)
+Р’ РјРѕРґСѓР»Рµ sgeGraphicColor РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeGraphicColor_GetRandomColor
+Р’ РјРѕРґСѓР»Рµ sgeGraphicColor С„СѓРЅРєС†РёСЏ sgeGraphicColor_GetGraphicColor РїРµСЂРµРёРјРµРЅРѕРІР°РЅР° РІ sgeGraphicColor_GetColor
+Р’ РєР»Р°СЃСЃРµ TsgeShellCommands РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeShell РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeStartParameters РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeWindow РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeSystemIcon РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeSystemCursor РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeSystemFont РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeSoundBuffer РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeSoundSource РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeSound РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine СѓРґР°Р»РµРЅРѕ РїРѕР»Рµ Flanguage (РўРµРїРµСЂСЊ РѕРґРёРЅ РјР°СЃСЃРёРІ СЏР·С‹РєРѕРІС‹С… СЃС‚СЂРѕРє)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РёСЃРїСЂР°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ GetLocalizedErrorString (РЎ СѓС‡С‘С‚РѕРј РЅРѕРІРѕРіРѕ С„РѕСЂРјР°С‚Р° СЏР·С‹РєРѕРІС‹С… СЃС‚СЂРѕРє)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РёСЃРїСЂР°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ ProcessError (РЎ СѓС‡С‘С‚РѕРј РЅРѕРІРѕРіРѕ С„РѕСЂРјР°С‚Р° СЏР·С‹РєРѕРІС‹С… СЃС‚СЂРѕРє)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РёСЃРїСЂР°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadAppIcon
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РёСЃРїСЂР°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadAppCursor
+Р’ РєР»Р°СЃСЃРµ TsgeSplashScreen РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅ С‚РёРї TsgeMessageMode (Р РµР¶РёРј РѕР±СЂР°Р±РѕС‚РєРё СЃРѕРѕР±С€РµРЅРёР№)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅ С‚РёРї TsgeCommandKeyMethod (РўРёРї РґРµР№СЃС‚РІРёСЏ РќР°Р¶Р°С‚РёРµ/РћС‚РїСѓСЃРєР°РЅРёРµ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅ РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° SendTranslateMessage (РћС‚РїСЂР°РІРєР° СЃРµР±Рµ СЃРѕРѕР±С‰РµРЅРёСЏ WM_CHAR)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅ РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ GetMessageMode (РћРїСЂРµРґРµР»РµРЅРёРµ СЂРµР¶РёРјР° РѕР±СЂР°Р±РѕС‚РєРё СЃРѕРѕР±С‰РµРЅРёСЏ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅ РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ GetMouseKeyIdx (РЈР·РЅР°С‚СЊ РёР· РјРЅРѕР¶РµСЃС‚РІР° РЅРѕРјРµСЂ РєРЅРѕРїРєРё)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine СѓРґР°Р»РµРЅР° С„СѓРЅРєС†РёСЏ ProcessMouseDownCommand (РЈСЃС‚Р°СЂРµР»Р°)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine СѓРґР°Р»РµРЅР° С„СѓРЅРєС†РёСЏ ProcessMouseUpCommand (РЈСЃС‚Р°СЂРµР»Р°)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine СѓРґР°Р»РµРЅР° С„СѓРЅРєС†РёСЏ ProcessMouseScrollCommand (РЈСЃС‚Р°СЂРµР»Р°)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РїРµСЂРµРїРёСЃР°РЅР° С„СѓРЅРєС†РёСЏ ProcessMessage (РЎР»РёС€РєРѕРј РіСЂРѕРјРѕР·РґРєРёР№ РєРѕРґ, СѓРґР°Р»РµРЅРѕ Р»РёС€РЅРµРµ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ WndProc (Р”РѕР±Р°РІР»РµРЅ Р°РЅР°Р»РёР· СЂРµР¶РёРјР° РѕР±СЂР°Р±РѕС‚РєРё СЃРѕРѕР±С‰РµРЅРёР№)
+РР·РјРµРЅС‘РЅ РјРµС…Р°РЅРёР·Рј Р·Р°РіСЂСѓР·РєРё СЂРµСЃСѓСЂСЃРѕРІ РїРѕ С‚Р°Р±Р»РёС†Рµ (Р”РѕР±Р°РІР»РµРЅС‹ РєРѕРјР°РЅРґС‹ Рё РїРѕРґСЃС‚Р°РЅРѕРІРєР° РїР°СЂРµРјРµРЅРЅС‹С…)
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadResource_SystemIcon
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadResource_SystemCursor
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadResource_SystemFont
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadResource_GraphicFont
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadResource_GraphicSprite
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadResource_GraphicFrames
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadResource_Parameters
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadResource_SoundBuffer
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° Command_SetParam
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° Command_DeleteParam
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° Command_ClearParams
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° Command_LoadResource
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° Command_LoadTable
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° LoadFromTable
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РїРµСЂРµРїРёСЃР°РЅР° С„СѓРЅРєС†РёСЏ LoadResourcesFromTable (РљРѕРґ РїРµСЂРµРЅРµСЃС‘РЅ РІ РєР»Р°СЃСЃ TsgeResource)
+РЎРѕР·РґР°РЅ РєР°С‚Р°Р»РѕРі Tools РґР»СЏ РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹С… РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ
+РЎРѕР·РґР°РЅ С„Р°Р№Р» 'ResourceTable. Notepad++ colors.xml' (РџРѕРґСЃРІРµС‚РєР° С‚Р°Р±Р»РёС†С‹ СЂРµСЃСѓСЂСЃРѕРІ)
+Р’ РєР»Р°СЃСЃРµ sgeGraphic РёСЃРїСЂР°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° ScreenShot (РЈС‚РµС‡РєР° РїР°РјСЏС‚Рё РµСЃР»Рё РЅРµ СѓРґР°РІР°Р»РѕСЃСЊ СЃРѕС…СЂР°РЅРёС‚СЊ РґР°РЅРЅС‹Рµ РІ С„Р°Р№Р»)
+Р’ РєР»Р°СЃСЃРµ sgeGraphicSprite РёСЃРїСЂР°РІР»РµРЅ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ (РќРµ СѓРґР°Р»СЏР»Р°СЃСЊ С‚РµРєСЃС‚СѓСЂР° РёР· РїР°РјСЏС‚Рё OpenGL РµСЃР»Рё РЅРµ СѓРґР°РІР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ С„Р°Р№Р» СЃ РёР·РѕР±СЂР°Р¶РµРЅРёРµРј)
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅ С‚РёРї TsgeInterval (Р”Р»СЏ РїРѕСЂСЏРґРєР°, РјРѕР¶РЅРѕ Р±С‹Р»Рѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ TsgePoint)
+Р’ РјРѕРґСѓР»Рµ sgeShellCommands РёР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ TsgeShellCommandProc c Integer РЅР° String
+Р’ РјРѕРґСѓР»Рµ sgeShell РґРѕР±Р°РІР»РµРЅ С‚РёРї TsgeShellErrorHandle (РџСЂРѕС‚РѕС‚РёРї С„СѓРЅРєС†РёРё РѕР±СЂР°Р±РѕС‚РєРё РѕС€РёР±РѕРє)
+Р’ РєР»Р°СЃСЃ TsgeShell РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ ScanMode (Р РµР¶РёРј СЃРєР°РЅРёСЂРѕРІР°РЅРёСЏ РёРјС‘РЅ РєР»Р°РІРёС€)
+Р’ РєР»Р°СЃСЃ TsgeShell РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ JournalOffset (РЎРјРµС‰РµРЅРёРµ РґР»СЏ РїСЂРѕРєСЂСѓС‚РєРё Р¶СѓСЂРЅР°Р»Р°)
+Р’ РєР»Р°СЃСЃ TsgeShell РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ JournalPageSize (Р Р°Р·РјРµСЂ СЃС‚СЂР°РЅРёС†С‹ РїСЂРѕРєСЂСѓС‚РєРё Р¶СѓСЂРЅР°Р»Р°)
+Р’ РєР»Р°СЃСЃ TsgeShell РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ SubstChar (РЎРёРјРІРѕР» РїСЂРёР·РЅР°РєР° РїРµСЂРµРјРµРЅРЅРѕР№, РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ @)
+Р’ РєР»Р°СЃСЃ TsgeShell РёР·РјРµРЅС‘РЅ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ, РґРѕР±Р°РІР»РµРЅС‹ РґРІР° РїР°СЂР°РјРµС‚СЂР° (TsgeParameters, TsgeErrorHandler)
+Р’ РєР»Р°СЃСЃРµ TsgeShell СѓРґР°Р»РµРЅС‹ Р»РёС€РЅРёРµ СЃС‚СЂРѕРєРѕРІС‹Рµ РїРѕР»СЏ
+Р’ РєР»Р°СЃСЃ TsgeShell РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° LogMessageLocalized (Р’С‹РІРѕРґ СЃРѕРѕР±С‰РµРЅРёР№ СЃ СѓС‡С‘С‚РѕРј СЏР·С‹РєР°, РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РєРѕРјР°РЅРґР°С…)
+Р’ РєР»Р°СЃСЃ TsgeShell РґРѕСЂР°Р±РѕС‚Р°РЅР° РїСЂРѕС†РµРґСѓСЂР° DoCommand (Р”РѕР±Р°РІР»РµРЅР° РїРѕРґСЃС‚Р°РЅРѕРІРєР° РїР°СЂР°РјРµС‚СЂРѕРІ РїРµСЂРµРґ РёСЃРїРѕР»РЅРµРЅРёРµРј Рё СѓРїСЂРѕС‰С‘РЅ РєРѕРґ)
+Р’ РєР»Р°СЃСЃ TsgeShell РґРѕСЂР°Р±РѕС‚Р°РЅР° РїСЂРѕС†РµРґСѓСЂР° KeyDown (Р’С‹РІРѕРґ РёРјРµРЅРё РЅР°Р¶Р°С‚РѕР№ РєР»Р°РІРёС€Рё, РїСЂРѕРєСЂСѓС‚РєР° Р¶СѓСЂРЅР°Р»Р° РєР»Р°РІРёС€Р°РјРё PgUp Рё PgDown)
+Р’ РєР»Р°СЃСЃ TsgeShell РґРѕСЂР°Р±РѕС‚Р°РЅР° РїСЂРѕС†РµРґСѓСЂР° MouseDown (Р’С‹РІРѕРґ РёРјРµРЅРё РЅР°Р¶Р°С‚РѕР№ РєР»Р°РІРёС€Рё)
+Р’ РєР»Р°СЃСЃ TsgeShell РґРѕСЂР°Р±РѕС‚Р°РЅР° РїСЂРѕС†РµРґСѓСЂР° MouseScroll (Р’С‹РІРѕРґ РёРјРµРЅРё РЅР°Р¶Р°С‚РѕР№ РєР»Р°РІРёС€Рё Рё РїСЂРѕРєСЂСѓС‚РєР° Р¶СѓСЂРЅР°Р»Р°)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РїРµСЂРµРїРёСЃР°РЅР° РїСЂРѕС†РµРґСѓСЂР° DrawShell (Р”РѕР±Р°РІР»РµРЅР° РїСЂРѕРєСЂСѓС‚РєР°, РёСЃРїСЂР°РІР»РµРЅРѕ РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹РІРѕРґРёРјС‹С… СЃС‚СЂРѕРє, РѕС‚СЃС‚СѓРїС‹)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ GetUserLoadFileName (Р”РѕР±Р°РІР»РµРЅР° РїСЂРѕРІРµСЂРєР° РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ С„Р°Р№Р»Р° РІ РєРѕСЂРЅРµ РґРІРёР¶РєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_Name (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_Stop (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_Version (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_Run (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё, СѓРґР°Р»С‘РЅ Р»РёС€РЅРёР№ РєРѕРґ)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_Write (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_Writec (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_Help (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, СѓРґР°Р»С‘РЅ РІС‹РІРѕРґ РѕС€РёР±РѕРє, РґРѕР±Р°РІР»РµРЅР° РїРѕРґРґРµСЂР¶РєР° СЏР·С‹РєР°)
+Р’ РјРѕРґСѓР»Рµ StringArray РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ StringArray_GetPart (Р‘РµР·РѕРїР°СЃРЅС‹Р№ РІРѕР·РІСЂР°С‚ РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_Debug (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_Tick (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_TickDelay (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_System_StartParams (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё, РґРѕР±Р°РІР»РµРЅР° РїРѕРґРґРµСЂР¶РєР° СЏР·С‹РєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_LoadLanguage (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Command_List (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё, РґРѕР±Р°РІР»РµРЅР° РїРѕРґРґРµСЂР¶РєР° СЏР·С‹РєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Command_Save (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Command_Load (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё, СѓРґР°Р»С‘РЅ Р»РёС€РЅРёР№ РєРѕРґ)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Command_Lines (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё, РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ РёСЃС‚РѕСЂРёРё РІРІРµРґС‘РЅРЅС‹С… РєРѕРјРјР°РЅРґ)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Set_Set (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Set_Clear (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Set_Liat (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РґРѕР±Р°РІР»РµРЅР° РїРѕРґРґРµСЂР¶РєР° СЏР·С‹РєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Set_Save (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_Clear (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_Shell (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_LogErrors (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_StrictSearch (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_SetsSearch (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_BGColor (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_EditColor (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_CurColor (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_SelColor (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_ErrColor (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_LogSave (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_LogLines (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_VisLines (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Shell_BGSprite (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_ScanMode (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё, СЂРµР¶РёРј СЃРєР°РЅРёСЂРѕРІР°РЅРёСЏ РєР»Р°РІРёС€)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_LogPageSize (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё, СЂР°Р·РјРµСЂ СЃС‚СЂР°РЅРёС†С‹ РїСЂРѕРєСЂСѓС‚РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_SubstChar (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё, СЂР°Р·РјРµСЂ СЃС‚СЂР°РЅРёС†С‹ РїСЂРѕРєСЂСѓС‚РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Window_LockCursor (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Window_SysCursor (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Window_Width (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Window_Height (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Window_Caption (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Window_StayOnTop (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Graphic_ScreenShot (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё, РґРѕР±Р°РІР»РµРЅ РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅС‹Р№ РїР°СЂР°РјРµС‚СЂ "Name")
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Graphic_MaxFPS (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Graphic_VSync (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Graphic_Info (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё, РґРѕР±Р°РІР»РµРЅР° РїРѕРґРґРµСЂР¶РєР° СЏР·С‹РєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Graphic_Draw (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Attach_Attach (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё, СѓР±СЂР°РЅР° РїСЂРѕРІРµСЂРєР° РЅР° РїСѓСЃС‚СѓСЋ РєРѕРјР°РЅРґСѓ (РЅРµР»СЊР·СЏ Р±С‹Р»Рѕ РѕР±РЅСѓР»РёС‚СЊ РєРѕРјР°РЅРґСѓ))
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Attach_Clear (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Attach_List (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РґРѕР±Р°РІР»РµРЅР° РїРѕРґРґРµСЂР¶РєР° СЏР·С‹РєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Attach_Save (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Attach_KeyList (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РґРѕР±Р°РІР»РµРЅР° РїРѕРґРґРµСЂР¶РєР° СЏР·С‹РєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Joysticks_Joysticks (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Joysticks_Delay (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Font_Name (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Font_Size (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Font_Attrib (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Parameters_Clear (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Parameters_Clear (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РґРѕР±Р°РІР»РµРЅР° РїРѕРґРґРµСЂР¶РєР° СЏР·С‹РєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Parameters_Set (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Parameters_Delete (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Parameters_Save (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeShellFunctions_Parameters_Load (РР·РјРµРЅС‘РЅ СЂРµР·СѓР»СЊС‚Р°С‚ СЃ Integer РЅР° String, РёСЃРїСЂР°РІР»РµРЅРѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Resources_List (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Resources_Clear (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Resources_Reload (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Resources_Delete (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Resources_Load (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Resources_LoadTable (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Resources_Rename (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+РњРµР»РєРёРµ РёСЃРїСЂР°РІР»РµРЅРёСЏ РїРѕ РєРѕРґСѓ РЅРµ РІР»РёСЏСЋС‰РёРµ РЅР° СЃРјС‹СЃР»
 
 
 
 
 
-Версия 1.15
+Р’РµСЂСЃРёСЏ 1.18
 
-Добавлен Модуль sgeConst
-Константы из модуля sgeTypes перенесены в sgeConst
-Перенесена функция sgeGetUniqueFileName из класса TsgeJournal в модуль sgeTypes
-В модуле sgeTypes добавлен новый тип TsgePoin
-В модуле sgeTypes добавлен новый тип TsgeRect
-В модуле sgeTypes добавлена функция sgeGetPoint
-В модуле sgeTypes добавлена функция sgeGetRect
-Добавлен Модуль sgeViewBox
-В модуле sgeViewBox добавлен класс TsgeViewBox (расчёт вывода игрового поля с учётом масштаба)
-В классе sgeParameters удалено поле FFileName и всё что с ним связано
-В модуле sgeGraphicColors добавлено 16 стандартных цветов
-В модуле sgeGraphicColors переработаны функции преобразования TRGBA в TsgeGraphicColor
-В модуле sgeGraphicColors добавлена функция sgeGraphicColors_ChangeAlpha
-В Классе Tsgeresources в функции Delete исправлена утечка памяти (Удалялся элемент массива, не уничтожая объект)
-В классе TSimpleGameEngine переименовано свойство FramesPerSecond в FPS
-В Классе TSimpleGameEngine добавлено свойство StrFPS (Количество кадров в виде строки)
-В классе TSimpleGameEngine переименовано свойство MaxFramesPerSecond в MaxFPS
-В Классе TSimpleGameEngine добавлен новый тип TsgeKeyDownMethod (Способ опроса нажатых кнопок асинхронный/синхронный)
-В классе TSimpleGameEngine доработана функция IsKeyDown
-В классе TSimpleGameEngine в функции SetPriority убран вызов исключения
-В классе TSimpleGameEngine в функции GetPriority убран вызов исключения
-В классе TSimpleGameEngine добавлено поле FDirUser
-В классе TSimpleGameEngine добавлено свойство DirMain
-В классе TSimpleGameEngine добавлено свойство DirJournal
-В классе TSimpleGameEngine добавлено свойство DirShots
-В классе TSimpleGameEngine добавлено свойство DirUser
-В классе TSimpleGameEngine добавлена процедура SetDirJournal
-В классе TSimpleGameEngine добавлена процедура SetDirShots
-В классе TSimpleGameEngine добавлена процедура SetDirUser
-В классе TSimpleGameEngine в функции LoadResourcesFromTable добавлена возможность загружать таблицы параметров
-В классе TSimpleGameEngine добавлена функция GetParameters (Безопасный поиск в массиве с ресурсами)
-В Классе TSimpleGameEngine добавлено поле FDedug
-В Классе TSimpleGameEngine добавлено свойство Dedug
-В Классе TSimpleGameEngine добавлен метод SetDedug
-В Классе TSimpleGameEngine добавлено поле FLanguage
-В Классе TSimpleGameEngine добавлена LoadLanguage (Загрузка таблицы расшифровки ошибок)
-В Классе TSimpleGameEngine добавлена функция GetLocalizedErrorString (Разбор строки с ошибкой возврат на понятном языке)
-В классе TSimpleGameEngine доработана функция ProcessError (Добавлено протоколирование ошибки на понятном языке)
-В модуле sgeTypes добавлена функция sgeDecodeErrorString (Выделение модуля, кода и описания ошибки)
-В модуле sgeTypes добавлен новый тип TsgeLanguageLoadMode (Режимы загрузки таблицы с языками)
-В классе TSimpleGameEngine в функции ProcessDraw добавлен вызов вывода на экран буфера кадра в зависимости от способа рисования
-
-
-
-
-
-Версия 1.14
-
-В классе TSimpleGameEngine добавлено свойство DefGraphicFrames
-В классе TSimpleGameEngine добавлена функция GetGraphicFrames для безопасной загрузки
-В классе TSimpleGameEngine в функции LoadResourcesFromTable добавлена возможность загружать TsgeGraphicFrames
-Добавлен модуль sgeGraphicAnimation
-В модуль sgeGraphicAnimation добавлен класс TsgeGraphicAnimation
-В классе TSimpleGameEngine добавлено свойство DefGraphicAnimation
-В классе TSimpleGameEngine добавлена функция GetGraphicAnimation для безопасной загрузки
-В классе TSimpleGameEngine в функции LoadResourcesFromTable добавлена возможность загружать TsgeGraphicAnimation
-В классе TsgeGraphic добавлено 2 метода DrawSprite
-В классе TsgeGraphic добавлено 2 метода DrawAnimation
-В классе TsgeGraphic добавлено 2 метода DrawTransformedAnimation
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РґРѕР±Р°РІР»РµРЅ РјРµС‚РѕРґ Randomize Рё DecimalSeparator
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ SetJoystickEnable (РЎРєР°РЅРёСЂРѕРІР°РЅРёРµ РїРѕСЃР»Рµ Р°РєС‚РёРІР°С†РёРё С‚Р°Р№РјРµСЂРЅРѕРіРѕ СЃРѕР±С‹С‚РёСЏ)
+Р’ РєР»Р°СЃСЃРµ TsgeJoysticks СѓРґР°Р»С‘РЅ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ (РўРµРїРµСЂСЊ РїСЂРё СЃРѕР·РґР°РЅРёРё РєР»Р°СЃСЃР° РЅРµ РїСЂРѕРёСЃС…РѕРґРёС‚ СЃРєР°РЅРёСЂРѕРІР°РЅРёСЏ СѓСЃС‚СЂРѕР№СЃС‚РІ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РІРёСЂС‚СѓР°Р»СЊРЅР°СЏ С„СѓРЅРєС†РёСЏ CloseWindow (РџРµСЂРµС…РІР°С‚ Р·Р°РєСЂС‹С‚РёСЏ РѕРєРЅР°)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ С„СѓРЅРєС†РёРё WndProc РґРѕР±Р°РІР»РµРЅР° СЂРµР°РєС†РёСЏ РЅР° WM_CLOSE
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёРё DrawShell (РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёРµ РЅР°СЃС‚СЂРѕР№РєРё РіСЂР°С„РёРєРё Р±РѕР»СЊС€Рµ РЅРµ РІР»РёСЏСЋС‚ РЅР° РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeGetOnOffFromParam (РґРѕР±Р°РІР»РµРЅ Р°РЅР°Р»РёР· РЅР° 1, 0, Yes, No, True, False, Enable, Disable)
+Р’ РєР»Р°СЃСЃРµ TsgeGraphic РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ DrawCircle (Р РµР°Р»РёР·Р°С†РёСЏ С‡РµСЂРµР· SinCos, РїРѕРєР° РѕСЃС‚Р°РІР»СЋ С‚Р°Рє, РґРѕ Р»СѓС‡С€РµРіРѕ СЂРµС€РµРЅРёСЏ)
+Р’ РєР»Р°СЃСЃРµ TsgeStartParameters РїРµСЂРµРїРёСЃР°РЅР° С„СѓРЅРєС†РёСЏ GetNormalParamString (РќРµРїСЂР°РІРёР»СЊРЅРѕ РѕР±СЂРµР·Р°Р»Р° РїРµСЂРІС‹Р№ РїР°СЂР°РјРµС‚СЂ)
+Р’ РєР»Р°СЃСЃРµ TsgeStartParameters РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ ParamSeparator (Р Р°Р·РґРµР»РёС‚РµР»СЊ РјРµР¶РґСѓ РїР°СЂР°РјРµС‚СЂР°РјРё)
+Р’ РєР»Р°СЃСЃРµ TsgeStartParameters РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ ValueSeparator (Р Р°Р·РґРµР»РёС‚РµР»СЊ РјРµР¶РґСѓ РёРјРµРЅРµРј РїР°СЂР°РјРµС‚СЂР° Рё Р·РЅР°С‡РµРЅРёРµРј)
+Р’ РєР»Р°СЃСЃРµ SimpleGameEngine РёСЃРїСЂР°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ LoadResourcesFromTable (РќРµРїР°СЂРІРёР»СЊРЅРѕ РѕРїСЂРµРґРµР»СЏР»РѕСЃСЊ РєРѕР»РёС‡РµСЃС‚РІРѕ С‚Р°Р№Р»РѕРІ СЃРїСЂР°Р№С‚Р° РїСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё Р·РЅР°С‡РµРЅРёР№ РІ С‚Р°Р±Р»РёС†Рµ)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_StartParam_List (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Parameters_Clear (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Parameters_List (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Parameters_Set (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Parameters_Delete (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Parameters_Save (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Parameters_Load (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РёСЃРїСЂР°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_VisLines (РџР°РґР°Р»Р° РїСЂРё РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹С… Р·РЅР°С‡РµРЅРёСЏС…)
+Р’ РјРѕРґСѓР»Рµ SimpleGameEngine РСЃРїСЂР°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ WndProc (РЈР±СЂР°РЅРѕ РёР·РјРµРЅРµРЅРёРµ VisLines РїСЂРё РёР·РјРµРЅРµРЅРёРё СЂР°Р·РјРµСЂРѕРІ РѕРєРЅР°. РќРµРїСЂР°РІРёР»СЊРЅРѕРµ РїРѕРІРµРґРµРЅРёРµ РїСЂРё СЃРІРѕСЂР°С‡РёРІР°РЅРёРё, РЅСѓР¶РЅРѕ РїРѕРґСѓРјР°С‚СЊ РєР°Рє РѕР±РѕР№С‚Рё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РёСЃРїСЂР°РІР»РµРЅС‹ С„СѓРЅРєС†РёРё РєРѕС‚РѕСЂС‹Рµ СЃРѕР·РґР°РІР°Р»Рё С„Р°Р№Р»С‹ РЅР° РґРёСЃРєРµ (РўРµРїРµСЂСЊ РјРѕР¶РЅРѕ СѓРєР°Р·С‹РІР°С‚СЊ РїРѕР»РЅС‹Р№ РїСѓС‚СЊ. Р Р°РЅРµРµ РІСЃРµРіРґР° СЃРѕС…СЂР°РЅСЏР»РѕСЃСЊ РІ РєР°С‚Р°Р»РѕРі РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ)
+Р’ РјРѕРґСѓР»Рµ sgeGraphicColors РґРѕР±Р°РІР»РµРЅР° РєРѕРЅСЃС‚Р°РЅС‚Р° GC_Transparent (РџСЂРѕР·СЂР°С‡РЅС‹Р№ С†РІРµС‚)
+Р’ РєР»Р°СЃСЃРµ TsgeGraphic РёСЃРїСЂР°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ GetTextureRect (РќРµРїСЂР°РІРёР»СЊРЅРѕ РѕРїСЂРµРґРµР»СЏР»Р°СЃСЊ РєРѕРѕСЂРґРёРЅР°С‚Р° Y2, СЃРёРЅС‚Р°РєСЃРёС‡РµСЃРєР°СЏ РѕС€РёР±РєР°)
+Р’ РєР»Р°СЃСЃРµ TsgeShellCommands РґРѕСЂР°Р±РѕС‚Р°РЅР° РїСЂРѕС†РµРґСѓСЂР° Add (Р”РѕР±Р°РІР»РµРЅР° РїСЂРѕРІРµСЂРєР° РЅР° СЃСѓС‰РµСЃС‚РІРѕР°РЅРёРµ РєРѕРјР°РЅРґС‹)
+Р’ РєР»Р°СЃСЃРµ TsgeResources РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ IndexOf (РџРѕРёСЃРє РёРЅРґРµРєСЃР° РѕР±СЉРµРєС‚Р° РїРѕ РµРіРѕ СѓРєР°Р·Р°С‚РµР»СЋ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ FOneSecondFrequency (РљРѕР»РёС‡РµСЃС‚РІРѕ С‚Р°РєСЃС‚РѕРІ РїСЂРѕС†РµСЃСЃРѕСЂР° РІ 1 СЃРµРєСѓРЅРґСѓ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РёСЃРїСЂР°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° ProcessMessage (РќРµРІРѕР·РјРѕР¶РЅРѕ Р±С‹Р»Рѕ РѕРїСЂРµРґРµР»РёС‚СЊ РёР· wparam РєР°РєР°СЏ РєР»Р°РІРёС€Р° РјС‹С€Рё РѕС‚РїСѓСЃРєР°Р»Р°СЃСЊ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° LoadResourcesFromTable (Р”РѕР±Р°РІР»РµРЅР° РїСЂРѕРІРµСЂРєР° РЅР° СЃРѕРІРїР°РґРµРЅРёРµ РёРјРµРЅРё)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° CorrectViewport (РР·РјРµРЅРµРЅРёРµ РѕР±Р»Р°СЃС‚Рё РІС‹РІРѕРґР° РіСЂР°С„РёРєРё)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° СЂРµР°РєС†РёСЏ РѕРєРЅР° РЅР° РёР·РјРµРЅРµРЅРёРµ СЂР°Р·РјРµСЂРѕРІ Рё РїРµСЂРµРјРµС‰РµРЅРёСЏ (РўРµРїРµСЂСЊ РїСЂРё РґРІРёР¶РµРЅРёРё РѕРєРЅР° РёР»Рё РёР·РјРµРЅРµРЅРёРё СЂР°Р·РјРµСЂРѕРІ РїСЂРѕРёСЃС…РѕРґРёС‚ РїРµСЂРµСЂРёСЃРѕРІРєР°)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° ResizingWindow (Р’С‹Р·С‹РІР°РµС‚СЃСЏ РІ РїСЂРѕС†РµСЃСЃРµ РёР·РјРµРЅРµРЅРёСЏ СЂР°Р·РјРµСЂРѕРІ РѕРєРЅР°)
+Р’ РєР»Р°СЃСЃРµ TsgeShell РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ BGSprite (Р¤РѕРЅРѕРІР°СЏ РєР°СЂС‚РёРЅРєР°)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕСЂР°Р±РѕС‚Р°РЅР° РїСЂРѕС†РµРґСѓСЂР° DrawShell (Р”РѕР±Р°РІР»РµРЅ РІС‹РІРѕРґ С„РѕРЅРѕРІРѕР№ РєР°СЂС‚РёРЅРєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_BGSprite
+Р’ РєР»Р°СЃСЃРµ TsgeLineEditor РёСЃРїСЂР°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ ProcessKey (РџСЂРё РІСЃС‚Р°РІРєРµ РёР· Р±СѓС„РµСЂР° РѕР±РјРµРЅР° РЅРµ СѓРґР°Р»СЏР»СЃСЏ РІС‹РґРµР»РµРЅРЅС‹Р№ С‚РµРєСЃС‚)
+Р’ РєР»Р°СЃСЃРµ TsgeShell РїРµСЂРµРїРёСЃР°РЅР° С„СѓРЅРєС†РёСЏ GetMatchList (РўРµРїРµСЂСЊ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ СЃРїРёСЃРѕРє РєРѕРјР°РЅРґ Рё РЅР°Р±РѕСЂРѕРІ РІ РІРёРґРµ TStringArray)
+Р’ РєР»Р°СЃСЃРµ TsgeShell РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ SortMatchList
+Р’ РєР»Р°СЃСЃРµ TsgeShell РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ ProcessKey (РўРµРїРµСЂСЊ Ctrl+TAB РІС‹РІРѕРґРёС‚ СЃРїРёСЃРѕРє РїРѕРґС…РѕРґСЏС‰РёС… РєРѕРјР°РЅРґ РІ РѕР±РѕР»РѕС‡РєСѓ)
+Р’ РєР»Р°СЃСЃРµ TsgeShell РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ ProcessKey (РџСЂРё РЅР°Р¶Р°С‚РёРё TAB РёР»Рё Shift+TAB РїСЂРѕРёСЃС…РѕРґРёС‚ РїРѕРѕС‡РµСЂС‘РґРЅС‹Р№ РІС‹РІРѕРґ СЃРѕРІРїР°РІС€РёС… РєРѕРјР°РЅРґ РІ СЃС‚СЂРѕРєСѓ СЂРµРґР°РєС‚РѕСЂР°. Р•СЃР»Рё РІ РєРѕРјР°РЅРґРµ РµСЃС‚СЊ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹, С‚Рѕ РІ СЃС‚СЂРѕРєСѓ СЂРµРґР°РєС‚РѕСЂР° РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РїСЂРѕР±РµР»)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions С„СѓРЅРєС†РёСЏ sge_ShellFunctions_StartParam_List РїРµСЂРµРёРјРµРЅРѕРІР°РЅР° РІ sge_ShellFunctions_System_StartParams
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sgeGetRGBAFromParam (РўРµРїРµСЂСЊ РјРѕР¶РЅРѕ СѓРєР°Р·Р°С‚СЊ СЃС‚Р°СЂС‚РѕРІС‹Р№ РёРЅРґРµРєСЃ РїРµСЂРІРѕР№ РґРѕР»Рё С†РІРµС‚Р°)
+Р’ РєР»Р°СЃСЃРµ TsgeShell РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ DoCommand (РўРµРїРµСЂСЊ РІ РѕР±РѕР»РѕС‡РєСѓ РЅРµ РІС‹РІРѕРґРёС‚СЃСЏ РєРѕРґ РѕС€РёР±РєРё РµСЃР»Рё РµСЃС‚СЊ СЃС‚СЂРѕРєР° СЃ РѕРїРёСЃР°РЅРёРµРј РІ С„Р°Р№Р»Рµ СЏР·С‹РєР°)
+РњРѕРґСѓР»СЊ sgeGraphicColors РїРµСЂРµРёРјРµРЅРѕРІР°РЅ РІ sgeGraphicColor
+Р’ РјРѕРґСѓР»Рµ StringArray РёСЃРїСЂР°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° StringArray_Sort (РСЃРїСЂР°РІР»РµРЅРѕ РїР°РґРµРЅРёРµ РїСЂРё РѕР±СЂР°С‚РЅРѕР№ СЃРѕСЂС‚РёСЂРѕРІРєРµ, РєРѕРіРґР° СЌР»РµРјРµРЅС‚РѕРІ РјРµРЅСЊС€Рµ РґРІСѓС…)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ AutoScanJoysticks (РђРІС‚РѕСЃРєР°РЅРёСЂРѕРІР°РЅРёРµ РґР¶РѕР№СЃС‚РёРєРѕРІ РїСЂРё РїРѕРґРєР»СЋС‡РµРЅРёРё)
+Р’ РєР»Р°СЃСЃРµ TsgeWindow РґРѕР±Р°РІР»РµРЅ СЃС‚РёР»СЊ wsDoubleClick
+Р’ РєР»Р°СЃСЃРµ TsgeWindow РІ РјРµС‚РѕРґРµ ChangeWindowStyle РґРѕР±Р°РІР»РµРЅ РєРѕРґ СѓС‡РёС‚С‹РІР°СЋС‰РёР№ РґРІРѕР№РЅРѕР№ РєР»РёРє РЅР° РѕРєРЅРµ
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeFade
+Р’ РјРѕРґСѓР»СЊ sgeFade РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeFade (РџРѕРјРѕС‰РЅРёРє Р·Р°С‚РµРјРЅРµРЅРёСЏ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° DrawFade (Р’С‹РІРѕРґ Р·Р°С‚РµРјРЅРµРЅРёСЏ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° FadeStart
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° FadeStop
+Р”РѕР±Р°РІР»РµРЅ С„Р°Р№Р» SGE.lpk (РўРµРїРµСЂСЊ РјРѕР¶РЅРѕ РґРІРёР¶РѕРє РїРѕРґРєР»СЋС‡Р°С‚СЊ Рє РїСЂРѕРµРєС‚Сѓ РІ РІРёРґРµ РїР°РєРµС‚Р°)
+РњРµР»РєРёРµ РёСЃРїСЂР°РІР»РµРЅРёСЏ РїРѕ РєРѕРґСѓ РЅРµ РІР»РёСЏСЋС‰РёРµ РЅР° СЃРјС‹СЃР»
 
 
 
 
 
-Версия 1.13
+Р’РµСЂСЃРёСЏ 1.17
 
-В классе TSimpleGameEngine в функции Stop добавлена остановка тиков ядра, так как они продолжали работать пока не вызывался деструктор
-В классе TSimpleGameEngine переименовано свойство Resource в Resources
-В классе TSimpleGameEngine в функции WndProc убрано противное пиканье по Alt + Enter
-В классе TsgeGraphicSprite в конструкторе изменен режим намотки текстуры с GL_CLAMP_TO_BORDER на GL_CLAMP_TO_EDGE, при Border дополнительно необходимо указывать цвет границы
-В классе TsgeSoundSource функция SetBuffer заменена свойством Buffer
-В классе TSimpleGameEngine добавлено свойство DefSystemIcon
-В классе TSimpleGameEngine добавлено свойство DefSystemCursor
-В классе TSimpleGameEngine добавлено свойство DefGraphicSprite
-В классе TSimpleGameEngine добавлено свойство DefGraphicFont
-В классе TSimpleGameEngine добавлено свойство DefSoundBuffer
+РџСЂРѕРІРµРґРµРЅР° СЂРµРѕСЂРіР°РЅРёР·Р°С†РёСЏ РїР°РїРѕРє РїСЂРѕРµРєС‚Р°
+Р’ РєР»Р°СЃСЃРµ TsgeWindow РёР·РјРµРЅС‘РЅ С‚РёРї TsgeWindowState РЅР° TsgeWindowViewMode Рё СЃРІСЏР·Р°РЅРЅС‹Р№ РєРѕРґ
+Р’ РєР»Р°СЃСЃРµ TsgeWindow СѓРґР°Р»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ Parent Рё СЃРІСЏР·Р°РЅРЅС‹Р№ РєРѕРґ
+Р’ РјРѕРґСѓР»Рµ sgeTypes РїРµСЂРёРјРµРЅРѕРІР°РЅ С‚РёРї TsgeKeyboardButtonsSet РІ TsgeKeyboardButtons
+Р’ РјРѕРґСѓР»Рµ TSimpleGameEngine РїРµСЂРµРёРјРµРЅРѕРІР°РЅ С‚РёРї TsgeMouseButtonsSet РІ TsgeMouseButtons
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ РјРµС‚РѕРґРµ RegisterShellCommands РґРѕР±Р°РІР»РµРЅР° СЂРµРіРёСЃС‚СЂР°С†РёСЏ С„СѓРЅРєС†РёРё sge_ShellFunctions_Shell_ErrColor
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ UserName
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine СЃРІРѕР№СЃС‚РІРѕ KeyTable РїРµСЂРµРЅРµСЃРµРЅРѕ РІ РєР»Р°СЃСЃ TsgeShell Рё СЃРІСЏР·Р°РЅРЅС‹Р№ РєРѕРґ
+Р’ РєР»Р°СЃСЃРµ TsgeShell РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ StrictSearch - РЎС‚СЂРѕРіРёР№ РїРѕРёСЃРє СЃРѕРІРїР°РґРµРЅРёР№ РѕС‚ РЅР°С‡Р°Р»Р°
+Р’ РєР»Р°СЃСЃРµ TsgeShell РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ SetsSearch - РСЃРєР°С‚СЊ СЃРѕРІРїР°РґРµРЅРёСЏ РІ РЅР°Р±РѕСЂР°С… РїРѕ TAB
+Р’ РєР»Р°СЃСЃРµ TsgeShell С„СѓРЅРєС†РёСЏ GetSuitableCommands Р·Р°РјРµРЅРµРЅР° РЅР° GetMatchList
+Р’ РєР»Р°СЃСЃРµ TsgeShell РІ РјРµС‚РѕРґРµ ProcessKey РёСЃРїСЂР°РІР»РµРЅ РІС‹РІРѕРґ РїРѕ TAB
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ ProcessMouseDownCommand
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ ProcessMouseUpCommand
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ ProcessMouseScrollCommand
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ РјРµС‚РѕРґРµ ProcessMessage СЂРµР°Р»РёР·РѕРІР°РЅРѕ РІС‹РїРѕР»РЅРµРЅРёРµ РєРѕРјР°РЅРґ РїСЂРёРІСЏР·Р°РЅРЅС‹С… Рє РјС‹С€Рµ
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РїРµСЂРµРїРёСЃР°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_CmdList (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РїРµСЂРµРїРёСЃР°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Sets_List (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РїРµСЂРµРїРёСЃР°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Keys_AttachList (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РїРµСЂРµРїРёСЃР°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Keys_List (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_Name (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_StrictSearch (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_SetsSearch (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Sets_Save (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Keys_AttachSave (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Window_Width (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Window_Height (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Window_Caption (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Window_StayOnTop (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_CmdList РїРµСЂРёРјРµРЅРѕРІР°РЅР° РІ sge_ShellFunctions_Command_List
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Command_Save (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Command_Load (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeSound РґРѕР±Р°РІР»РµРЅР° РїРѕРґРґРµСЂР¶РєР° 32 Р±РёС‚РЅРѕР№ Р±РёР±Р»РёРѕС‚РµРєРё OpenAL
+Р’ РљР»Р°СЃСЃРµ sgeWindow РІ С„СѓРЅРєС†РёРё ChangeWindowStyle РёСЃРїСЂР°РІР»РµРЅРѕ СЃРѕР·РґР°РЅРёРµ СЃС‚РёР»СЏ (РїСЂРё СѓР±РёСЂР°РЅРёРё Р·Р°РіРѕР»РѕРІРєР° РѕРєРЅР° Camtasia РїРµСЂРµСЃС‚Р°РІР°Р»Р° СЃРЅРёРјР°С‚СЊ РѕРєРЅРѕ РёР·-Р·Р° СЃС‚РёР»СЏ WS_POPUP)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ РїСЂРѕС†РµРґСѓСЂРµ ProcessError РїСЂРµРґСѓСЃРјРѕС‚СЂРµРЅ РІС‹РІРѕРґ РјРЅРѕРіРѕСЃС‚СЂРѕС‡РЅС‹С… РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine С„СѓРЅРєС†РёРё РёСЃРїСЂР°РІР»РµРЅС‹ РЅР° РІС‹РІРѕРґ РјРЅРѕРіРѕСЃС‚СЂРѕС‡РЅС‹С… РѕС€РёР±РѕРє
+Р’ РєР»Р°СЃСЃРµ TsgeGraphic РїРµСЂРµРґРµР»Р°РЅРѕ СЃРІРѕР№СЃС‚РІРѕ RenderBuffer, РѕР±СЂР°С‰РµРЅРёСЏ Рє РґСЂР°Р№РІРµСЂСѓ Р·Р°РјРµРЅРµРЅРѕ РЅР° РѕР±СЂР°С‰РµРЅРёРµ Рє РїРѕР»СЋ РєР»Р°СЃСЃР°. (Р‘С‹Р»Р° РЅР°РіСЂСѓР·РєР° 100% РЅР° РѕРґРЅРѕ СЏРґСЂРѕ)
+Р’ РєР»Р°СЃСЃРµ TsgeGraphicSprite РґРѕР±Р°РІР»РµРЅРѕ 2 СЃРІРѕР№СЃС‚РІР° GLPixelWidth Рё GLPixelHeight (Р Р°Р·РјРµСЂ РѕРґРЅРѕРіРѕ РїРёРєСЃРµР»СЏ РІ OpenGL)
+РІ РєР»Р°СЃСЃРµ TsgeGraphic С„СѓРЅРєС†РёСЏ DrawWinText РїРµСЂРµРёРјРµРЅРѕРІР°РЅР° РІ DrawText
+РІ РєР»Р°СЃСЃРµ TsgeGraphic РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ DrawTextWithLineBreaks (Р’С‹РІРѕРґ РјРЅРѕРіРѕСЃС‚СЂРѕС‡РЅРѕРіРѕ С‚РµРєСЃС‚Р°)
+Р’ РєР»Р°СЃСЃРµ TsgeGraphic РїРѕР»РЅРѕСЃС‚СЊСЋ РїСЂРµРїРёСЃР°РЅС‹ РјРµС‚РѕРґС‹ РІС‹РІРѕРґР° СЃРїСЂР°Р№С‚РѕРІ, РїР»РёС‚РѕРє, Р°РЅРёРјР°С†РёРё Рё С‚.Рґ.
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ РїСЂРѕС†РµРґСѓСЂРµ LoadResourcesFromTable РґРѕР±Р°РІР»РµРЅ РїР°СЂР°РјРµС‚СЂ Mode (Р РµР¶РёРј Р·Р°РіСЂСѓР·РєРё СЂРµСЃСѓСЂСЃРѕРІ)
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeJoystick
+Р’ РјРѕРґСѓР»СЊ sgeJoystick РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeJoystick (Р Р°Р±РѕС‚Р° СЃ РґР¶РѕР№СЃС‚РёРєРѕРј)
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeJoysticks
+Р’ РјРѕРґСѓР»СЊ sgeJoysticks РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeJoysticks (РҐСЂР°РЅРёР»РёС‰Рµ РїРѕРґРєР»СЋС‡С‘РЅРЅС‹С… РґР¶РѕР№СЃС‚РёРєРѕРІ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° FullScreen
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїРѕРґРґРµСЂР¶РєР° РґР¶РѕР№СЃС‚РёРєРѕРІ
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ JoysticksDelay
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ JoysticksEnable
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ РїСЂРѕС†РµРґСѓСЂР° JoystickScan (Р’С‹Р·РѕРІ РїРѕСЃР»Рµ СЃРєР°РЅРёСЂРѕРІР°РЅРёСЏ РґР¶РѕР№СЃС‚РёРєРѕРІ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ РїСЂРѕС†РµРґСѓСЂР° JoystickInput (Р’С‹Р·РѕРІ РїРѕСЃР»Рµ РѕРїСЂРѕСЃР° СЃРѕСЃС‚РѕСЏРЅРёСЏ РєРЅРѕРїРѕРє Рё РѕСЃРµР№)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ CursorPos (РљРѕРѕСЂРґРёРЅР°С‚С‹ РєСѓСЂСЃРѕСЂР° РЅР°Рґ С„РѕСЂРјРѕР№)
+Р’ РєР»Р°СЃСЃРµ TsgeEvent РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ MinPeriod
+Р’ РєР»Р°СЃСЃРµ TsgeEvent РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ MaxPeriod
+Р’ РєР»Р°СЃСЃРµ TsgeEvent РґРѕСЂР°Р±РѕС‚Р°РЅ РјРµС…Р°РЅРёР·Рј РїСЂРѕРІРµСЂРєРё РїСЂР°РІРёР»СЊРЅРѕРіРѕ РґРёР°РїР°Р·РѕРЅР°
+Р’ РєР»Р°СЃСЃРµ TsgeGraphicFont РґРѕР±Р°РІР»РµРЅР° РїСЂРѕРІРµСЂРєР° РЅР° СЂР°Р·РјРµСЂ С€СЂРёС„С‚Р° (РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РјРµРЅСЊС€Рµ 1)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_VisLines (РџСЂРѕРІРµСЂРєР° РЅР° РЅР°Р»РёС‡РёРµ РєР»Р°СЃСЃР° РіСЂР°С„РёРєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Graphic_ScreenShot (РџСЂРѕРІРµСЂРєР° РЅР° РЅР°Р»РёС‡РёРµ РєР»Р°СЃСЃР° РіСЂР°С„РёРєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Graphic_VSync (РџСЂРѕРІРµСЂРєР° РЅР° РЅР°Р»РёС‡РёРµ РєР»Р°СЃСЃР° РіСЂР°С„РёРєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Graphic_Info (РџСЂРѕРІРµСЂРєР° РЅР° РЅР°Р»РёС‡РёРµ РєР»Р°СЃСЃР° РіСЂР°С„РёРєР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_Write (Р’С‹РІРѕРґ РІСЃРµС… С‡Р°СЃС‚РµР№)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_WriteСЃ (Р’С‹РІРѕРґ РІСЃРµС… С‡Р°СЃС‚РµР№)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Command_List (Р”РѕР±Р°РІР»РµРЅ РІС‹РІРѕРґ РѕРїРёСЃР°РЅРёСЏ С„СѓРЅРєС†РёР№)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Sets_List (Р”РѕР±Р°РІР»РµРЅ РІС‹РІРѕРґ Р·РЅР°С‡РµРЅРёР№ РЅР°Р±РѕСЂР°)
+Р’ РјРѕРґСѓР»Рµ sgeShellFunctions РїРµСЂРµРїРёСЃР°РЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Attach_KeyList
+РџРµСЂРµРЅРµСЃРµРЅР° С„СѓРЅРєС†РёСЏ RegisterShellCommand РёР· РєР»Р°СЃСЃР° TSimpleGameEngine РІ РјРѕРґСѓР»СЊ sgeShellFunctions c РёРјРµРЅРµРј sgeShellFunctions_RegisterCommand (РљСЂР°СЃРёРІРµРµ РєРѕРґ)
+РњРµР»РєРёРµ РёСЃРїСЂР°РІР»РµРЅРёСЏ РїРѕ РєРѕРґСѓ РЅРµ РІР»РёСЏСЋС‰РёРµ РЅР° СЃРјС‹СЃР»
+
+
+
+
+
+Р’РµСЂСЃРёСЏ 1.16
+
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ РїСЂРѕС†РµРґСѓСЂРµ InitGraphic РёР·РјРµРЅС‘РЅ СЃРѕР·РґР°РІР°РµРјС‹Р№ С€СЂРёС„С‚ РЅР° РјРѕРЅРѕС€РёСЂРЅС‹Р№ "Courier New"
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeLineEditor
+Р’ РјРѕРґСѓР»СЊ sgeLineEditor РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeLineEditor (РћРґРЅРѕСЃС‚СЂРѕС‡РЅС‹Р№ СЂРµРґР°РєС‚РѕСЂ С‚РµРєСЃС‚Р°)
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeCommandHistory
+Р’ РјРѕРґСѓР»СЊ sgeCommandHistory РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeCommandHistory (РСЃС‚РѕСЂРёСЏ РІРІРµРґС‘РЅРЅС‹С… РєРѕРјРјР°РЅРґ)
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeColoredLines
+Р’ РјРѕРґСѓР»Рµ sgeColoredLines РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeColoredLines (С†РІРµС‚РЅС‹Рµ СЃС‚СЂРѕРєРё РґР»СЏ Р¶СѓСЂРЅР°Р»Р° РѕР±РѕР»РѕС‡РєРё)
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeShellCommands
+Р’ РјРѕРґСѓР»СЊ sgeShellCommands РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeShellCommands (РњР°СЃСЃРёРІ РєРѕРјР°РЅРґ РѕР±РѕР»РѕС‡РєРё)
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ AutoEraseBackground (РђРІС‚РѕРѕС‡РёСЃС‚РєР° СЌРєСЂР°РЅР° РїРµСЂРµРґ СЂРёСЃРѕРІР°РЅРёРµРј)
+Р’ РљР»Р°СЃСЃРµ TsgeColoredLines РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ MaxLines
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeShell
+Р’ РјРѕРґСѓР»СЊ sgeShell РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeShell (РѕР±РѕР»РѕС‡РєР° РІРІРѕРґР° РєРѕРјР°РЅРґ)
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeShellFunctions
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_Stop (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_Version (Р’С‹РІРѕРґ РІРµСЂСЃРёРё РґРІРёР¶РєР°)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Sets_Set (РЈСЃС‚Р°РЅРѕРІРєР°/СѓРґР°Р»РµРЅРёРµ РЅР°Р±РѕСЂР°)
+Р’ РєР»Р°СЃСЃРµ TsgeGraphic РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ VerticalSync
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine СѓРґР°Р»РµРЅРѕ РїРѕР»Рµ FDefGraphicAnimation
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine СѓРґР°Р»РµРЅР° С„СѓРЅРєС†РёСЏ GetAnimation
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine СѓРґР°Р»РµРЅРѕ СЃРІРѕР№СЃС‚Р°Рѕ DefGraphicAnimation
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РІ РјРµС‚РѕРґРµ LoadResourceFromTable СѓРґР°Р»РµРЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р·Р°РіСЂСѓР¶РёС‚СЊ Р°РЅРёРјР°С†РёРё
+Р’ РјРѕРґСѓР»СЊ sgeTypes РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeGetOnOffFromParam (РћРїСЂРµРґРµР»РµРЅРёРµ On/Off)
+Р’ РјРѕРґСѓР»СЊ sgeTypes РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeGetRGBAFromParam (Р’РѕР·РІСЂР°С‚ TsgeRGBA РёР· СЃС‚СЂРѕРєРё)
+Р’ РјРѕРґСѓР»СЊ sgeTypes РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeGetRGBAAsStringByGraphicColor(Р’РѕР·РІСЂР°С‚ СЃС‚СЂРѕРєРё "R G B A" РёР· С†РІРµС‚Р°)
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РІ РјРµС‚РѕРґРµ ProcessMessage РёР·РјРµРЅС‘РЅ СЃРїРѕСЃРѕР± РІС‹Р±РѕСЂРєРё СЃРѕРѕР±С‰РµРЅРёР№ (РџСЂРѕРёСЃС…РѕРґРёС‚ РѕР±СЂР°Р±РѕС‚РєР° РІСЃРµР№ РѕС‡РµСЂРµРґРё)
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeKeyTable
+Р’ РјРѕРґСѓР»СЊ sgeKeyTable РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeKeyTable (РњР°СЃСЃРёРІ РєРѕРјР°РЅРґ РЅР° РєР»Р°РІРёС€Р°С… РєР»Р°РІРёР°С‚СѓСЂС‹)
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РІ РїСЂРѕС†РµРґСѓСЂРµ ProcessMessage РґРѕР±Р°РІР»РµРЅ РѕР±СЂР°Р±РѕС‚С‡РёРє РєРѕРјР°РЅРґ РЅР° РєР»Р°РІРёС€Р°С…
+Р’ РєР»Р°СЃСЃРµ TsgeShell РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ GetSuitableCommands (РџРѕРёСЃРє РїРѕРґС…РѕРґСЏС‰РёС… РєРѕРјР°РЅРґ)
+Р’ РєР»Р°СЃСЃРµ TsgeShell РІ С„СѓРЅРєС†РёРё ProcessKey Р”РѕР±Р°РІР»РµРЅР° РѕР±СЂР°Р±РѕС‚РєР° РєР»Р°РІРёС€Рё TAB (Р’С‹РІРѕРґ РїРѕРґС…РѕРґСЏС‰РёС… РєРѕРјР°РЅРґ)
+Р’ РєР»Р°СЃСЃРµ TsgeShellCommands РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° Sort (Р”Р»СЏ РєСЂР°СЃРѕС‚С‹)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_Run (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_Write (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_Writec (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_CmdList (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_Help (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_Debug (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Sets_Set (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Sets_Clear (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Sets_List (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_Clear (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_Shell (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_LogErrors (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_BGColor (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_EditColor (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_CurColor (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_SelColor (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_TextColor (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_NoteColor (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_ErrColor (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_LogSave (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_LogLines (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Shell_VisLines (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Window_FullScreen (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Window_LockCursor (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Graphic_ScreenShot (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Graphic_MaxFPS (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Graphic_VSync (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Graphic_Info (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Keys_Attach (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Keys_AttachClear (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Keys_AttachList (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Keys_List (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Window_SysCursor (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_Graphic_Draw (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_Tick (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РјРѕРґСѓР»СЊ sgeShellFunctions РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sge_ShellFunctions_System_TickDelay (РљРѕРјР°РЅРґР° РѕР±РѕР»РѕС‡РєРё)
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° SetMouseTrackEvent (Р—Р°РїСѓСЃРє РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РЅРµСЃС‚Р°РЅРґР°СЂС‚РЅС‹С… СЃРѕР±С‹С‚РёР№ РјС‹С€Рё)
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅ РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ MouseLeave (РЈС…РѕРґ РјС‹С€Рё РёР· РєР»РёРµРЅС‚СЃРєРѕР№ РѕР±Р»Р°СЃС‚Рё)
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅ РІРёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ MouseReturn (Р’РѕР·РІСЂР°С‚ РјС‹С€Рё РЅР° РєР»РёРµРЅС‚СЃРєСѓСЋ РѕР±Р»Р°СЃС‚СЊ)
+Р’ РљР»Р°СЃСЃРµ TsgeGraphic РІ СЃРІРѕР№СЃС‚РІРµ Capabilities РґРѕР±Р°РІР»РµРЅР° РєРѕРЅСЃС‚Р°РЅС‚Р° gcScissor
+Р’ РљР»Р°СЃСЃРµ TsgeGraphic РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° SetScissor
+
+
+
+
+
+Р’РµСЂСЃРёСЏ 1.15
+
+Р”РѕР±Р°РІР»РµРЅ РњРѕРґСѓР»СЊ sgeConst
+РљРѕРЅСЃС‚Р°РЅС‚С‹ РёР· РјРѕРґСѓР»СЏ sgeTypes РїРµСЂРµРЅРµСЃРµРЅС‹ РІ sgeConst
+РџРµСЂРµРЅРµСЃРµРЅР° С„СѓРЅРєС†РёСЏ sgeGetUniqueFileName РёР· РєР»Р°СЃСЃР° TsgeJournal РІ РјРѕРґСѓР»СЊ sgeTypes
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅ РЅРѕРІС‹Р№ С‚РёРї TsgePoin
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅ РЅРѕРІС‹Р№ С‚РёРї TsgeRect
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeGetPoint
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeGetRect
+Р”РѕР±Р°РІР»РµРЅ РњРѕРґСѓР»СЊ sgeViewBox
+Р’ РјРѕРґСѓР»Рµ sgeViewBox РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeViewBox (СЂР°СЃС‡С‘С‚ РІС‹РІРѕРґР° РёРіСЂРѕРІРѕРіРѕ РїРѕР»СЏ СЃ СѓС‡С‘С‚РѕРј РјР°СЃС€С‚Р°Р±Р°)
+Р’ РєР»Р°СЃСЃРµ sgeParameters СѓРґР°Р»РµРЅРѕ РїРѕР»Рµ FFileName Рё РІСЃС‘ С‡С‚Рѕ СЃ РЅРёРј СЃРІСЏР·Р°РЅРѕ
+Р’ РјРѕРґСѓР»Рµ sgeGraphicColors РґРѕР±Р°РІР»РµРЅРѕ 16 СЃС‚Р°РЅРґР°СЂС‚РЅС‹С… С†РІРµС‚РѕРІ
+Р’ РјРѕРґСѓР»Рµ sgeGraphicColors РїРµСЂРµСЂР°Р±РѕС‚Р°РЅС‹ С„СѓРЅРєС†РёРё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ TRGBA РІ TsgeGraphicColor
+Р’ РјРѕРґСѓР»Рµ sgeGraphicColors РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeGraphicColors_ChangeAlpha
+Р’ РљР»Р°СЃСЃРµ Tsgeresources РІ С„СѓРЅРєС†РёРё Delete РёСЃРїСЂР°РІР»РµРЅР° СѓС‚РµС‡РєР° РїР°РјСЏС‚Рё (РЈРґР°Р»СЏР»СЃСЏ СЌР»РµРјРµРЅС‚ РјР°СЃСЃРёРІР°, РЅРµ СѓРЅРёС‡С‚РѕР¶Р°СЏ РѕР±СЉРµРєС‚)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РїРµСЂРµРёРјРµРЅРѕРІР°РЅРѕ СЃРІРѕР№СЃС‚РІРѕ FramesPerSecond РІ FPS
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ StrFPS (РљРѕР»РёС‡РµСЃС‚РІРѕ РєР°РґСЂРѕРІ РІ РІРёРґРµ СЃС‚СЂРѕРєРё)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РїРµСЂРµРёРјРµРЅРѕРІР°РЅРѕ СЃРІРѕР№СЃС‚РІРѕ MaxFramesPerSecond РІ MaxFPS
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅ РЅРѕРІС‹Р№ С‚РёРї TsgeKeyDownMethod (РЎРїРѕСЃРѕР± РѕРїСЂРѕСЃР° РЅР°Р¶Р°С‚С‹С… РєРЅРѕРїРѕРє Р°СЃРёРЅС…СЂРѕРЅРЅС‹Р№/СЃРёРЅС…СЂРѕРЅРЅС‹Р№)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ IsKeyDown
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ С„СѓРЅРєС†РёРё SetPriority СѓР±СЂР°РЅ РІС‹Р·РѕРІ РёСЃРєР»СЋС‡РµРЅРёСЏ
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ С„СѓРЅРєС†РёРё GetPriority СѓР±СЂР°РЅ РІС‹Р·РѕРІ РёСЃРєР»СЋС‡РµРЅРёСЏ
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ РїРѕР»Рµ FDirUser
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DirMain
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DirJournal
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DirShots
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DirUser
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° SetDirJournal
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° SetDirShots
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° РїСЂРѕС†РµРґСѓСЂР° SetDirUser
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ С„СѓРЅРєС†РёРё LoadResourcesFromTable РґРѕР±Р°РІР»РµРЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р·Р°РіСЂСѓР¶Р°С‚СЊ С‚Р°Р±Р»РёС†С‹ РїР°СЂР°РјРµС‚СЂРѕРІ
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ GetParameters (Р‘РµР·РѕРїР°СЃРЅС‹Р№ РїРѕРёСЃРє РІ РјР°СЃСЃРёРІРµ СЃ СЂРµСЃСѓСЂСЃР°РјРё)
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ РїРѕР»Рµ FDedug
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ Dedug
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅ РјРµС‚РѕРґ SetDedug
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ РїРѕР»Рµ FLanguage
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° LoadLanguage (Р—Р°РіСЂСѓР·РєР° С‚Р°Р±Р»РёС†С‹ СЂР°СЃС€РёС„СЂРѕРІРєРё РѕС€РёР±РѕРє)
+Р’ РљР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ GetLocalizedErrorString (Р Р°Р·Р±РѕСЂ СЃС‚СЂРѕРєРё СЃ РѕС€РёР±РєРѕР№ РІРѕР·РІСЂР°С‚ РЅР° РїРѕРЅСЏС‚РЅРѕРј СЏР·С‹РєРµ)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕСЂР°Р±РѕС‚Р°РЅР° С„СѓРЅРєС†РёСЏ ProcessError (Р”РѕР±Р°РІР»РµРЅРѕ РїСЂРѕС‚РѕРєРѕР»РёСЂРѕРІР°РЅРёРµ РѕС€РёР±РєРё РЅР° РїРѕРЅСЏС‚РЅРѕРј СЏР·С‹РєРµ)
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ sgeDecodeErrorString (Р’С‹РґРµР»РµРЅРёРµ РјРѕРґСѓР»СЏ, РєРѕРґР° Рё РѕРїРёСЃР°РЅРёСЏ РѕС€РёР±РєРё)
+Р’ РјРѕРґСѓР»Рµ sgeTypes РґРѕР±Р°РІР»РµРЅ РЅРѕРІС‹Р№ С‚РёРї TsgeLanguageLoadMode (Р РµР¶РёРјС‹ Р·Р°РіСЂСѓР·РєРё С‚Р°Р±Р»РёС†С‹ СЃ СЏР·С‹РєР°РјРё)
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ С„СѓРЅРєС†РёРё ProcessDraw РґРѕР±Р°РІР»РµРЅ РІС‹Р·РѕРІ РІС‹РІРѕРґР° РЅР° СЌРєСЂР°РЅ Р±СѓС„РµСЂР° РєР°РґСЂР° РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃРїРѕСЃРѕР±Р° СЂРёСЃРѕРІР°РЅРёСЏ
+
+
+
+
+
+Р’РµСЂСЃРёСЏ 1.14
+
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DefGraphicFrames
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ GetGraphicFrames РґР»СЏ Р±РµР·РѕРїР°СЃРЅРѕР№ Р·Р°РіСЂСѓР·РєРё
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ С„СѓРЅРєС†РёРё LoadResourcesFromTable РґРѕР±Р°РІР»РµРЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р·Р°РіСЂСѓР¶Р°С‚СЊ TsgeGraphicFrames
+Р”РѕР±Р°РІР»РµРЅ РјРѕРґСѓР»СЊ sgeGraphicAnimation
+Р’ РјРѕРґСѓР»СЊ sgeGraphicAnimation РґРѕР±Р°РІР»РµРЅ РєР»Р°СЃСЃ TsgeGraphicAnimation
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DefGraphicAnimation
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅР° С„СѓРЅРєС†РёСЏ GetGraphicAnimation РґР»СЏ Р±РµР·РѕРїР°СЃРЅРѕР№ Р·Р°РіСЂСѓР·РєРё
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ С„СѓРЅРєС†РёРё LoadResourcesFromTable РґРѕР±Р°РІР»РµРЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ Р·Р°РіСЂСѓР¶Р°С‚СЊ TsgeGraphicAnimation
+Р’ РєР»Р°СЃСЃРµ TsgeGraphic РґРѕР±Р°РІР»РµРЅРѕ 2 РјРµС‚РѕРґР° DrawSprite
+Р’ РєР»Р°СЃСЃРµ TsgeGraphic РґРѕР±Р°РІР»РµРЅРѕ 2 РјРµС‚РѕРґР° DrawAnimation
+Р’ РєР»Р°СЃСЃРµ TsgeGraphic РґРѕР±Р°РІР»РµРЅРѕ 2 РјРµС‚РѕРґР° DrawTransformedAnimation
+
+
+
+
+
+Р’РµСЂСЃРёСЏ 1.13
+
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ С„СѓРЅРєС†РёРё Stop РґРѕР±Р°РІР»РµРЅР° РѕСЃС‚Р°РЅРѕРІРєР° С‚РёРєРѕРІ СЏРґСЂР°, С‚Р°Рє РєР°Рє РѕРЅРё РїСЂРѕРґРѕР»Р¶Р°Р»Рё СЂР°Р±РѕС‚Р°С‚СЊ РїРѕРєР° РЅРµ РІС‹Р·С‹РІР°Р»СЃСЏ РґРµСЃС‚СЂСѓРєС‚РѕСЂ
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РїРµСЂРµРёРјРµРЅРѕРІР°РЅРѕ СЃРІРѕР№СЃС‚РІРѕ Resource РІ Resources
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РІ С„СѓРЅРєС†РёРё WndProc СѓР±СЂР°РЅРѕ РїСЂРѕС‚РёРІРЅРѕРµ РїРёРєР°РЅСЊРµ РїРѕ Alt + Enter
+Р’ РєР»Р°СЃСЃРµ TsgeGraphicSprite РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРµ РёР·РјРµРЅРµРЅ СЂРµР¶РёРј РЅР°РјРѕС‚РєРё С‚РµРєСЃС‚СѓСЂС‹ СЃ GL_CLAMP_TO_BORDER РЅР° GL_CLAMP_TO_EDGE, РїСЂРё Border РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РЅРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·С‹РІР°С‚СЊ С†РІРµС‚ РіСЂР°РЅРёС†С‹
+Р’ РєР»Р°СЃСЃРµ TsgeSoundSource С„СѓРЅРєС†РёСЏ SetBuffer Р·Р°РјРµРЅРµРЅР° СЃРІРѕР№СЃС‚РІРѕРј Buffer
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DefSystemIcon
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DefSystemCursor
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DefGraphicSprite
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DefGraphicFont
+Р’ РєР»Р°СЃСЃРµ TSimpleGameEngine РґРѕР±Р°РІР»РµРЅРѕ СЃРІРѕР№СЃС‚РІРѕ DefSoundBuffer

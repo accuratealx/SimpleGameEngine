@@ -1,7 +1,7 @@
 {
 Пакет             Simple Tools 1
 Файл              StringArray.pas
-Версия            1.3
+Версия            1.4
 Создан            14.05.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Динамический массив строк
@@ -62,7 +62,7 @@ function 	StringArray_Equal(P: PStringArray; MinCount: Integer): Boolean;
 procedure StringArray_Copy(PSrc, PDest: PStringArray; Options: TSearchOptions = []);
 procedure StringArray_Remix(P: PStringArray; Count: Integer = -1);
 procedure StringArray_Sort(P: PStringArray; Direction: TSortDirection = sdForward; Mode: TSortMode = smBubble);
-
+function  StringArray_GetPart(P: PStringArray; Index: Integer; Default: String = ''): String;
 
 
 
@@ -608,6 +608,22 @@ begin
     end;
 end;
 
+
+{
+Описание
+  Функция возвращает один элемент массива
+Параметры
+  P       - Массив строк
+  Index   - Номер части
+  Default - Значение по умолчанию
+}
+function StringArray_GetPart(P: PStringArray; Index: Integer; Default: String = ''): String;
+var
+  c: Integer;
+begin
+  c := StringArray_GetCount(P) - 1;
+  if (Index < 0) or (Index > c) then Result := Default else Result := P^[Index];
+end;
 
 
 

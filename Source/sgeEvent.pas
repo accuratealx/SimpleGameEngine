@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeEvent.pas
-Версия            1.1
+Версия            1.2
 Создан            04.07.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Событие срабатывающее через определённый интервал времени
@@ -56,6 +56,11 @@ type
 
 
 implementation
+
+
+const
+  _UNITNAME = 'sgeEvent';
+
 
 
 function sgeTimeSetEvent(uDelay: Cardinal; uResolution: Cardinal; lpTimeProc: Pointer; dwUser: TObject; fuEvent: Cardinal): Cardinal; stdcall; external 'winmm.dll' name 'timeSetEvent';
@@ -126,7 +131,7 @@ procedure TsgeEvent.StartEvent;
 begin
   FTimerID := sgeTimeSetEvent(FDelay, 0, @sgeTimeEventProc, Self, 1);
   if FTimerID = 0 then
-    raise EsgeException.Create(Err_sgeEvent + Err_Separator + Err_sgeEvent_CantStartEvent);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantStartEvent));
 
   FEnable := True;
 end;

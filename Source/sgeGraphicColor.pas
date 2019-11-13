@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeGraphicColors.pas
-Версия            1.2
+Версия            1.3
 Создан            05.06.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Цвет
@@ -62,9 +62,10 @@ function sgeGraphicColor_RGBAToColor(R, G, B, A: Byte): TsgeGraphicColor;
 function sgeGraphicColor_RGBAToColor(Color: TsgeRGBA): TsgeGraphicColor;
 function sgeGraphicColor_ColorToRGBA(R, G, B, A: Single): TsgeRGBA;
 function sgeGraphicColor_ColorToRGBA(Color: TsgeGraphicColor): TsgeRGBA;
-function sgeGraphicColor_GetGraphicColor(R, G, B, A: Single): TsgeGraphicColor;
+function sgeGraphicColor_GetColor(R, G, B, A: Single): TsgeGraphicColor;
 function sgeGraphicColor_GetRGBA(R, G, B, A: Byte): TsgeRGBA;
 function sgeGraphicColor_ChangeAlpha(Color: TsgeGraphicColor; Alpha: Single): TsgeGraphicColor;
+function sgeGraphicColor_GetRandomColor(Alpha: Single = 1): TsgeGraphicColor;
 
 
 implementation
@@ -100,7 +101,7 @@ begin
 end;
 
 
-function sgeGraphicColor_GetGraphicColor(R, G, B, A: Single): TsgeGraphicColor;
+function sgeGraphicColor_GetColor(R, G, B, A: Single): TsgeGraphicColor;
 begin
   //R
   if R < 0 then R := 0;
@@ -136,6 +137,15 @@ begin
   if Alpha < 0 then Alpha := 0;
   if Alpha > 1 then Alpha := 1;
   Result := Color;
+  Result.Alpha := Alpha;
+end;
+
+
+function sgeGraphicColor_GetRandomColor(Alpha: Single = 1): TsgeGraphicColor;
+begin
+  Result.Red := Random;
+  Result.Green := Random;
+  Result.Blue := Random;
   Result.Alpha := Alpha;
 end;
 

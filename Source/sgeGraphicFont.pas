@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeGraphicFont.pas
-Версия            1.6
+Версия            1.7
 Создан            04.04.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс битового шрифта для вывода посредством OpenGL.
@@ -64,6 +64,11 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeGraphicFont';
+
+
+
 procedure TsgeGraphicFont.BuildFont;
 var
   Fnt: HFONT;
@@ -88,14 +93,14 @@ begin
   //Создать шрифт и проверить
   Fnt := CreateFontIndirect(LogFont);
   if Fnt = 0 then
-    raise EsgeException.Create(Err_sgeGraphicFont + Err_Separator + Err_sgeGraphicFont_CantCreateWinFont + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantCreateWindowsFont, FName));
 
   //выбрать шрифт
   SelectObject(FDC, Fnt);
 
   //Создать дисплейные списки и проверить
   if wglUseFontBitmaps(FDc, 0, 256, FGLHandle) = False then
-    raise EsgeException.Create(Err_sgeGraphicFont + Err_Separator + Err_sgeGraphicFont_CantCreateGLFont + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantCreateGLFont, FName));
 
   //Почистить память
   DeleteObject(FFont);
@@ -134,7 +139,7 @@ constructor TsgeGraphicFont.Create(Name: String; Height: Word; Attrib: TsgeGraph
 begin
   //Если вдруг особо одарённые будут неправильно использовать
   if (not Assigned(glGenLists)) then
-    raise EsgeException.Create(Err_sgeGraphicFont + Err_Separator + Err_sgeGraphicFont_OpenGLNotInitialize + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_GraphicNotInitialized, Name));
 
   if Height < 1 then Height := 1; //Поправить размер
   FHeight := Height;              //Запомнить высоту шрифта
@@ -144,7 +149,7 @@ begin
   //Выделить 256 дисплейных списков и проверить
   FGLHandle := glGenLists(256);
   if FGLHandle = 0 then
-    raise EsgeException.Create(Err_sgeGraphicFont + Err_Separator + Err_sgeGraphicFont_CantAllocGLMemory + Err_Separator + Name);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantAllocGLMemory, Name));
 
   //Создать совместимый контекст в памяти
   FDC := CreateCompatibleDC(0);

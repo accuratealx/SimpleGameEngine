@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeJoystick.pas
-Версия            1.0
+Версия            1.1
 Создан            08.03.2019
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс работы с джойстиком
@@ -103,6 +103,10 @@ type
 implementation
 
 
+const
+  _UNITNAME = 'sgeJoystick';
+
+
 
 function TsgeJoystick.GetName: ShortString;
 begin
@@ -192,7 +196,7 @@ end;
 function TsgeJoystick.GetButton(Index: Byte): TsgeJoystickButton;
 begin
   if Index > FCaps.wNumButtons - 1 then
-    raise EsgeException.Create(Err_sgeJoystick + Err_Separator + Err_sgeJoystick_IndexOutOfBounds + Err_Separator + IntToStr(Index));
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   Result := FBtnArray[Index];
 end;
@@ -225,11 +229,11 @@ var
 begin
   //Проверить физическое подключение
   if joyGetPos(ID, @J) <> JOYERR_NOERROR then
-    raise EsgeException.Create(Err_sgeJoystick + Err_Separator + Err_sgeJoystick_NotAttach);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_DeviceNotAttach, IntToStr(ID)));
 
   //Запросить параметры
   if joyGetDevCaps(ID, @FCaps, SizeOf(TJOYCAPS)) <> JOYERR_NOERROR then
-    raise EsgeException.Create(Err_sgeJoystick + Err_Separator + Err_sgeJoystick_CantGetInfo);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantGetDeviceInfo, IntToStr(ID)));
 
   //Задать значения
   FDriverID := ID;
@@ -310,7 +314,7 @@ begin
 
   //Запросить значения
   if joyGetPosEx(FDriverID, @FPosEx) <> JOYERR_NOERROR then
-    EsgeException.Create(Err_sgeJoystick + Err_Separator + Err_sgeJoystick_CantReadPosition);
+    raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_CantReadData, IntToStr(FDriverID)));
 
   //Поправить массив кнопок
   Mask := 1;
