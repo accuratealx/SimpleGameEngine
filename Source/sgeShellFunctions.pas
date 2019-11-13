@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeShellFunctions.pas
-Версия            1.9
+Версия            1.10
 Создан            09.12.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Функции оболочки
@@ -22,7 +22,8 @@ implementation
 uses
   StringArray, SimpleCommand,
   SimpleGameEngine, sgeConst, sgeTypes, sgeGraphicColor, sgeShell, sgeGraphic, sgeWindow,
-  sgeGraphicFont, sgeGraphicSprite, sgeKeyTable, sgeResources,
+  sgeGraphicFont, sgeGraphicSprite, sgeKeyTable, sgeResources, sgeSystemFont, sgeSystemCursor,
+  sgeSystemIcon, sgeSoundBuffer,
   SysUtils;
 
 
@@ -230,7 +231,7 @@ begin
   hSyntax := '';
   hHint := '';
   PrmCnt := 0;
-  cName := LowerCase(Cmd^[1]);
+  cName := Trim(Cmd^[1]);
 
   //Поиск языковых констант
   SGE.Shell.Language.GetString('Help:' + cName + '.Info', hInfo);
@@ -240,7 +241,7 @@ begin
 
   //Вывод сведений
   SGE.Shell.LogMessage('');
-  SGE.Shell.LogMessageLocalized('Help', ': ' + Cmd^[1]);
+  SGE.Shell.LogMessageLocalized('Help', ': ' + cName);
   if hInfo <> '' then
     begin
     SGE.Shell.LogMessageLocalized('Info', ':');
@@ -379,6 +380,8 @@ end;
     Replace - Заменить строки
 }
 function sge_ShellFunctions_System_LoadLanguage(Cmd: PStringArray): String;
+const
+  PROCNAME = 'CmdSystemLoadLanguage';
 var
   fn: String;
   Mode: TsgeLoadMode;
@@ -395,7 +398,7 @@ begin
       'add'    : Mode := lmAdd;
       'replace': Mode := lmReplace;
       else begin
-      Result := sgeCreateErrorString('CmdSystemLoadLanguage', Err_UnableToDetermineMode, Cmd^[2]);
+      Result := sgeCreateErrorString(PROCNAME, Err_UnableToDetermineMode, Cmd^[2]);
       Exit;
       end;
     end;
@@ -404,7 +407,7 @@ begin
   try
     SGE.LoadLanguage(fn, Mode);
   except
-    Result := sgeCreateErrorString('CmdSystemLoadLanguage', Err_FileReadError, fn);
+    Result := sgeCreateErrorString(PROCNAME, Err_FileReadError, fn);
   end;
 end;
 
@@ -980,6 +983,8 @@ end;
   Number - Количество строк
 }
 function sge_ShellFunctions_Shell_VisLines(Cmd: PStringArray): String;
+const
+  PROCNAME = 'CmdShellVisLines';
 var
   i, ml: Integer;
 begin
@@ -987,14 +992,14 @@ begin
 
   if SGE.Graphic = nil then
     begin
-    Result := sgeCreateErrorString('CmdShellVisLines', Err_GraphicNotInitialized);
+    Result := sgeCreateErrorString(PROCNAME, Err_GraphicNotInitialized);
     Exit;
     end;
 
   if StringArray_Equal(Cmd, 2) then
     begin
     i := 0;
-    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdShellVisLines', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString(PROCNAME, Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
       else begin
       ml := sgeGetShellMaxVisibleLines(SGE.Window.ClientHeight, SGE.ShellFont.Height);
       if i > ml then i := ml;
@@ -1252,6 +1257,8 @@ end;
   Name - Имя файла
 }
 function sge_ShellFunctions_Graphic_ScreenShot(Cmd: PStringArray): String;
+const
+  PROCNAME = 'CmdGraphicScreenShot';
 var
   Name, Fn, Dir: String;
 begin
@@ -1264,7 +1271,7 @@ begin
   //Проверить класс графики
   if SGE.Graphic = nil then
     begin
-    Result := sgeCreateErrorString('CmdGraphicScreenShot', Err_GraphicNotInitialized, Fn);
+    Result := sgeCreateErrorString(PROCNAME, Err_GraphicNotInitialized, Fn);
     Exit;
     end;
 
@@ -1273,7 +1280,7 @@ begin
   try
     ForceDirectories(Dir)
   except
-    Result := sgeCreateErrorString('CmdGraphicScreenShot', Err_UnableToCreateDirectory, Dir);
+    Result := sgeCreateErrorString(PROCNAME, Err_UnableToCreateDirectory, Dir);
     Exit;
   end;
 
@@ -1281,7 +1288,7 @@ begin
   try
     SGE.Graphic.ScreenShot(SGE.DirShots + sgeGetUniqueFileName + '.' + sge_ExtShots);
   except
-    Result := sgeCreateErrorString('CmdGraphicScreenShot', Err_FileWriteError, Fn);
+    Result := sgeCreateErrorString(PROCNAME, Err_FileWriteError, Fn);
   end;
 end;
 
@@ -1318,24 +1325,26 @@ end;
   On/Off - Включить/выключить
 }
 function sge_ShellFunctions_Graphic_VSync(Cmd: PStringArray): String;
+const
+  PROCNAME = 'CmdGraphicVSync';
 begin
   Result := '';
 
   if SGE.Graphic = nil then
     begin
-    Result := sgeCreateErrorString('CmdGraphicVSync', Err_GraphicNotInitialized);
+    Result := sgeCreateErrorString(PROCNAME, Err_GraphicNotInitialized);
     Exit;
     end;
 
   try
     case sgeGetOnOffFromParam(Cmd) of
       0: if SGE.DrawControl = dcSync then SGE.Shell.LogMessage('VSync = On') else SGE.Shell.LogMessage('VSync = Off');
-      1: Result := sgeCreateErrorString('CmdGraphicVSync', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
+      1: Result := sgeCreateErrorString(PROCNAME, Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1));
       2: SGE.DrawControl := dcSync;
       3: SGE.DrawControl := dcProgram;
     end;
   except
-    Result := sgeCreateErrorString('CmdGraphicVSync', Err_VerticalSyncNotSupported);
+    Result := sgeCreateErrorString(PROCNAME, Err_VerticalSyncNotSupported);
   end;
 end;
 
@@ -1407,6 +1416,7 @@ end;
 }
 function sge_ShellFunctions_Attach_Attach(Cmd: PStringArray): String;
 const
+  PROCNAME = 'CmdAttachAttach';
   ModeDown  = 0;
   ModeUp    = 1;
   ModeBouth = 2;
@@ -1424,7 +1434,7 @@ begin
   //Проверить на пустую строку
   if sKey = '' then
     begin
-    Result := sgeCreateErrorString('CmdAttachAttach', Err_KeyNameNotFound, sKey);
+    Result := sgeCreateErrorString(PROCNAME, Err_KeyNameNotFound, sKey);
     Exit;
     end;
 
@@ -1448,7 +1458,7 @@ begin
   KeyIdx := SGE.Shell.KeyTable.IndexOf(sKey);
   if KeyIdx = -1 then
     begin
-    Result := sgeCreateErrorString('CmdAttachAttach', Err_KeyNameNotFound, sKey);
+    Result := sgeCreateErrorString(PROCNAME, Err_KeyNameNotFound, sKey);
     Exit;
     end;
 
@@ -1474,7 +1484,7 @@ begin
 
     //Изменить значение
     SGE.Shell.KeyTable.Key[KeyIdx] := K;
-    end else SGE.Shell.KeyTable.Delete(KeyIdx);   //Удалить если нехватает параметров
+    end else SGE.Shell.KeyTable.Delete(KeyIdx);   //Удалить если не хватает параметров
 end;
 
 
@@ -1582,11 +1592,11 @@ begin
 
     //Нажатие
     s := SGE.Shell.KeyTable.Key[i].Down;
-    if s <> '' then StringArray_Add(@sa, 'Attach +' + Name + ' '#39 + s + #39);
+    if s <> '' then StringArray_Add(@sa, 'Attach +' + Name + ' ' + SimpleCommand_SecureString(s));
 
     //Отпускание
     s := SGE.Shell.KeyTable.Key[i].Up;
-    if s <> '' then StringArray_Add(@sa, 'Attach -' + Name + ' '#39 + s + #39);
+    if s <> '' then StringArray_Add(@sa, 'Attach -' + Name + ' ' + SimpleCommand_SecureString(s));
     end;
 
   //Сохранить в файл
@@ -1738,6 +1748,8 @@ end;
   Size - Размер
 }
 function sge_ShellFunctions_Font_Size(Cmd: PStringArray): String;
+const
+  PROCNAME = 'CmdFontSize';
 var
   i: Integer;
 begin
@@ -1745,14 +1757,14 @@ begin
 
   if SGE.Graphic = nil then
     begin
-    Result := sgeCreateErrorString('CmdFontSize', Err_GraphicNotInitialized);
+    Result := sgeCreateErrorString(PROCNAME, Err_GraphicNotInitialized);
     Exit;
     end;
 
   if StringArray_Equal(Cmd, 2) then
     begin
     i := 0;
-    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString('CmdFontSize', Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
+    if not TryStrToInt(Cmd^[1], i) then Result := sgeCreateErrorString(PROCNAME, Err_UnableToDetermineValue, StringArray_GetPart(Cmd, 1))
       else begin
       //Изменить высоту шрифта
       if i < 1 then i := 1;
@@ -2024,6 +2036,278 @@ end;
 
 
 
+{
+Описание:
+  Вывести список ресурсов
+Синтаксис:
+  ResList <Mask>
+Параметры:
+  Mask - Подстрока для поиска
+}
+function sge_ShellFunctions_Resources_List(Cmd: PStringArray): String;
+var
+  i, c, Idx, Cnt: Integer;
+  Mask, cName: String;
+  isAdd: Boolean;
+begin
+  Result := '';
+
+  //Подготовить маску
+  if StringArray_Equal(Cmd, 2) then Mask := LowerCase(Cmd^[1]) else Mask := '';
+
+  //Вывод шапки
+  SGE.Shell.LogMessage('');
+  SGE.Shell.LogMessageLocalized('ResourceList', ': ' + Mask);
+
+  //Перебор массива
+  Cnt := 0;
+  c := SGE.Resources.Count - 1;
+  for i := 0 to c do
+    begin
+    cName := SGE.Resources.Item[i].Name;
+
+    //Поиск соответствия
+    if Mask = '' then isAdd := True
+      else begin
+      Idx := Pos(Mask, LowerCase(cName));
+
+      isAdd := False;
+      case SGE.Shell.StrictSearch of
+        True : if Idx = 1 then isAdd := True;
+        False: if Idx > 0 then isAdd := True;
+      end;
+      end;
+
+    //Вывод в оболочку
+    if isAdd then
+      begin
+      Inc(Cnt);
+      SGE.Shell.LogMessage('[' + SGE.Resources.Item[i].rType + '] ' + cName);
+      end;
+    end;
+
+  //Вывод хвоста
+  SGE.Shell.LogMessageLocalized('Count', ': ' + IntToStr(Cnt));
+end;
+
+
+{
+Описание:
+  Перезагрузить ресурс
+Синтаксис:
+  ResReload [Name]
+Параметры:
+  Name - Имя ресурса
+}
+function sge_ShellFunctions_Resources_Reload(Cmd: PStringArray): String;
+const
+  PROCNAME = 'CmdResourcesReload';
+var
+  Idx: Integer;
+  cName, ErrStr: String;
+begin
+  Result := '';
+
+  cName := Trim(Cmd^[1]);
+  //Найти индекс
+  Idx := SGE.Resources.IndexOf(cName);
+  if Idx = -1 then
+    begin
+    Result := sgeCreateErrorString(PROCNAME, Err_ResourceNotFound, cName);
+    Exit;
+    end;
+
+  //Перезагрузить ресурс
+  ErrStr := sgeCreateErrorString(PROCNAME, Err_ReloadMethodDoesNotExist, cName);
+  try
+    case SGE.Resources.Item[Idx].rType of
+      rtGraphicSprite : TsgeGraphicSprite(SGE.Resources.Item[Idx].Obj).Reload;
+      rtGraphicFont   : Result := ErrStr;
+      rtGraphicFrames : Result := ErrStr;
+      rtSystemFont    : TsgeSystemFont(SGE.Resources.Item[Idx].Obj).Reload;
+      rtSystemIcon    : TsgeSystemIcon(SGE.Resources.Item[Idx].Obj).Reload;
+      rtSystemCursor  : TsgeSystemCursor(SGE.Resources.Item[Idx].Obj).Reload;
+      rtSoundBuffer   : TsgeSoundBuffer(SGE.Resources.Item[Idx].Obj).Reload;
+      rtParameters    : Result := ErrStr;
+    end;
+  except
+    Result := sgeCreateErrorString(PROCNAME, Err_LoadResourceError, cName);
+  end;
+end;
+
+
+{
+Описание:
+  Удалить ресурс по имени
+Синтаксис:
+  ResDelete [Name]
+Параметры:
+  Name - Имя ресурса
+}
+function sge_ShellFunctions_Resources_Delete(Cmd: PStringArray): String;
+var
+  cName: String;
+begin
+  Result := '';
+
+  //Определить имя
+  cName := Trim(Cmd^[1]);
+
+  //Удалить
+  try
+    SGE.Resources.Delete(cName);
+  except
+    Result := sgeCreateErrorString('CmdResourcesDelete', Err_ResourceNotFound, cName);
+  end;
+end;
+
+
+{
+Описание:
+  Очистить ресурсы
+Синтаксис:
+  ResClear
+}
+function sge_ShellFunctions_Resources_Clear(Cmd: PStringArray): String;
+begin
+  Result := '';
+
+  SGE.Resources.Clear;
+end;
+
+
+{
+Описание:
+  Загрузить ресурс
+Синтаксис:
+  ResLoad [Type] [Name] [File] <Params>
+Параметры:
+  Type   - Тип ресурса
+    sysfont   - Системный шрифт
+    sysicon   - Системная иконка
+    syscursor - Системный курсор
+    sprite    - Графический спрайт
+    font      - Графический шрифт
+    frames    - Кадры графики
+    buffer    - Звуковой буфер
+    params    - Параметры
+  Name   - Имя ресурса
+  File   - Путь к файлу
+  Params - Дополнительные параметры
+}
+function sge_ShellFunctions_Resources_Load(Cmd: PStringArray): String;
+var
+  fn: String;
+begin
+  Result := '';
+
+  //Подготовить имя файла
+  fn := GetUserLoadFileName(Cmd^[3]);
+
+  //Загрузить
+  try
+    SGE.Resources.Command_LoadResource(ExtractFilePath(fn), Cmd);
+  except
+    on E: EsgeException do
+      Result := sgeCreateErrorString(sgeFoldErrorString('CmdResourcesLoad', Err_LoadResourceError, fn), E.Message);
+  end;
+end;
+
+
+{
+Описание:
+  Загрузить таблицу ресурсов
+Синтаксис:
+  ResLoadTable [FileName] <Mode>
+Параметры:
+  FileFile - Путь к файлу
+  Mode     - Режим загрузки
+    Add     - Добавить
+    Replace - Заменить
+}
+function sge_ShellFunctions_Resources_LoadTable(Cmd: PStringArray): String;
+const
+  PROCNAME = 'CmdResourcesLoadTable';
+var
+  fn, cMode: String;
+  Mode: TsgeLoadMode;
+begin
+  Result := '';
+
+  //Определить режим загрузки
+  Mode := lmAdd;
+  if StringArray_Equal(Cmd, 3) then
+    begin
+    cMode := Trim(Cmd^[2]);
+    case LowerCase(cMode) of
+      'replace': Mode := lmReplace;
+      'add'    : Mode := lmAdd;
+      else begin
+      Result := sgeCreateErrorString(PROCNAME, Err_UnableToDetermineMode, cMode);
+      Exit;
+      end;
+    end;
+    end;
+
+  //Подготовить имя файла
+  fn := GetUserLoadFileName(Cmd^[1]);
+
+  //Загрузить
+  try
+    SGE.LoadResourcesFromTable(fn, Mode);
+  except
+    on E: EsgeException do
+      Result := sgeCreateErrorString(sgeFoldErrorString(PROCNAME, Err_LoadResourceTableError, fn), E.Message);
+  end;
+end;
+
+
+{
+Описание:
+  Переименовать ресурс
+Синтаксис:
+  ResRename [OldName] [NewName]
+Параметры:
+  OldName - Старое имя
+  NewName - Новое имя
+}
+function sge_ShellFunctions_Resources_Rename(Cmd: PStringArray): String;
+const
+  PROCNAME = 'CmdResourcesRename';
+var
+  Old, New: String;
+  Idx: Integer;
+  Res: TsgeResource;
+begin
+  Result := '';
+
+  Old := Trim(Cmd^[1]);
+  New := Trim(Cmd^[2]);
+
+  //Найти индекс
+  Idx := SGE.Resources.IndexOf(Old);
+  if Idx = -1 then
+    begin
+    Result := sgeCreateErrorString(PROCNAME, Err_ResourceNotFound, Old);
+    Exit;
+    end;
+
+  //Проверить на дубликат
+  if SGE.Resources.IndexOf(New) <> -1 then
+    begin
+    Result := sgeCreateErrorString(PROCNAME, Err_ResourceExist, New);
+    Exit;
+    end;
+
+  //Переименовать
+  Res := SGE.Resources.Item[Idx];
+  Res.Name := New;
+  SGE.Resources.Item[Idx] := Res;
+end;
+
+
+
+
 
 
 
@@ -2134,7 +2418,19 @@ begin
     Add('Parameters', 'ParamDel', @sge_ShellFunctions_Parameters_Delete, 1);
     Add('Parameters', 'ParamSave', @sge_ShellFunctions_Parameters_Save, 1);
     Add('Parameters', 'ParamLoad', @sge_ShellFunctions_Parameters_Load, 1);
+
+    //Ресурсы
+    Add('Resources', 'ResList', @sge_ShellFunctions_Resources_List, 0);
+    Add('Resources', 'ResClear', @sge_ShellFunctions_Resources_Clear, 0);
+    Add('Resources', 'ResReload', @sge_ShellFunctions_Resources_Reload, 1);
+    Add('Resources', 'ResDelete', @sge_ShellFunctions_Resources_Delete, 1);
+    Add('Resources', 'ResLoad', @sge_ShellFunctions_Resources_Load, 3);
+    Add('Resources', 'ResLoadTable', @sge_ShellFunctions_Resources_LoadTable, 1);
+    Add('Resources', 'ResRename', @sge_ShellFunctions_Resources_Rename, 2);
     end;
+
+  //Упорядочить
+  SGE.Shell.Commands.Sort;
 end;
 
 
