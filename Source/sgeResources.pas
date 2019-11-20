@@ -228,16 +228,15 @@ procedure TsgeResources.Delete(Index: Integer);
 var
   i, c: Integer;
 begin
-  c := GetCount;
+  c := GetCount - 1;
   if (Index < 0) or (Index > c) then
     raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
   FResources[Index].Obj.Free;
 
-  Dec(c, 2);
-  for i := Index to c do
+  for i := Index to c - 1 do
     FResources[i] := FResources[i + 1];
-  SetLength(FResources, c + 1);
+  SetLength(FResources, c);
 end;
 
 

@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeShellCommands.pas
-Версия            1.4
+Версия            1.5
 Создан            09.12.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Хранилище указателей на команды оболочки
@@ -179,7 +179,7 @@ procedure TsgeShellCommands.Insert(Index: Integer; Cmd: TsgeShellCommand);
 var
   i, c: Integer;
 begin
-  c := GetCount - 1;
+  c := GetCount;
   if (Index < 0) or (Index > c) then
     raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 

@@ -1,7 +1,7 @@
 {
 Пакет             Simple Tools 1
 Файл              StringArray.pas
-Версия            1.4
+Версия            1.5
 Создан            14.05.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Динамический массив строк
@@ -248,11 +248,11 @@ var
   i, c: Integer;
 begin
   Result := False;
-  c := StringArray_GetCount(P);
+  c := StringArray_GetCount(P) - 1;
   if (Idx < 0) or (Idx > c) then Exit;
-  for i := Idx to c - 2 do
+  for i := Idx to c - 1 do
     P^[i] := P^[i + 1];
-  SetLength(P^, c - 1);
+  SetLength(P^, c);
   Result := True;
 end;
 

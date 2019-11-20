@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeColoredLines.pas
-Версия            1.2
+Версия            1.3
 Создан            09.12.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Массив цветных линий
@@ -160,7 +160,7 @@ procedure TsgeColoredLines.Insert(Index: Integer; ALine: TsgeColorLine);
 var
   i, c: Integer;
 begin
-  c := GetCount - 1;
+  c := GetCount;
   if (Index < 0) or (Index > c) then
     raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 

@@ -143,7 +143,7 @@ procedure TsgeGraphicFrames.Add(AFrame: TsgeGraphicFrame);
 var
   c: Integer;
 begin
-  c := Length(FFrames);       //Узнать сколько кадров
+  c := GetCount;              //Узнать сколько кадров
   SetLength(FFrames, c + 1);  //Добавить 1 кадр
   FFrames[c] := AFrame;       //Изменить кадр
 end;
@@ -153,13 +153,14 @@ procedure TsgeGraphicFrames.Delete(Index: Integer);
 var
   i, c: Integer;
 begin
-  c := Length(FFrames);
+  c := GetCount - 1;
   if (Index < 0) or (Index > c) then
     raise EsgeException.Create(sgeCreateErrorString(_UNITNAME, Err_IndexOutOfBounds, IntToStr(Index)));
 
-  for i := 0 to c - 2 do           //Переместить кадры
+  for i := 0 to c - 1 do            //Переместить кадры
     FFrames[i] := FFrames[i + 1];
-  SetLength(FFrames, c - 1);       //Уменьшить на 1 кадр
+
+  SetLength(FFrames, c);            //Уменьшить на 1 кадр
 end;
 
 
@@ -174,7 +175,8 @@ begin
   SetLength(FFrames, c + 1);      //Добавить 1 кадр
   for i := c downto Index + 1 do  //Сместить кадры
     FFrames[i] := FFrames[i - 1];
-  FFrames[Index] := AFrame;       //Вставить новый
+
+  FFrames[Index] := AFrame;       //Вставить новый кадр
 end;
 
 

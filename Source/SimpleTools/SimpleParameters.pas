@@ -1,7 +1,7 @@
 {
 Пакет             Simple Tools 1
 Файл              SimpleParameters.pas
-Версия            1.0
+Версия            1.1
 Создан            26.05.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Массив параметров
@@ -342,11 +342,11 @@ var
   i, c: Integer;
 begin
   Result := False;
-  c := SimpleParameters_GetCount(P);        //Сколько всего параметров
+  c := SimpleParameters_GetCount(P) - 1;    //Сколько всего параметров
   if (Index < 0) or (Index > c) then Exit;  //Индекс вне диапазона массива
-  for i := Index to c - 2 do                //Сдвинуть все параметры влево на 1 от Index до конца массива
+  for i := Index to c - 1 do                //Сдвинуть все параметры влево на 1 от Index до конца массива
     P^[i] := P^[i + 1];
-  SetLength(P^, c - 1);                     //Обрезать последний параметр
+  SetLength(P^, c);                         //Обрезать последний параметр
   Result := True;
 end;
 
