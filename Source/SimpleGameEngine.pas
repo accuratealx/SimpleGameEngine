@@ -608,8 +608,8 @@ begin
   FGraphic.Capabilities[gcColorBlend] := True;
 
   //Размеры оболочки
-  lnHeight := FShellFont.Height;             //Высота строки
-  shWidth := FWindow.ClientWidth;               //Ширина окна
+  lnHeight := FShellFont.Height;
+  shWidth := FWindow.ClientWidth;
   shHeight := (FShell.VisibleLines * lnHeight) + lnHeight + sge_ShellIndent * 3;
 
   //Вывод фонового цвета
