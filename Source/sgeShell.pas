@@ -338,9 +338,9 @@ end;
 
 function TsgeShell.GetJournalInterval: TsgeInterval;
 begin
-  Result.iBegin := FJournal.Count - 1 - FJournalOffset;
-  Result.iEnd := Result.iBegin - FVisibleLines + 1;
-  if Result.iEnd < 0 then Result.iEnd := 0;
+  Result.Start := FJournal.Count - 1 - FJournalOffset;
+  Result.Stop  := Result.Start - FVisibleLines + 1;
+  if Result.Stop < 0 then Result.Stop := 0;
 end;
 
 

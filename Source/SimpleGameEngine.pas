@@ -655,7 +655,7 @@ begin
     X := sge_ShellIndent;
     Y := shHeight - lnHeight * 2 - sge_ShellIndent * 2;
     Interval := FShell.GetJournalInterval;
-    for i := Interval.iBegin downto Interval.iEnd do
+    for i := Interval.Start downto Interval.Stop do
       begin
       FGraphic.Color := FShell.Journal.Line[i].Color;
       FGraphic.DrawText(X, Y, FShellFont, FShell.Journal.Line[i].Text);

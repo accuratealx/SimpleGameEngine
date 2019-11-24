@@ -39,8 +39,8 @@ type
 
 
   TsgeInterval = record
-    iBegin: Integer;
-    iEnd: Integer;
+    Start: Integer;
+    Stop: Integer;
   end;
 
 
