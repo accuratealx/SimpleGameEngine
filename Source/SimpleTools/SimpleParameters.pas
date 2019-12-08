@@ -1,7 +1,7 @@
 {
 Пакет             Simple Tools 1
 Файл              SimpleParameters.pas
-Версия            1.1
+Версия            1.2
 Создан            26.05.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Массив параметров
@@ -832,7 +832,7 @@ var
   Exist: Boolean;
 begin
   Result := False;
-  if not StringArray_LoadFromFile(@sa, FileName, Divider) then Exit;                //Загрузить массив строк из файла
+  StringArray_LoadFromFile(@sa, FileName, Divider);                                 //Попробовать загрузить массив строк из файла
   Value := SimpleCommand_SecureString(Value, sp_Divider, sp_Staple, sp_Control);    //Обезопасить новое значение параметра
   c := StringArray_GetCount(@sa) - 1;                                               //Узнать индекс песледней строки
   if (soCaseSensivity in Options) then lcPrm := Name else lcPrm := LowerCase(Name); //Поправить имя при использовании модификатора
@@ -1075,7 +1075,7 @@ var
   Exist: Boolean;
 begin
   Result := False;
-  if not StringArray_LoadFromFile(@sa, FileName, Divider) then Exit;                //Загрузить массив строк из файла
+  StringArray_LoadFromFile(@sa, FileName, Divider);                                 //Попробовать загрузить массив строк из файла
   k := StringArray_GetCount(@sa) - 1;                                               //Индекс последней строки в массиве
   c := SimpleParameters_GetCount(P) - 1;                                            //Индекс последнего параметра в массиве
   if UseIndent then a := ' ' else a := '';                                          //Подготовить отступ

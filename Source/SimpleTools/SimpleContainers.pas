@@ -1,7 +1,7 @@
 {
 Пакет             Simple Tools 1
 Файл              SimpleContainers.pas
-Версия            1.2
+Версия            1.3
 Создан            27.09.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Простое хранилище параметров
@@ -254,7 +254,7 @@ begin
   Result := False;
 
   //Чтение файла
-  if not LoadStringFromFile(FileName, Str) then Exit;
+  LoadStringFromFile(FileName, Str);
 
   //Предусмотреть регистр поиска
   if soCaseSensivity in Options then
@@ -372,7 +372,7 @@ begin
   NeedUpdate := False;
 
   //Чтение файла
-  if not LoadStringFromFile(FileName, Str) then Exit;
+  LoadStringFromFile(FileName, Str);
 
   //Цикл по параметрам
   k := SimpleParameters_GetCount(P) - 1;
