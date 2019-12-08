@@ -145,6 +145,8 @@ begin
   SimpleParameters_Clear(P);  //Почистить выходной массив
   CurrentMode := cEmpty;      //Режим
   ShieldMode := False;        //Режим экранирования
+  Name := '';
+  Value := '';
 
   //Обработка строки
   Size := Length(Str);
