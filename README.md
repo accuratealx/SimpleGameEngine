@@ -1,3 +1,2 @@
-# SGE
-
-Simple Game Engine written in Lazarus for 2D games
+# SGE-Source
+Простой игровой движок написан на Lazarus для помощи в создании 2D игр
