@@ -297,7 +297,9 @@ end;
 
 procedure TsgeWindow.SetIcon(AIcon: HICON);
 begin
+  {$R-}
   SetClassLongPtr(FHandle, GCLP_HICONSM, AIcon);
+  {$R+}
 end;
 
 
@@ -309,7 +311,9 @@ end;
 
 procedure TsgeWindow.SetStatusBarIcon(AIcon: HICON);
 begin
+  {$R-}
   SetClassLongPtr(FHandle, GCLP_HICON, AIcon);
+  {$R+}
 end;
 
 
@@ -321,7 +325,9 @@ end;
 
 procedure TsgeWindow.SetCursor(ACursor: HCURSOR);
 begin
+  {$R-}
   SetClassLongPtr(FHandle, GCLP_HCURSOR, ACursor);
+  {$R+}
 end;
 
 
@@ -436,7 +442,9 @@ begin
   //Двойной клик на окне
   NewStyle := CS_HREDRAW or CS_VREDRAW;
   if wsDoubleClick in FStyle then NewStyle := NewStyle or CS_DBLCLKS;
+  {$R-}
   SetClassLongPtr(FHandle, GCL_STYLE, NewStyle);
+  {$R+}
 
   //Пошевелить окно
   SetWindowPos(FHandle, GetHWNDPos, 0, 0, 0, 0, SWP_NOMOVE or SWP_NOSIZE or SWP_FRAMECHANGED or SWP_NOACTIVATE);
@@ -537,7 +545,9 @@ end;
 procedure TsgeWindow.SetWindowProc(Proc: Pointer);
 begin
   if Proc = nil then Exit;
+  {$R-}
   SetWindowLongPtr(FHandle, GWLP_WNDPROC,  LONG_PTR(Proc));
+  {$R+}
 end;
 
 
