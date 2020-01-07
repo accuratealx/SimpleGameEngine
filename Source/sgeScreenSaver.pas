@@ -1,3 +1,12 @@
+{
+Пакет             Simple Game Engine 1
+Файл              sgeScreenSaver.pas
+Версия            1.1
+Создан            07.01.2020
+Автор             Творческий человек  (accuratealx@gmail.com)
+Описание          Класс для создания хранителей экрана в ОС Windows
+
+}
 unit sgeScreenSaver;
 
 {$mode objfpc}{$H+}
@@ -80,12 +89,7 @@ begin
     end;
 
   //Подготовить систему
-  try
-    InitWindow;
-    InitGraphic;
-  except
-    raise EsgeException.Create('Fatal error.');
-  end;
+  Ignition();
 
   //Настроить систему
   Window.Style := [];
