@@ -122,7 +122,6 @@ end;
 
 
 begin
-  Application.Scaled := True;
   SS := TSaverRects.Create;
   SS.Init;
   SS.StartSaver;

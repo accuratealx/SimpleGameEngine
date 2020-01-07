@@ -39,9 +39,6 @@ type
 implementation
 
 
-{$R SaverName.rc}
-
-
 uses
   SysUtils;
 
