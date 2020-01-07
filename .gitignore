@@ -1,0 +1,7 @@
+*.o
+*.ppu
+*.a
+*.compiled
+backup
+*.lps
+*.res
