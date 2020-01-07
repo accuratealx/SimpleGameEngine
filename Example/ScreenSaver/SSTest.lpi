@@ -46,7 +46,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\..\Source\ThirdParty\OpenAL;..\..\Source\ThirdParty\gdiPlus;..\..\Source\ThirdParty\dglOpenGL;..\..\Source\SimpleTools;..\..\Source"/>
+      <OtherUnitFiles Value="..\..\..\Source\ThirdParty\OpenAL;..\..\..\Source\ThirdParty\gdiPlus;..\..\..\Source\ThirdParty\dglOpenGL;..\..\..\Source\SimpleTools;..\..\..\Source"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
