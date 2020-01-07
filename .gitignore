@@ -3,7 +3,5 @@
 *.a
 *.compiled
 backup
-*.lps
-*.lpi
 *.res
 *.scr
