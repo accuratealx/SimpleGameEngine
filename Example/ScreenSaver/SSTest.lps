@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="1">
+      <Unit0>
+        <Filename Value="SSTest.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="81"/>
+        <CursorPos X="79" Y="115"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit0>
+    </Units>
+    <JumpHistory Count="4" HistoryIndex="3">
+      <Position1>
+        <Filename Value="SSTest.lpr"/>
+      </Position1>
+      <Position2>
+        <Filename Value="SSTest.lpr"/>
+        <Caret Line="126" TopLine="84"/>
+      </Position2>
+      <Position3>
+        <Filename Value="SSTest.lpr"/>
+        <Caret Line="125" Column="3" TopLine="85"/>
+      </Position3>
+      <Position4>
+        <Filename Value="SSTest.lpr"/>
+        <Caret Line="126" Column="3" TopLine="84"/>
+      </Position4>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="1" ActiveMode="default">
+        <Mode0 Name="default">
+          <local>
+            <HostApplicationFilename Value="$(ProjPath)SSTest.scr"/>
+            <CommandLineParams Value="/s"/>
+            <WorkingDirectory Value="$(ProjPath)"/>
+          </local>
+        </Mode0>
+      </Modes>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>
