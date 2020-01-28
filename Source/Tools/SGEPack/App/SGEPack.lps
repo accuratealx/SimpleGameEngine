@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Release"/>
+    <Units Count="4">
+      <Unit0>
+        <Filename Value="SGEPack.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="21"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="MainFrm\MainUnit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="450"/>
+        <CursorPos X="28" Y="537"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="ProgressFrm\ProgressUnit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ProgressFrm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UsageCount Value="21"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\..\..\System\sgeMemoryStream.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="152"/>
+        <CursorPos X="22" Y="167"/>
+        <UsageCount Value="10"/>
+      </Unit3>
+    </Units>
+    <JumpHistory Count="9" HistoryIndex="8">
+      <Position1>
+        <Filename Value="MainFrm\MainUnit.pas"/>
+        <Caret Line="23" Column="27" TopLine="28"/>
+      </Position1>
+      <Position2>
+        <Filename Value="MainFrm\MainUnit.pas"/>
+        <Caret Line="686" Column="3" TopLine="693"/>
+      </Position2>
+      <Position3>
+        <Filename Value="MainFrm\MainUnit.pas"/>
+        <Caret Line="535" Column="29" TopLine="519"/>
+      </Position3>
+      <Position4>
+        <Filename Value="MainFrm\MainUnit.pas"/>
+        <Caret Line="696" Column="52" TopLine="681"/>
+      </Position4>
+      <Position5>
+        <Filename Value="MainFrm\MainUnit.pas"/>
+        <Caret Line="679" TopLine="666"/>
+      </Position5>
+      <Position6>
+        <Filename Value="MainFrm\MainUnit.pas"/>
+        <Caret Line="678" TopLine="665"/>
+      </Position6>
+      <Position7>
+        <Filename Value="MainFrm\MainUnit.pas"/>
+        <Caret Line="676" Column="9" TopLine="665"/>
+      </Position7>
+      <Position8>
+        <Filename Value="MainFrm\MainUnit.pas"/>
+        <Caret Line="57" TopLine="38"/>
+      </Position8>
+      <Position9>
+        <Filename Value="MainFrm\MainUnit.pas"/>
+        <Caret Line="57" TopLine="32"/>
+      </Position9>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

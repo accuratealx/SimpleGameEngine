@@ -1,0 +1,49 @@
+#  01.11.2019 Творческий человек (accuratealx@gmail.com)
+#  Таблица загрузки ресурсов Simple Game Engine 1.19
+#
+#  Общая форма записи:
+#    [Command] <Param 1> <Param 2> <Param N>
+#    
+#  Команды:
+#    SetParam [Name] [Value] - Установить параметр
+#      Name - Имя параметра
+#      Value - Значение параметра
+#
+#    DelParam [Name] - Удалить параметр
+#      Name - Имя параметра
+#
+#    ClearParams - Очистить параметры
+#
+#    LoadTable [FileName] - Загрузить таблицу ресурсов
+#      FileName - Имя файла относительно текущей таблицы
+#
+#    LoadRes [ResType] [Name] [File] <Param 1> <Param N>
+#      ResType - Тип ресурса (SysFont, Sprite, Font, Frames, Buffer, Params, Animation)
+#      Name - Имя ресурса в таблице
+#      File - Имя файла относительно текущей таблицы
+#      <Param 1> - Дополнительный параметр
+#
+#  Загрузка ресурсов:
+#    LoadRes SysFont [Имя] [Путь к файлу]
+#    LoadRes Buffer [Имя] [Путь к файлу]
+#    LoadRes Params [Имя] [Путь к файлу]
+#    LoadRes Frames [Имя] [Путь к файлу]
+#    LoadRes Sprite [Имя] [Путь к файлу] <Плиток по X = 1> <Плиток по Y = 1> <Фильтр увеличения (Linear/Nearest)> <Фильтр уменьшения (Linear/Nearest)>
+#    LoadRes Font [Имя] [Имя шрифта из папки Fonts] <Высота в пикселях> <Атрибуты (BIUS)>
+#    LoadRes Animation [Имя] [Путь к файлу] <Ширина = 16> <Высота = 16>
+#
+#  Дополнительно:
+#    Пустые строки и начинающиеся с символа "#" пропускаются.
+#    Допускается использование любого количества пробелов и табуляций.
+#    Параметры действуют только во время работы алгоритма и у каждой таблицы свои.
+#    Для вставки значения используется обрамление символом "%", Например %CursorName%.
+#
+
+#Следующие две записи выполняют одни и те же действия
+#Первый вариант
+LoadRes Sprite SmallTurret 'Buildings\Small\Turret.png'
+
+#Второй вариант
+SetParam Path 'Buildings\Small'
+LoadRes Sprite SmallTurret '%Path%\Turret.png'
+

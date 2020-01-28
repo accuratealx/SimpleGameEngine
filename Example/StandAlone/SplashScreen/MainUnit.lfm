@@ -1,0 +1,8 @@
+object MainFrm: TMainFrm
+  Left = 441
+  Height = 319
+  Top = 270
+  Width = 450
+  Caption = 'MainFrm'
+  LCLVersion = '1.8.4.0'
+end

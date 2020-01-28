@@ -1,5 +1,5 @@
-#  31.10.2019 Творческий человек (accuratealx@gmail.com)
-#  Языковой файл Simple Game Engine 1.17
+#  03.02.2020 Творческий человек (accuratealx@gmail.com)
+#  Языковой файл Simple Game Engine 1.20. Версия 1.10
 #
 #
 #  Оболочка
@@ -31,147 +31,206 @@
 
 
 #Оболочка
-Shell:Hint = Введите "Help CmdName" для показа информации, "CmdList" для списка команд
-Shell:ScanModeOn = Режим сканирования Включён
-Shell:ScanModeOff = Режим сканирования Выключён
-Shell:KeyName = Имя клавиши
+Shell:Hint                        = Введите "Help CmdName" для показа информации, "CmdList" для списка команд
+Shell:ScanModeOn                  = Режим сканирования Включён
+Shell:ScanModeOff                 = Режим сканирования Выключён
+Shell:KeyName                     = Имя клавиши
 
 
 #Команды
-Cmd:AttachList = Список привязок
-Cmd:CommandList = Список комманд
-Cmd:Count = Всего
-Cmd:End = Конец
-Cmd:Found = Найдено
-Cmd:GraphicInfo = Графический адаптер
-Cmd:Help = Помощь
-Cmd:Hint = Подсказка
-Cmd:Info = Описание
-Cmd:KeyList = Список клавиш
-Cmd:ParameterList = Список параметров
-Cmd:Parameters = Параметры
-Cmd:Renderer = Визуализатор
-Cmd:ResourceList = Список ресурсов
-Cmd:SetList = Список наборов
-Cmd:Shader = Версия шейдера
-Cmd:StartParameters = Стартовые параметры
-Cmd:Syntax = Синтаксис
-Cmd:Vendor = Производитель
-Cmd:Version = Версия
+Cmd:Name                          = Имя
+Cmd:Delay                         = Задержка
+Cmd:Enable                        = Активность
+Cmd:Times                         = Ограничение вызовов
+Cmd:StartDelay                    = Задержка запуска
+Cmd:AutoDelete                    = Автоудаление
+Cmd:TimesCount                    = Всего вызвано
+Cmd:On                            = Включено
+Cmd:Off                           = Выключено
+Cmd:Infinity                      = Бесконечно
+
+
+Cmd:AttachList                    = Список привязок
+Cmd:CommandList                   = Список комманд
+Cmd:Count                         = Всего
+Cmd:End                           = Конец
+Cmd:Found                         = Найдено
+Cmd:GraphicInfo                   = Графический адаптер
+Cmd:Group                         = Группа
+Cmd:Help                          = Помощь
+Cmd:Hint                          = Подсказка
+Cmd:Info                          = Описание
+Cmd:KeyList                       = Список клавиш
+Cmd:ObjectList                    = Список объектов
+Cmd:PackList                      = Список архивов
+Cmd:PackFileList                  = Список файлов в архивах
+Cmd:ParameterList                 = Список параметров
+Cmd:Parameters                    = Параметры
+Cmd:Renderer                      = Визуализатор
+Cmd:ResourceList                  = Список ресурсов
+Cmd:SetList                       = Список наборов
+Cmd:Shader                        = Версия шейдера
+Cmd:StartParameters               = Стартовые параметры
+Cmd:Syntax                        = Синтаксис
+Cmd:TaskInfo                      = Информация о задаче
+Cmd:TaskList                      = Список задач
+Cmd:Vendor                        = Производитель
+Cmd:Version                       = Версия
 
 
 #Модули
-Unit:SGE = Система
-Unit:sgeColoredLines = Цветные линии
-Unit:sgeCommandHistory = История комманд
-Unit:sgeEvent = Событие
-Unit:sgeGraphic = Графика
-Unit:sgeGraphicAnimation = Анимация
-Unit:sgeGraphicFont = Шрифт
-Unit:sgeGraphicFrames = Кадры анимации
-Unit:sgeGraphicSprite = Спрайт
-Unit:sgeJournal = Журнал
-Unit:sgeJoystick = Джойстик
-Unit:sgeJoysticks = Джойстики
-Unit:sgeKeyTable = Таблица клавиш
-Unit:sgeParameters = Параметры
-Unit:sgeResources = Ресурсы
-Unit:sgeShell = Оболочка
-Unit:sgeShellCommand = Команды оболочки
-Unit:sgeSound = Звук
-Unit:sgeSoundBuffer = Звуковой буфер
-Unit:sgeSoundSource = Звуковой источник
-Unit:sgeSplashScreen = Заставка
-Unit:sgeStartParameters = Стартовые параметры
-Unit:sgeSystemCursor = Системный курсор
-Unit:sgeSystemFont = Системный шрифт
-Unit:sgeSystemIcon = Системная иконка
-Unit:sgeWindow = Окно
+Unit:SGE                          = Система
+Unit:sgeAnimationList             = Список анимаций
+Unit:sgeColoredLines              = Цветные линии
+Unit:sgeCommandHistory            = История комманд
+Unit:sgeEvent                     = Событие
+Unit:sgeFile                      = Файл
+Unit:sgeFileSystem                = Файловая система
+Unit:sgeFileSystemPackFileList    = Список файлов в архивах
+Unit:sgeGraphic                   = Графика
+Unit:sgeGraphicAnimation          = Анимация
+Unit:sgeGraphicFont               = Шрифт
+Unit:sgeGraphicFrameList          = Кадры анимации
+Unit:sgeGraphicSprite             = Спрайт
+Unit:sgeJournal                   = Журнал
+Unit:sgeJoystick                  = Джойстик
+Unit:sgeJoystickList              = Список джойстиков
+Unit:sgeKeyTable                  = Таблица клавиш
+Unit:sgeMemoryStream              = Память
+Unit:sgeObjectList                = Список объектов
+Unit:sgePackFileList              = Список архивов
+Unit:sgePackFileReader            = Класс чтения архива
+Unit:sgePackFileWriter            = Класс записи архива
+Unit:sgeResourceList              = Список ресурсов
+Unit:sgeShell                     = Оболочка
+Unit:sgeShellCommandList          = Список команды оболочки
+Unit:sgeSimpleCommand             = Парсер команд
+Unit:sgeSimpleParameters          = Список параметров
+Unit:sgeSound                     = Звук
+Unit:sgeSoundBuffer               = Звуковой буфер
+Unit:sgeSoundBufferLoader         = Загрузчик аудио
+Unit:sgeSoundBufferWavLoader      = Загрузчик WAVE
+Unit:sgeSoundSource               = Звуковой источник
+Unit:sgeSplashScreen              = Заставка
+Unit:sgeSplashScreen              = Заставка
+Unit:sgeSpriteList                = Список спрайтов
+Unit:sgeStartParameterList        = Стартовые параметры
+Unit:sgeStringList                = Список строк
+Unit:sgeSystemCursor              = Системный курсор
+Unit:sgeSystemFont                = Системный шрифт
+Unit:sgeSystemIcon                = Системная иконка
+Unit:sgeTask                      = Задача
+Unit:sgeTaskList                  = Список задач
+Unit:sgeWindow                    = Окно
 
 
 #Ошибки
-Error:BufferNotFound = Буфер не найден
-Error:CantAccessMemory = Невозможно получить доступ к памяти
-Error:CantActivateContext =	Невозможно активировать контекст
-Error:CantAddFontToSystem = Невозможно добавить шрифт в систему
-Error:CantAllocGLMemory = Невозможно выделить память у OpenGL
-Error:CantChangeDebug = Невозможно изменить режим отладки
-Error:CantChangeDrawControl = Невозможно изменить режим вывода графики
-Error:CantChangePriority = Невозможно изменить приоритет
-Error:CantCreateBitmapFromScan = Невозможно создать битмап из буфера данных
-Error:CantCreateContex = Невозможно создать контекст
-Error:CantCreateGLFont = Невозможно создать шрифт OpenGL
-Error:CantCreateScreenShot = Невозможно сделать скриншот
-Error:CantCreateSource = Невозможно сделать источник звука
-Error:CantCreateWindow = Невозможно создать окно
-Error:CantCreateWindowsFont = Невозможно создать системный шрифт
-Error:CantGetBitmapData = Невозможно узнать данные битмапа
-Error:CantGetDeviceInfo = Невозможно узнать информацию об устройстве
-Error:CantGetHeight = Невозможно определить высоту
-Error:CantGetWidth = Невозможно определить ширину
-Error:CantInitGraphic =	Графика не инициализирована
-Error:CantInitSound = Невозможно инициализировать звук
-Error:CantInitWindow = Невозможно создать окно
-Error:CantLoadAppCursor = Невозможно загрузить курсор приложения
-Error:CantLoadAppIcon = Невозможно загрузить иконку приложения
-Error:CantLoadFromHinstance = Невозможно загрузить из приложения
-Error:CantLoadFromResource = Невозможно загрузить из ресурсов
-Error:CantLoadLanguage = Невозможно загрузить язык
-Error:CantLoadOpenALLib = Невозможно загрузить OpenAL
-Error:CantLoadOpenGLLib = Невозможно загрузить OpenGL
-Error:CantLoadParameters = Невозможно загрузить параметры
-Error:CantOpenDevice = Невозможно открыть устройство
-Error:CantReadData = Невозможно прочесть данные
-Error:CantReadPriority = Невозможно прочитать приоритет
-Error:CantRegisterClass = Невозможно зарегестрировать класс
-Error:CantSaveParameters = Невозможно сохранить параметры
-Error:CantSelectPixelFormat = Невозможно выбрать формат пикселя
-Error:CantSetPixelFormat = Невозможно установить формат пикселя
-Error:CantStartEvent = Невозможно запустить событие
-Error:CantloadBitmap = Невозможно загрузить битмап
-Error:CommandError = Ошибка при выполнении команды
-Error:CommandExist = Команда существует
-Error:CommandNotFound = Команда не найдена
-Error:DeviceNotAttach = Устройство не присоеденено
-Error:DuplicateResource = Дубликат ресурса
-Error:EmptyPointer = Пустой указатель
-Error:FileNotFound = Файл не найден
-Error:FileReadError = Ошибка чтения файла
-Error:FileWriteError = Ошибка записи файла
-Error:FontNotFound = Файл не найден
-Error:FramesNotFound = Кадры не найдены
-Error:GraphicsNotInitialized = Графика не инициализирована
-Error:ImageIsEmpty = Пустое изображение
-Error:IndexOutOfBounds = Индекс вне диапазона
-Error:KeyNameNotFound = Имя клавиши не найдено
-Error:LoadResourceError = Ресурс не загружен
-Error:LoadResourceTableError = Ошибка загрузки таблицы
-Error:MissingContext = Отсутствует контекст
-Error:NoPartsToLoad = Нет частей для загрузки
-Error:NotEnoughParameters = Недостаточно параметров
-Error:OutOfMemory = Недостаточно памяти
-Error:ParameterNotFound = Параметр не найден
-Error:ParametersNotFound = Параметры не найдены
-Error:ReachedBuffersLimit = Достигнут предел звуковых буферов
-Error:ReachedSourceLimit = Достигнут предел звуковых источников
-Error:ReloadMethodDoesNotExist = Ресурс не имеет метода Reload
-Error:ResourceExist = Ресурс существует
-Error:ResourceNotFound = Ресурс не найден
-Error:SoundNotInitialized = Звук не инициализирован
-Error:SpriteNotFound = Спрайт не найден
-Error:UnableToCreateDirectory = Невозможно создать каталог
-Error:UnableToDetermineColumn = Невозможно определить столбец
-Error:UnableToDetermineMode = Невозможно определить режим
-Error:UnableToDetermineRow = Невозможно определить строку
-Error:UnableToDetermineTime = Невозможно определить время
-Error:UnableToDetermineValue = Невозможно определить значение
-Error:UnexpectedError = Неожиданная ошибка
-Error:UnknownCommand = Неизвестная команда
-Error:UnknownResource = Неизвестный ресурс
-Error:UnsupportedFormat = Неподдерживаемый формат
-Error:VerticalSyncNotSupported = Вертикальная синхронизация не поддерживается
-Error:WindowNotInitialized = Окно не инициализировано
-Error:WrongDataFormat = Неправильный формат данных
+Error:CantInitSimpleGameEngine    = Невозможно инициализировать ядро
+Error:AnimationNotFound           = Анимация не найдена
+Error:BitsPerSampleNotSupport			= Биты в секунду не поддерживаются
+Error:BufferNotFound              = Буфер не найден
+Error:CantAccessMemory            = Невозможно получить доступ к памяти
+Error:CantActivateContext         = Невозможно активировать контекст
+Error:CantAllocGLMemory           = Невозможно выделить память у OpenGL
+Error:CantAllocMemory             = Невозможно выделить память
+Error:CantEnableDebug             = Невозможно изменить режим отладки
+Error:CantChangeDrawControl       = Невозможно изменить режим вывода графики
+Error:CantChangePriority          = Невозможно изменить приоритет
+Error:CantCreateBitmapFromIStream = Невозможно создать битмап из IStream
+Error:CantCreateContext           = Невозможно создать контекст
+Error:CantCreateDirectory         = Невозможно создать каталог
+Error:CantCreateFile              = Невозможно создать файл
+Error:CantCreateFontFromMemory    = Невозможно создать шрифт из памяти
+Error:CantCreateGLFont            = Невозможно создать шрифт OpenGL
+Error:CantCreateIStream           = Невозможно создать IStream
+Error:CantCreateScreenShot        = Невозможно сделать скриншот
+Error:CantCreateSource            = Невозможно сделать источник звука
+Error:CantCreateWindow            = Невозможно создать окно
+Error:CantCreateWindowsFont       = Невозможно создать системный шрифт
+Error:CantDeleteFile              = Невозможно удалить файл
+Error:CantFlushFile               = Невозможно сбросить данные в файл
+Error:CantGetBitmapData           = Невозможно узнать данные битмапа
+Error:CantGetDeviceInfo           = Невозможно узнать информацию об устройстве
+Error:CantGetHeight               = Невозможно определить высоту
+Error:CantGetWidth                = Невозможно определить ширину
+Error:CantLoadAppCursor           = Невозможно загрузить курсор приложения
+Error:CantLoadAppIcon             = Невозможно загрузить иконку приложения
+Error:CantLoadBitmap              = Невозможно загрузить Bitmap
+Error:CantLoadFromHinstance       = Невозможно загрузить из приложения
+Error:CantLoadFromStream          = Невозможно загрузить из потока
+Error:CantLoadLanguage            = Невозможно загрузить язык
+Error:CantLoadOpenALLib           = Невозможно загрузить OpenAL
+Error:CantLoadOpenGLLib           = Невозможно загрузить OpenGL
+Error:CantLoadPackFile            = Невозможно загрузить архив
+Error:CantLoadParameters          = Невозможно загрузить параметры
+Error:CantLockMemory              = Невозможно заблокировать память
+Error:CantOpenDevice              = Невозможно открыть устройство
+Error:CantOpenFile                = Невозможно открыть файл
+Error:CantReadBuffer              = Невозможно прочитать файл
+Error:CantReadData                = Невозможно прочесть данные
+Error:CantReadFileSize            = Невозможно определить размер файла
+Error:CantReadPriority            = Невозможно прочитать приоритет
+Error:CantReallocMemory           = Невозможно перераспределить память
+Error:CantRegisterClass           = Невозможно зарегестрировать класс
+Error:CantRenameFile              = Невозможно переименовать файл
+Error:CantSaveParameters          = Невозможно сохранить параметры
+Error:CantSelectPixelFormal       = Невозможно выбрать формат пикселя
+Error:CantSetFileSize             = Невозможно изменить размер файла
+Error:CantSetPixelFormat          = Невозможно установить формат пикселя
+Error:CantStartEvent              = Невозможно запустить событие
+Error:CantUpdateFile              = Невозможно обновить данные в файл
+Error:CantUpdateFromFile          = Невозможно обновить данные из файла
+Error:CantUpdateInFile            = Невозможно обновить данные в файле
+Error:CantWriteBuffer             = Невозможно записать данные в буфер
+Error:ChannelNumberNotSupport			= Количество каналов не поддерживется
+Error:CommandError                = Ошибка при выполнении команды
+Error:CommandExist                = Команда существует
+Error:CommandNotFound             = Команда не найдена
+Error:DeviceNotAttach             = Устройство не присоеденено
+Error:DuplicateName               = Дубликат имени
+Error:DuplicateResource           = Дубликат ресурса
+Error:EmptyPointer                = Пустой указатель
+Error:FileNotFound                = Файл не найден
+Error:FileReadError               = Ошибка чтения файла
+Error:FileWriteError              = Ошибка записи файла
+Error:FontNotFound                = шрифт не найден
+Error:FramesNotFound              = Кадры не найдены
+Error:IndexOutOfBounds            = Индекс вне диапазона
+Error:IndexOutsideTheData         = Индекс за границей данных
+Error:KeyNameNotFound             = Имя клавиши не найдено
+Error:LoadResourceError           = Ресурс не загружен
+Error:LoadResourceTableError      = Ошибка загрузки таблицы ресурсов
+Error:MissingContext              = Отсутствует контекст
+Error:NameNotFound                = Имя не найдено
+Error:NoPartsToLoad               = Нет частей для загрузки
+Error:NotEnoughParameters         = Недостаточно параметров
+Error:ObjectIsEmpty               = Пустой объект
+Error:OutOfMemory                 = Недостаточно памяти
+Error:ParameterNotFound           = Параметр не найден
+Error:ParametersNotFound          = Параметры не найдены
+Error:ReachedBufferLimit          = Достигнут предел звуковых буферов
+Error:ReachedSourceLimit          = Достигнут предел звуковых источников
+Error:ReloadMethodDoesNotExist    = Ресурс не имеет метода Reload
+Error:ResourceExist               = Ресурс существует
+Error:ResourceNotFound            = Ресурс не найден
+Error:SoundNotInitialized         = Звук не инициализирован
+Error:SpriteIsEmpty               = Пустой спрайт
+Error:SpriteNotFound              = Спрайт не найден
+Error:TaskExist                   = Задача существует
+Error:UnableToDetermineColumn     = Невозможно определить столбец
+Error:UnableToDetermineMode       = Невозможно определить режим
+Error:UnableToDetermineRow        = Невозможно определить строку
+Error:UnableToDetermineTime       = Невозможно определить время
+Error:UnableToDetermineValue      = Невозможно определить значение
+Error:UnexpectedError             = Неожиданная ошибка
+Error:UnknownCommand              = Неизвестная команда
+Error:UnknownResource             = Неизвестный ресурс
+Error:UnsupportedFormat           = Неподдерживаемый формат
+Error:VerticalSyncNotSupported    = Вертикальная синхронизация не поддерживается
+Error:WindowNotInitialized        = Окно не инициализировано
+Error:WrongDataFormat             = Неправильный формат данных
+Error:WrongFileHeader             = Неправильный заголовок файла
+Error:WrongWAVEHeader             = Неправильный заголовок WAVE файла
 
 
 
@@ -272,17 +331,11 @@ Help:Debug.Syntax = LockCursor <On/Off>
 Help:Debug.ParamCount = 1
 Help:Debug.Param.1 = On/Off - Включить/выключить
 
-#Tick
-Help:Tick.Info = Включить/выключить системные тики
-Help:Tick.Syntax = Tick <On/Off>
-Help:Tick.ParamCount = 1
-Help:Tick.Param.1 = On/Off - Включить/выключить
-
-#TickDelay
-Help:TickDelay.Info = Изменить задержку между системными тиками
-Help:TickDelay.Syntax = TickDelay <Number>
-Help:TickDelay.ParamCount = 1
-Help:TickDelay.Param.1 = Number - Задержка
+#Priority
+Help:Priority.Info = Изменить приоритет приложения
+Help:Priority.Syntax = Priority <Priority>
+Help:Priority.ParamCount = 1
+Help:Priority.Param.1 = Priority - Приоритет (Idle, BelowNormal, Normal, AboveNormal, High, RealTime)
 
 #StartParams
 Help:StartParams.Info = Вывести список стартовых параметров
@@ -294,6 +347,54 @@ Help:LoadLanguage.Syntax = LoadLanguage [FileName] <Mode>
 Help:LoadLanguage.ParamCount = 2
 Help:LoadLanguage.Param.1 = FileName - Имя файла
 Help:LoadLanguage.Param.2 = Mode - Режим загрузки ("Add" Добавить, "Replace" Заменить)
+
+#Tasks
+Help:Tasks.Info = Включить/выключить планировщик задач
+Help:Tasks.Syntax = Tsks <On/Off>
+Help:Tasks.ParamCount = 1
+Help:Tasks.Param.1 = On/Off - Включить/выключить
+
+#TaskDelay
+Help:TaskDelay.Info = Установить задержку планировщику задач
+Help:TaskDelay.Syntax = TickDelay <Delay>
+Help:TaskDelay.ParamCount = 1
+Help:TaskDelay.Param.1 = Delay - Задержка
+
+#TaskList
+Help:TaskList.Info = Вывести список задач
+Help:TaskList.Syntax = TaskList <Mask>
+Help:TaskList.ParamCount = 1
+Help:TaskList.Param.1 = Mask - Подстрока для поиска
+
+#TaskInfo
+Help:TaskInfo.Info = Вывести подробную информацию о задаче
+Help:TaskInfo.Syntax = TaskInfo [TaskName]
+Help:TaskInfo.ParamCount = 1
+Help:TaskInfo.Param.1 = TaskName - Имя задачи
+
+#TaskDelete
+Help:TaskDelete.Info = Удалить задачу
+Help:TaskDelete.Syntax = TaskDelete [TaskName]
+Help:TaskDelete.ParamCount = 1
+Help:TaskDelete.Param.1 = TaskName - Имя задачи
+
+#TaskStop
+Help:TaskStop.Info = Остановить задачу
+Help:TaskStop.Syntax = TaskStop [TaskName]
+Help:TaskStop.ParamCount = 1
+Help:TaskStop.Param.1 = TaskName - Имя задачи
+
+#TaskStart
+Help:TaskStart.Info = Возобновить задачу
+Help:TaskStart.Syntax = TaskStart [TaskName]
+Help:TaskStart.ParamCount = 1
+Help:TaskStart.Param.1 = TaskName - Имя задачи
+
+#TaskRestart
+Help:TaskRestart.Info = Перезапустить задачу
+Help:TaskRestart.Syntax = TaskRestart [TaskName]
+Help:TaskRestart.ParamCount = 1
+Help:TaskRestart.Param.1 = TaskName - Имя задачи
 
 #CmdList
 Help:CmdList.Info = Вывести список команд
@@ -463,6 +564,7 @@ Help:ScanMode.Info = Включить/выключить режим сканирования клавиш
 Help:ScanMode.Syntax = ScanMode <On/Off>
 Help:ScanMode.ParamCount = 1
 Help:ScanMode.Param.1 = On/Off - Включить/выключить
+Help:ScanMode.Hint = Для переключения используйте Shift + ESC
 
 #LogPageSize
 Help:LogPageSize.Info = Изментиь размер страницы журнала оболочки
@@ -471,10 +573,16 @@ Help:LogPageSize.ParamCount = 1
 Help:LogPageSize.Param.1 = Number - Количество
 
 #SubstChar
-Help:SubstChar.Info = Изментиь символ признака переменной
+Help:SubstChar.Info = Изментиь символ признака переменной в оболочке
 Help:SubstChar.Syntax = SubstChar <Char>
 Help:SubstChar.ParamCount = 1
 Help:SubstChar.Param.1 = Char - Символ признака
+
+#StapleChar
+Help:StapleChar.Info = Изментиь символ кавычки в оболочке
+Help:StapleChar.Syntax = StapleChar <Char>
+Help:StapleChar.ParamCount = 1
+Help:StapleChar.Param.1 = Char - Символ кавычки
 
 #FullScreen
 Help:FullScreen.Info = Переключить полноэкранный режим
@@ -546,10 +654,10 @@ Help:Draw.Param.1 = On/Off - Включить/выключить
 
 #Attach
 Help:Attach.Info = Привязать команду к клавише
-Help:Attach.Syntax = Attach [KeyName] <<+-*>Command>
+Help:Attach.Syntax = Attach [<+-*>KeyName] <Command>
 Help:Attach.ParamCount = 2
-Help:Attach.Param.1 = KeyName - Имя клавиши
-Help:Attach.Param.2 = <+-*>Command - Команда. ("+" Нажатие, "-" Отпускание, "*" Нажатие и отпускание)
+Help:Attach.Param.1 = <+-*>KeyName - Имя клавиши ("+" Нажатие, "-" Отпускание, "*" Нажатие и отпускание)
+Help:Attach.Param.2 = Command - Команда
 Help:Attach.Hint = При отсутствии команды клавиша освобождается
 
 #AttachClear
@@ -573,6 +681,24 @@ Help:KeyList.Info = Вывести список названий клавиш
 Help:KeyList.Syntax = KeyList <Mask>
 Help:KeyList.ParamCount = 1
 Help:KeyList.Param.1 = Mask - Подстрока для поиска
+
+#KeyDown
+Help:KeyDown.Info = Нажать на клавишу
+Help:KeyDown.Syntax = KeyDown [Key]
+Help:KeyDown.ParamCount = 1
+Help:KeyDown.Param.1 = Key - Имя клавиши
+
+#KeyUp
+Help:KeyUp.Info = Отпустить клавишу
+Help:KeyUp.Syntax = KeyUp [Key]
+Help:KeyUp.ParamCount = 1
+Help:KeyUp.Param.1 = Key - Имя клавиши
+
+#KeyClick
+Help:KeyClick.Info = Нажать и отпустить клавишу
+Help:KeyClick.Syntax = KeyClick [Key]
+Help:KeyClick.ParamCount = 1
+Help:KeyClick.Param.1 = Key - Имя клавиши
 
 #Joysticks
 Help:Joysticks.Info = Включить/выключить опрос джойстиков
@@ -622,26 +748,24 @@ Help:ParamSet.Param.1 = Name - Имя параметра
 Help:ParamSet.Param.2 = Value - Значение параметра
 Help:ParamSet.Hint = При отсутствии параметра, добавляется
 
-#ParamDel
-Help:ParamDel.Info = Удалить параметр
-Help:ParamDel.Syntax = ParamDel [Name]
-Help:ParamDel.ParamCount = 1
-Help:ParamDel.Param.1 = Name - Имя параметра
-Help:ParamDel.Hint = При отсутствии параметра, добавляется
+#ParamDelete
+Help:ParamDelete.Info = Удалить параметр
+Help:ParamDelete.Syntax = ParamDel [Name]
+Help:ParamDelete.ParamCount = 1
+Help:ParamDelete.Param.1 = Name - Имя параметра
+Help:ParamDelete.Hint = При отсутствии параметра, добавляется
 
 #ParamSave
 Help:ParamSave.Info = Сохранить параметры в файл
-Help:ParamSave.Syntax = ParamSave [FileName] <U/A>
-Help:ParamSave.ParamCount = 2
+Help:ParamSave.Syntax = ParamSave [FileName]
+Help:ParamSave.ParamCount = 1
 Help:ParamSave.Param.1 = FileName - Имя файла
-Help:ParamSave.Param.2 = U/A - Модификаторы ("U" Обновить, "A" Обновить и добавить)
 
 #ParamLoad
 Help:ParamLoad.Info = Загрузить параметры из файла
-Help:ParamLoad.Syntax = ParamLoad [FileName] <U/A>
-Help:ParamLoad.ParamCount = 2
+Help:ParamLoad.Syntax = ParamLoad [FileName]
+Help:ParamLoad.ParamCount = 1
 Help:ParamLoad.Param.1 = FileName - Имя файла
-Help:ParamLoad.Param.2 = U/A - Модификаторы ("U" Обновить, "A" Обновить и добавить)
 
 #ResList
 Help:ResList.Info = Вывести список ресурсов
@@ -688,3 +812,38 @@ Help:ResRename.ParamCount = 2
 Help:ResRename.Param.1 = OldName - Текущее имя ресурса
 Help:ResRename.Param.2 = NewName - Новое имя ресурса
 
+#ResDeleteGroup
+Help:ResDeleteGroup.Info = Удалить группу ресурс
+Help:ResDeleteGroup.Syntax = ResDeleteGroup [Group]
+Help:ResDeleteGroup.ParamCount = 1
+Help:ResDeleteGroup.Param.1 = Group - Имя группы
+
+#ObjectList
+Help:ObjectList.Info = Вывести список объектов
+Help:ObjectList.Syntax = ObjectList <Mask>
+Help:ObjectList.ParamCount = 1
+Help:ObjectList.Param.1 = Mask - Подстрока для поиска
+
+#PackList
+Help:PackList.Info = Вывести список архивов
+Help:PackList.Syntax = PackList <Mask>
+Help:PackList.ParamCount = 1
+Help:PackList.Param.1 = Mask - Подстрока для поиска
+
+#PackDelete
+Help:PackDelete.Info = Удалить архив
+Help:PackDelete.Syntax = PackDelete [Name]
+Help:PackDelete.ParamCount = 1
+Help:PackDelete.Param.1 = Name - Имя архива
+
+#PackAdd
+Help:PackAdd.Info = Добавить архив
+Help:PackAdd.Syntax = PackAdd [Name]
+Help:PackAdd.ParamCount = 1
+Help:PackAdd.Param.1 = Name - Имя архива
+
+#PackFileList
+Help:PackFileList.Info = Вывести список файлов в архивах
+Help:PackFileList.Syntax = PackFileList <Mask>
+Help:PackFileList.ParamCount = 1
+Help:PackFileList.Param.1 = Mask - Подстрока для поиска

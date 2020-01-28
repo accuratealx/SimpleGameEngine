@@ -10,6 +10,10 @@
   Мне пришлось вырезать всё кощунство, относящееся к
   линуксу и говноправки этого человека. Проверял работу
   на Windows 7 SP1 x64.
+  Дополнение 20.06.2020 Часть относящаяся к Alut, а точнее
+  alutLoadWAVMemory не работает через TStream. Пришлось
+  самому делать разбор WAVE PCM, расширение в этом модуле
+  было выпилено на совсем.
 
  *)
 
@@ -1845,17 +1849,6 @@ var
   ALGETAUXILIARYEFFECTSLOTFV: procedure(asid: TALuint; param: TALenum; values: PALfloat); cdecl;
 
 
-  //Internal Alut functions
-  procedure alutInit;
-  procedure alutExit;
-  procedure alutLoadWAVFile(fname: string; var format: TALenum; var data: TALvoid; var size: TALsizei; var freq: TALsizei{; var loop: TALint});
-  procedure alutLoadWAVMemory(memory: PALbyte; var format: TALenum; var data: TALvoid; var size: TALsizei; var freq: TALsizei{; var loop: TALint});
-  procedure alutUnloadWAV({format: TALenum;} data: TALvoid{; size: TALsizei; freq: TALsizei});
-
-  function  LoadWavStream(Stream: Tstream; var format: TALenum; var data: TALvoid; var size: TALsizei; var freq: TALsizei{; var loop: TALint}): Boolean; //Unofficial
-
-
-
 var
   LibHandle: THandle = 0;
 
@@ -2061,157 +2054,6 @@ begin
       end;
     end;
 end;
-
-
-
-
-
-
-
-//Internal Alut replacement procedures
-procedure alutInit;
-var
-  Context: PALCcontext;
-  Device: PALCdevice;
-begin
-  Device := alcOpenDevice(nil);               //Open device
-  Context := alcCreateContext(Device, nil);   //Create context(s)
-  alcMakeContextCurrent(Context);             //Set active context
-end;
-
-
-procedure alutExit;
-var
-  Context: PALCcontext;
-  Device: PALCdevice;
-begin
-  Context := alcGetCurrentContext();        //Get active context
-  Device := alcGetContextsDevice(Context);  //Get device for active context
-  alcDestroyContext(Context);               //Release context(s)
-  alcCloseDevice(Device);                   //Close device
-end;
-
-
-
-const
-  WAV_STANDARD  = $0001;
-  WAV_IMA_ADPCM = $0011;
-  WAV_MP3       = $0055;
-
-
-type
-  TWAVHeader = record
-    RIFFHeader: array [1..4] of AnsiChar;
-    FileSize: Integer;
-    WAVEHeader: array [1..4] of AnsiChar;
-    FormatHeader: array [1..4] of AnsiChar;
-    FormatHeaderSize: Integer;
-    FormatCode: Word;
-    ChannelNumber: Word;
-    SampleRate: Integer;
-    BytesPerSecond: Integer;
-    BytesPerSample: Word;
-    BitsPerSample: Word;
-  end;
-
-
-
-procedure alutLoadWAVFile(fname: string; var format: TALenum; var data: TALvoid; var size: TALsizei; var freq: TALsizei);
-var
-  Stream: TFileStream;
-begin
-  Stream := TFileStream.Create(fname, $0000);
-  LoadWavStream(Stream, format, data, size, freq);
-  Stream.Free;
-end;
-
-
-procedure alutLoadWAVMemory(memory: PALbyte; var format: TALenum; var data: TALvoid; var size: TALsizei; var freq: TALsizei);
-var
-  Stream: TMemoryStream;
-begin
-  Stream := TMemoryStream.Create;
-  Stream.Write(memory, sizeof(memory^));
-  LoadWavStream(Stream, format, data, size, freq);
-  Stream.Free;
-end;
-
-
-procedure alutUnloadWAV(data: TALvoid);
-begin
-  if data <> nil then freemem(data);
-end;
-
-
-function LoadWavStream(Stream: Tstream; var format: TALenum; var data: TALvoid; var size: TALsizei; var freq: TALsizei): Boolean;
-var
-  WavHeader: TWavHeader;
-  readname: pansichar;
-  name: ansistring;
-  readint: integer;
-begin
-    Result := False;
-
-    //Read wav header
-    stream.Read(WavHeader, sizeof(TWavHeader));
-
-    //Determine SampleRate
-    freq := WavHeader.SampleRate;
-
-    //Detemine waveformat
-    if WavHeader.ChannelNumber = 1 then
-      case WavHeader.BitsPerSample of
-        8 : format := AL_FORMAT_MONO8;
-        16: format := AL_FORMAT_MONO16;
-      end;
-
-    if WavHeader.ChannelNumber = 2 then
-      case WavHeader.BitsPerSample of
-        8 : format := AL_FORMAT_STEREO8;
-        16: format := AL_FORMAT_STEREO16;
-      end;
-
-    //go to end of wavheader
-    stream.seek((8 - 44) + 12 + 4 + WavHeader.FormatHeaderSize + 4, soFromCurrent); //hmm crappy... //Изврат, оставлю пока так
-
-    //loop to rest of wave file data chunks
-    repeat
-      //read chunk name
-      getmem(readname, 4);
-      stream.Read(readname^, 4);
-      name := readname[0] + readname[1] + readname[2] + readname[3];
-      if name = 'data' then
-        begin
-        //Get the size of the wave data
-        stream.Read(readint, 4);
-        size := readint;
-
-        //if WavHeader.BitsPerSample = 8 then size:=size+1; //fix for 8bit???
-        //Read the actual wave data
-        getmem(data, size);
-        stream.Read(Data^, size);
-
-        //Decode wave data if needed
-        if WavHeader.FormatCode = WAV_IMA_ADPCM then
-          begin
-          //TODO: add code to decompress IMA ADPCM data
-          end;
-
-        if WavHeader.FormatCode = WAV_MP3 then
-          begin
-          //TODO: add code to decompress MP3 data
-          end;
-        Result:=True;
-
-        end
-        else begin
-        //Skip unknown chunk(s)
-        stream.Read(readint, 4);
-        stream.Position := stream.Position + readint;
-        end;
-    until stream.Position >= stream.size;
-end;
-
 
 
 

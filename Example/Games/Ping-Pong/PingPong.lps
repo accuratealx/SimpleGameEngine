@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="11"/>
+    <BuildModes Active="Default"/>
+    <Units Count="2">
+      <Unit0>
+        <Filename Value="PingPong.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="146"/>
+        <CursorPos X="22" Y="163"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="..\..\..\Source\System\sgeSound.pas"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="85"/>
+        <CursorPos X="30" Y="152"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit1>
+    </Units>
+    <JumpHistory Count="12" HistoryIndex="11">
+      <Position1>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="58" Column="17" TopLine="47"/>
+      </Position1>
+      <Position2>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="98" Column="3" TopLine="95"/>
+      </Position2>
+      <Position3>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="61" Column="17" TopLine="41"/>
+      </Position3>
+      <Position4>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="161" Column="13" TopLine="142"/>
+      </Position4>
+      <Position5>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="66" Column="20" TopLine="50"/>
+      </Position5>
+      <Position6>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="84" Column="25" TopLine="67"/>
+      </Position6>
+      <Position7>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="89" Column="5" TopLine="71"/>
+      </Position7>
+      <Position8>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="162" Column="24" TopLine="144"/>
+      </Position8>
+      <Position9>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="165" Column="21" TopLine="145"/>
+      </Position9>
+      <Position10>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="88" Column="47" TopLine="67"/>
+      </Position10>
+      <Position11>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="61" Column="15" TopLine="39"/>
+      </Position11>
+      <Position12>
+        <Filename Value="PingPong.lpr"/>
+        <Caret Line="128" Column="25" TopLine="106"/>
+      </Position12>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

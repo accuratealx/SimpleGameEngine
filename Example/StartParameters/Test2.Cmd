@@ -1,1 +1,0 @@
-StartParameters.exe --help /TestParam Mode:Abc

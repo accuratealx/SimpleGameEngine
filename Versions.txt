@@ -1,3 +1,314 @@
+﻿Версия 1.20
+
+Добавлен модуль sgeSimpleContainer
+В модуль sgeSimpleContainer добавлен класс TsgeSimpleContainer (Работа с простым контейнером)
+Добавлен модуль sgeSimpleCommand
+В модуль sgeSimpleCommand добавлен класс TsgeSimpleCommand (Синатксический парсер строки)
+Добавлен модуль sgeStringList
+В модуль sgeObjectList добавлен тип TsgeObject
+В модуль sgeObjectList добавлен класс TsgeObjectList (Глобальное хранилище объектов)
+Добавлен модуль sgeAnimationList (Именованное хранилище анимаций)
+В модуль sgeAnimationList добавлен класс TsgeAnimationList
+Добавлен модуль sgeSpriteList (Именованное хранилище спрайтов)
+В модуль sgeSpriteList добавлен класс TsgeSpriteList
+Добавлен модуль sgeScreenSaver
+В модуль sgeScreenSaver добавлен класс TsgeScreenSaver (Шаблон хранителя экрана)
+Добавлен модуль sgeMemoryStream
+В модуль sgeMemoryStream добавлен класс TsgeMemoryStream
+Добавлен модуль sgeFile
+В модуль sgeFile добавлен класс TsgeFile (Класс доступа к файлу)
+Добавлен модуль sgeFileSystem
+В модуль sgeFileSystem добавлен класс TsgeFileSystem (Файловая система)
+Добавлен модуль sgePackFile
+В модуль sgePackFile добавлен класс TsgePackFileReader (Класс чтения архива)
+Добавлен модуль sgePackFileList
+В модуль sgePackFileList добавлен класс TsgePackFileList
+Добавлен модуль sgeFileSystemPackFileList
+В модуль sgeFileSystemPackFileList добавлен класс TsgeFileSystemPackFileList (Список файлов в подключенных архивах)
+Добавлен модуль sgePackFileReader
+В модуль sgePackFileReader добавлен класс TsgePackFileReader
+Добавлен модуль sgePackFileWriter
+В модуль sgePackFileWriter добавлен класс TsgePackFileWriter
+Добавлен модуль sgeSoundBufferLoader
+В модуле sgeSoundBufferLoader добавлен класс TsgeSoundBufferLoader (Базовый класс загрузчика звуковых файлов)
+Добавлен модуль sgeSoundBufferWavLoader
+В модуле sgeSoundBufferWavLoader добавлен класс TsgeSoundBufferWavLoader (Загрузчик Wav PCM 8/16 бит)
+В модуль sgeStringList добавлен класс TsgeStringList
+Добавлен модуль sgeTask
+В модуль sgeTask добавлен класс TsgeTask (Пользовательская задача)
+Добавлен модуль sgeTaskList
+В модуль sgeTaskList добавлен класс TsgeTaskList (Список пользовательских задач)
+В классе TSimpleGameEngine удалён метод InitWindow
+В классе TSimpleGameEngine удалён метод InitGraphic
+В классе TSimpleGameEngine удалён метод InitSound
+В классе TSimpleGameEngine удалёно свойство TickCount
+В классе TSimpleGameEngine удалён метод SetTickCount
+В классе TSimpleGameEngine удалён метод GetTickCount
+В классе TSimpleGameEngine удалёно свойство TickEnable
+В классе TSimpleGameEngine удалён метод SetTickEnable
+В классе TSimpleGameEngine удалён метод GetTickEnable
+В классе TSimpleGameEngine удалёно свойство TickDelay
+В классе TSimpleGameEngine удалён метод SetTickDelay
+В классе TSimpleGameEngine удалён метод GetTickDelay
+В классе TSimpleGameEngine удалён метод SendTickMessage
+В классе TSimpleGameEngine удалён метод Tick (Теперь обработчик тиков это обычная задача)
+В классе TSimpleGameEngine добавлен метод Initialize (код из InitWindow, InitGraphic и InitSound)
+В классе TSimpleGameEngine добавлено свойство TaskList (Пользовательские задачи)
+В классе TSimpleGameEngine добавлено свойство TaskEnable
+В классе TSimpleGameEngine добавлен метод SetTaskEnable
+В классе TSimpleGameEngine добавлен метод GetTaskEnable
+В классе TSimpleGameEngine добавлено свойство TaskDelay (Задержка планировщика)
+В классе TSimpleGameEngine добавлен метод SetTaskDelay
+В классе TSimpleGameEngine добавлен метод GetTaskDelay
+В классе TSimpleGameEngine добавлен метод TaskManager (Планировщик задач)
+В модуле sgeShellFunction доработана функция sge_ShellFunctions_Resources_Reload (Вызов метода Reload для TsgeSimpleParameters)
+В модуле StringArray добавлена функция StringArray_Trim
+В модуле StringArray переписана функция StringToArray (увеличена скорость работы примерно в 50 раз)
+В модуле sgeResource в тип TsgeResource добавлено поле Group
+В модуле sgeResource добавлен метод DeleteByGroup
+В классе TsgeWindow добавлен метод IsFocused
+В классе TsgeWindow удален метод GetRect
+В классе TsgeWindow удален метод SetRect
+В классе TsgeWindow удален метод GetClientRect
+В классе TsgeWindow переименован свойство Width в WindowWidth
+В классе TsgeWindow переименован свойство Height в WindowHeight
+В классе TsgeWindow переименован свойство ClientWidth в Width
+В классе TsgeWindow переименован свойство ClientHeight в Height
+Добавлен модуль sgeObjectList
+В классе sgeGraphicFrames исправлен метод SetAsString (убрана утечка памяти)
+В модуле sgeGraphicFrames переименован класс TSgeGraphicFrames в TSgeGraphicFrameList
+Модуль sgeGraphicFrames перименован в sgeGraphicFrameList
+В модуле sgeResources переименован класс TSgeResources в TSgeResourceList
+Модуль sgeResources перименован в sgeResourceList
+В модуле sgeStartParameters переименован класс TsgeStartParameters в TsgeStartParameterList
+Модуль sgeStartParameter перименован в sgeStartParameterList
+В модуле sgeJoysticks переименован класс TsgeJoysticks в TsgeJoystickList
+Модуль sgeJoysticks перименован в sgeJoystickList
+В модуле sgeShellCommands переименован класс TsgeShellCommands в TsgeShellCommandList
+Модуль sgeShellCommands перименован в sgeShellCommandList
+В модуле sgeColoredLines переименован класс TsgeColoredLines в TsgeColoredLineList
+Модуль sgeColoredLines перименован в sgeColoredLineList
+В классе TSimpleGameEngine метод Run изменён на виртуальный
+В классе TsgeGraphicSprite добавлен метод SetWidth
+В классе TsgeGraphicSprite добавлен метод SetHeight
+В классе TsgeGraphicSprite добавлен метод ChangeTexture (Заливка готовых данных в OpenGL)
+В классе TsgeGraphicSprite конструктор CreateChessBoard перименован в Create (Создание одноцветного спрайта)
+В классе TsgeGraphicSprite исправлен метод LoadChessBoard (Удалён лишний код)
+В классе TsgeGraphicSprite добавлен метод FillColor (Заливка одним цветом)
+В классе TsgeGraphicSprite добавлен метод SetSize
+В классе TsgeGraphicSprite свойство Width и Height теперь доступны для записи
+В классе TsgeGraphic добавлен тип TsgeGraphicRenderPlace
+В классе TsgeGraphic добавлено свойство RenderPlace (Установка места отрисовки экран/спрайт)
+В классе TsgeGraphic добавлено свойство RenderSprite (Установка спрайта для отрисовки)
+В классе TsgeGraphic добавлен метод SetRenderSprite
+В классе TsgeGraphic добавлен метод SetRenderPlace
+В классе TsgeGraphic тип TsgeGraphicCapabilities изменено на TsegGraphicState
+В классе TsgeGraphic свойство Capabilities изменено на State
+В классе TSimpleGameEngine указатели на важные объекты добавлены в ObjectList
+В модуль sgeGraphicFont добавлена функция sgeGraphicFont_AttribToString
+В модуль sgeGraphicFont добавлена функция sgeGraphicFont_StringToAttrib
+В классе TsgeGraphicFont в методе BuildFont исправлена ошибка (Не устанавливался начальный номер списка)
+В классе TsgeGraphicFont в методе BuildFont исправлено формирование строки ошибки (Имя + Высота + Атрибуты)
+В модуле sgeShellFunctions исправлена функция sgeShellFunctions_Font_Attrib (Упрощён код)
+В модуле sgeShellFunctions добавлена функция sgeShellFunctions_Object_List (Команда оболочки)
+В модуль sgeGraphicColor добавлена функция sgeGraphicColor_GetColor (Возврат цвета из строки)
+В классе TsgeResourceList в методе LoadResource_Parameters исправлена ошибка (В конструктор ParameterList не передавалось имя файла, не работал метод Reload)
+В модуле sgeTypes исправлена функция sgeGetRGBAFromParam (Не учитывался StartIdx)
+В классе TsgeViewBox добавлена функция GetMapLimitPosByScreenPoint (Возврат точки на карте без выхода за границы)
+В модуле sgeTypes удалена функция sgeCreateErrorString
+В модуле sgeTypes удалена функция sgeFoldErrorString
+в классе EsgeException добавлен конструктор (взамен sgeCreateErrorString и sgeFoldErrorString)
+В модуле sgeShellFunctions исправлена функция sge_ShellFunctions_Resources_Load (Неправильно формаровалась строка ошибки)
+В модуле sgeShellFunctions исправлена функция sge_ShellFunctions_Resources_LoadTable (Неправильно формаровалась строка ошибки)
+В модуле sgeTypes добавлена функция sgeBinStringToHex (Перевод бинарной строки 11110000 в F0)
+В модуле sgeTypes добавлена функция sgeHexToBinString (Перевод HEX строки F0 в 11110000)
+В классе sgeGraphicFrameList изменен метод SetAsString (Сомнительные строки теперь пропускаются вместо исключения)
+В модуле sgeConst удалены лишние константы
+В классе TSimpleGameEngine добавлено свойство DefGraphicAnimation
+В классе TSimpleGameEngine добавлен метод SendTickMessage (Отправка сообщения о пересчёте мира)
+В классе TSimpleGameEngine доработан метод WndProc (Добавлен обработчик WM_SGETICK)
+В классе TsgeGraphicSprite Доработан конструктор (Добавлена проверка на размеры спрайта)
+В классе TsgeShell добавлено свойство StapleChar (Символ кавычки для обрамления пробелов)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Shell_StapleChar (Изменение символа кавычки для обрамления строки)
+В классе TSimpleGameEngine добавлено свойство FFileSystem
+В классе TSimpleGameEngine добавлен метод LoadPackFromDirectory (Рекурсивный поиск архивов и добавление в файловую систему)
+В классе ЕsgeKeyTable добавлено свойство KeyUpCommand
+В классе ЕsgeKeyTable добавлено свойство KeyDownCommand
+В классе ЕsgeKeyTable добавлено свойство NamedKeyUpCommand
+В классе ЕsgeKeyTable добавлено свойство NamedKeyDownCommand
+В Модуль sgeGraphicColor добавлена константа GC_LightGray
+В Модуль sgeGraphicColor добавлена константа GC_DarkGray
+В класс TsgeGraphicSprite добавлен метод загрузки из MemoryStream
+В модуле sgeTypes удалена функция sgeFoldErrorString (Код перенесён в sgeCreateErrorString)
+В классе TsgeJournal заменена зависимость TFileStream на sgeFile
+В классе TsgeColoredLines заменена зависимость StringArray на sgeStringList
+В классе TsgeCommandHistory заменена зависимость StringArray на sgeStringList
+В модуле sgeTypes добавлена функция sgeGetTickCount
+В модуле sgeTypes добавлена функция sgeGetPerformanceCounter
+В классе TsgeGraphicFrameList заменена зависимость StringArray на sgeStringList
+В классе TsgeGraphicFrameList заменена зависимость StringArray на sgeSimpleCommand
+В классе TsgeGraphicFrameList заменена зависимость QueryPerformanceCounter на sgeGetTickCount
+В классе TsgeGraphicFrameList добавлено свойство FileName
+В классе TsgeGraphicFrameList добавлен метод Reload
+В классе TsgeGraphicAnimation заменена зависимость QueryPerformanceCounter на sgeGetTickCount
+В классе TsgeGraphicAnimation добавлено свойство FileName
+В классе TsgeGraphicAnimation добавлен метод Reload
+В классе TsgeCounter убрана зависимость Windows.GetTickCount
+В классе TSimpleGameEngine добавлен метод FadePassTime (Обработчик затемнения)
+В классе TsgeFileSystem исправлен метод GetFileSize (Не искал размер файла в архивах)
+В классе TsgeFade убрана зависимость Windows.GetTickCount
+В модуле sgeGraphicColor удалена функция sgeGraphicColor_GetColor
+В модуле sgeGraphicColor убрана зависимость StringArray
+В классе ЕsgeSystemFont добавлен метод LoadFromStream
+В классе ЕsgeSystemFont переписан механизм загрузки шрифта через память вместо файла
+В классе TsgeSoundBuffer добавлен метод LoadFromStream
+В классе TsgeSoundBuffer переписана процедура LoadFromFile (Загрузка из TsgeFile)
+В классе TsgeResourceList Убрана зависимость StringArray, SimpleParameters, SimpleCommand
+В классе TsgeResourceList переписан механизм загрузки ресурсов из TsgeMemoryStream
+В классе TsgeResourceList Удалены 2 типа ресурсов TsgeSystemIcon и TsgeSystemCursor (Нет лёкого способа загрузки из TStream)
+В классе TSimpleGameEngine переписан конструктор (Теперь полное отслеживание ошибок)
+В классе TSimpleGameEngine удалён метод Initialize (Код переехал в конструктор)
+В классе TSimpleGameEngine переписана функция GetLocalizedErrorString (Учёт кривой строки ошибки)
+В классе TSimpleGameEngine функция ProcessError перименована в LogError
+В классе TSimpleGameEngine переписана функция LogError (Введено два режима работы Error и Note, Note не локализуется)
+В модуле sgeTypes удалена функция sgeDecodeErrorString (Код перенесён в GetLocalizedErrorString)
+В классе TsgeStartParametersList добавлен метод GetNameAndValueFromString (Разбор параметра из строки)
+В классе TsgeStartParametersList переписан метод FindParametersFromString (Добавлена поддержка utf8)
+В классе TsgeStartParametersList убрана зависимость StringArray, SimpleCommand, SimpleParameters
+В классе TsgeStartParametersList добавлено свойство CmdLine (Сырая строка от операционной системы)
+В классе TsgeShellCommandList убрана зависимость StringArray
+В классе TsgeShell убрана зависимость StringArray, SimpleCommand, SimpleParameters
+В классе TsgeGraphic изменена функция Screenshot (Сохранение в MemoryStream вместо файла)
+В классе TSimpleGameEngine переписана функция ScreenShot (Сохранение через sgeMemoryStream)
+В классе TSimpleGameEngine переписана функция LoadLanguage (Загрузка из файловой системы)
+В классе TSimpleGameEngine доработана функция WndProc (В режиме сканирования клавиш не посылается повтор в оболочку)
+В классе TSimpleGameEngine переписана функция LoadParameters (Загрузка из файловой системы)
+В классе TSimpleGameEngine переписана функция SaveParameters (Сохранение в файловую систему)
+В классе TSimpleGameEngine добавлена функция GetGraphicAnimation (Безопасный поиск анимации)
+В классе TSimpleGameEngine добавлена процедура SetDirMain
+В классе TSimpleGameEngine переписана функция IsKeyDown (Учёт активности окна)
+В классе TsgeResourceList добавлена функция LoadResource_GraphicAnimation
+В классе TsgeResourceList доработана функция Command_LoadResource (Добавлена загрузка анимации)
+В классе TsgeSimpleParameters добавлена процедура Add (Добавление из списка параметров)
+В классе TsgeSimpleParameters добавлено свойство NamedParameter (Доступ по имени)
+В классе TsgeSimpleParameters добавлено свойство NamedValue (Доступ к значению по имени)
+В классе TsgeSimpleParameters добавлено свойство Exist (Проверка существования параметра)
+В классе TsgeSimpleParameters удалена функция Substitute
+В модуле sgeTypes добавлена функция sgeSubstituteParameterToString (Код переехал из TsgeSimpleParameters)
+В классе TsgeColoredLineList переписана процедура SaveToFile (Сохранение в файловую систему)
+В классе TsgeColoredLineList переписана функция ToString (Убрана зависимость от StringArray)
+В классе TsgeCommandHistory добавлена процедура ToMemoryStream
+В классе TsgeCommandHistory добавлена процедура FromMemoryStream
+В классе TsgeCommandHistory переписана функция FromString (Убрана зависимость от StringArray)
+В классе TsgeCommandHistory переписана функция ToString (Убрана зависимость от StringArray)
+В классе TsgeGraphicAnimation добавлена процедура FromMemoryStream
+В классе TsgeGraphicAnimation добавлен конструктор Create (Создание из MemoryStream)
+В классе TsgeFileSystem добавлено свойство MainDir (Возможность менять базовый каталог)
+В классе TsgeFileSystem добавлена функция DirectoryExists
+В модуле sgeShellFunctions переписана функция GetUserLoadFileName
+В модуле sgeShellFunctions переписана функция GetUserSaveFileName
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_Name
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_Run (Загрузка из файловой системы)
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_Write
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_Writec
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_Help
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_Debug
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_Tick
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_TickDelay
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_System_LoadLanguage
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Command_List
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Command_Save (Загрузка в файловую систему)
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Command_Load (Загрузка из файловой системы)
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Command_Lines
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Set_Set
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Set_List
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Set_Save (Загрузка в файловую систему)
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_Shell
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_LogErrors
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_StrictSearch
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_SetsSearch
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_BGColor
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_EditColor
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_CurColor
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_SelColor
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_TextColor
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_NoteColor
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_ErrColor
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_LogSave (Загрузка в файловую систему)
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_LogLines
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_VisLines
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_BGSprite
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_ScanMode
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_LogPageSize
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_SubstChar
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Shell_StapleChar
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Window_LockCursor
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Window_SysCursor
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Window_Width
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Window_Height
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Window_Caption
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Window_StayOnTop
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Graphic_ScreenShot (Загрузка в файловую систему)
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Graphic_MaxFPS
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Graphic_VSync
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Graphic_Draw
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Attach_Attach
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Attach_List
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Attach_Save (Загрузка в файловую систему)
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Attach_KeyList
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Joysticks_Joysticks
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Joysticks_Delay
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Font_Name
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Font_Size
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Font_Attrib
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Parameters_List
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Parameters_Set
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Parameters_Delete
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Parameters_Save (Загрузка в файловую систему)
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Parameters_Load (Загрузка из файловой системы)
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Resources_List (Вывод группы)
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Resources_Reload
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Resources_Delete
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Resources_Load
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Resources_LoadTable
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Resources_Rename
+В модуле sgeShellFunctions доработана функция sge_ShellFunctions_Object_List
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Key_Up (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Key_Down (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Key_Click (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Pack_List (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Pack_Delete (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Pack_Add (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Pack_FileList (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_System_Priority (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Task_Delay (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Task_Task (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Task_List (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Task_Info (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Task_Delete (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Task_Stop (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Task_Start (Команда оболочки)
+В модуле sgeShellFunctions добавлена функция sge_ShellFunctions_Task_Restart (Команда оболочки)
+В модуле sgeShellFunctions удалена функция sge_ShellFunctions_Tick_Delay
+В модуле sgeShellFunctions удалена функция sge_ShellFunctions_Tick_Enable
+В папку Example добавлен пример FirstGame
+В папку Example добавлен пример Ping-Pong
+В папку Example добавлен пример RenderToSprite (рисование на спрайте)
+В папку Example добавлен пример ScreenSaver (Создание хранителя экрана Windows)
+В папку Example добавлен пример FirstGame (Пример базовой игры)
+В папку Example добавлен пример SplashScreen (Окно заставки перед запуском основного приложения)
+В папку Example добавлен пример StartParameters (Стартовые параметры приложения)
+В папку Example добавлен пример Joysticks (Работа с джойстиками)
+Добавлен инструмент SGEPack (Запаковка и распаковка файлов из игровых архивов)
+Проведена реорганизация папок проекта
+Обновлён файл Russian.Language
+В модуле sgeConst удалены лишние константы и добавлены недостающие
+Мелкие исправления по коду не влияющие на смысл
+
+
+
+
+
 Версия 1.19
 
 Доработан механизм формирования строк исключений

@@ -84,7 +84,7 @@
 
 unit dglOpenGL;
 
-{$HINTS OFF}
+{$HINTS OFF} {$Warnings Off}
 
 interface
 
