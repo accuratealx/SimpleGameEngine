@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeFileSystem.pas
-Версия            1.6
+Версия            1.7
 Создан            28.05.2020
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Доступ к файловой системе и архивам
@@ -203,7 +203,11 @@ begin
   Result := False;
 
   //Проверить в файловой системе
-  if SysUtils.FileExists(FMainDir + FileName) then Result := True;
+  if SysUtils.FileExists(FMainDir + FileName) then
+    begin
+    Result := True;
+    Exit;
+    end;
 
   //Проверить в архивах
   c := FFileList.Count - 1;

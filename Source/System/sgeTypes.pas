@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeTypes.pas
-Версия            1.8
+Версия            1.9
 Создан            24.01.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Типы простого игрового движка плюс пару функций
@@ -9,7 +9,7 @@
 
 unit sgeTypes;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -147,12 +147,10 @@ begin
 end;
 
 
-{$Hints Off}
 function sgeGetPerformanceCounter: Int64;
 begin
   QueryPerformanceCounter(Result);
 end;
-{$Hints On}
 
 
 function sgeCreateErrorString(ModuleName, Error: String; Info: String = ''; NewLine: String = ''): String;
@@ -316,7 +314,6 @@ end;
 
 
 //Перевод бинарной строки в HEX (11111111 - FF)
-{$Hints Off}
 function sgeBinStringToHex(BinString: String): String;
 var
   StrLen, TailCount, i, c, j, ResIdx: Integer;
@@ -357,11 +354,9 @@ begin
     Inc(ResIdx, 2);
     end;
 end;
-{$Hints On}
 
 
 //Перевод строки HEX в бинарную строку (F0 - 11110000)
-{$Hints Off}
 function sgeHexToBinString(HexStr: String): String;
 const
   HEXDIGIT = ['0'..'9', 'A'..'F'];
@@ -400,7 +395,6 @@ begin
     Inc(ResIdx, 8);
     end;
 end;
-{$Warnings On}
 
 
 

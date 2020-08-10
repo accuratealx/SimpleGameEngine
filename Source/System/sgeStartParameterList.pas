@@ -9,7 +9,7 @@
 
 unit sgeStartParameterList;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -119,7 +119,6 @@ begin
 end;
 
 
-{$Hints Off}
 function TsgeStartParameterList.IndexOf(Name: string): Integer;
 var
   i, c: Integer;
@@ -135,7 +134,6 @@ begin
       Break;
       end;
 end;
-{$Hints on}
 
 
 function TsgeStartParameterList.GetValue(Name: String): String;
@@ -202,7 +200,6 @@ begin
 end;
 
 
-{$Hints Off}
 procedure TsgeStartParameterList.FindParametersFromString(Str: String);
 var
   i, c: Integer;
@@ -233,18 +230,14 @@ begin
   //Очистить список
   List.Free;
 end;
-{$Hints On}
 
 
-{$Warnings Off}
 function TsgeStartParameterList.GetRawParamString: String;
 begin
   Result := WideString(GetCommandLine);
 end;
-{$Warnings On}
 
 
-{$Warnings Off}
 function TsgeStartParameterList.GetNormalParamString: String;
 var
   i, c: Integer;
@@ -268,7 +261,6 @@ begin
   //Вернуть результат
   Result := UTF8Trim(Result);
 end;
-{$Warnings On}
 
 
 constructor TsgeStartParameterList.Create;

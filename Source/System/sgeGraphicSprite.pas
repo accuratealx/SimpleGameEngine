@@ -10,7 +10,7 @@
 
 unit sgeGraphicSprite;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -101,7 +101,6 @@ const
 
 
 
-{$Warnings Off}
 procedure TsgeGraphicSprite.SetMagFilter(AFilter: TsgeGraphicSpriteFilter);
 var
   Filter: Integer;
@@ -160,7 +159,6 @@ begin
     GL_LINEAR : Result := gsfLinear;
   end;
 end;
-{$Warnings On}
 
 
 procedure TsgeGraphicSprite.SetTileCols(ACols: Word);

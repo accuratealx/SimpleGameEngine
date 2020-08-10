@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              SimpleGameEngine.pas
-Версия            1.19.10
+Версия            1.20.0
 Создан            07.06.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Главный класс движка
@@ -9,7 +9,7 @@
 
 unit SimpleGameEngine;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -284,7 +284,6 @@ begin
 end;
 
 
-{$Warnings Off}
 function TSimpleGameEngine.GetPriority: TsgePriority;
 var
   mode: DWORD;
@@ -303,7 +302,6 @@ begin
     $100  : Result := pRealTime;    //REALTIME_PRIORITY_CLASS
   end;
 end;
-{$Warnings On}
 
 
 procedure TSimpleGameEngine.SetJoysticksDelay(ADelay: Cardinal);

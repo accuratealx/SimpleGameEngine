@@ -9,7 +9,7 @@
 
 unit sgeEvent;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -68,8 +68,8 @@ function sgeTimeSetEvent(uDelay: Cardinal; uResolution: Cardinal; lpTimeProc: Po
 Function sgeTimeKillEvent(uTimerID: Cardinal): Cardinal; stdcall; external 'winmm.dll' name 'timeKillEvent';
 
 
+
 //Функция обратного вызова
-{$Hints Off}
 Procedure sgeTimeEventProc(uTimerID, uMsg: Cardinal; dwUser, dw1, dw2: PtrUInt); stdcall;
 var
   Eo: TsgeEvent;
@@ -92,7 +92,6 @@ begin
   Inc(Eo.FTimesCount);
   if Eo.FTimesCount >= Eo.FTimes then Eo.StopEvent;
 end;
-{$Hints On}
 
 
 procedure TsgeEvent.SetEnable(AEnable: Boolean);
@@ -149,13 +148,11 @@ begin
 end;
 
 
-{$Warnings Off}
 procedure TsgeEvent.CorrectPeriod(out Period: Cardinal);
 begin
   if Period < FMinPeriod then Period := FMinPeriod;
   if Period > FMaxPeriod then Period := FMaxPeriod;
 end;
-{$Warnings On}
 
 
 constructor TsgeEvent.Create(Delay: Cardinal; Enable: Boolean; Proc: TsgeEventProc; Times: Integer);

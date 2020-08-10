@@ -9,7 +9,7 @@
 
 unit sgeGraphic;
 
-{$mode objfpc}{$H+}{$Inline On}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}{$Inline On}
 
 interface
 
@@ -199,7 +199,6 @@ begin
 end;
 
 
-{$Warnings Off}
 function TsgeGraphic.GetMetrix(Index: TsgeGraphicMetrics): Single;
 var
   Dt: array[0..3] of Single;
@@ -267,7 +266,6 @@ begin
       end;
   end;
 end;
-{$Warnings On}
 
 
 procedure TsgeGraphic.SetColor(AColor: TsgeGraphicColor);
@@ -328,7 +326,6 @@ begin
 end;
 
 
-{$Warnings Off}
 function TsgeGraphic.GetPoligonMode: TsgeGraphicPolygonMode;
 var
   rs: array[0..1] of Integer;
@@ -340,7 +337,6 @@ begin
   if rs[0] = GL_LINE then Result := gpmLine;
   if rs[0] = GL_FILL then Result := gpmFill;
 end;
-{$Warnings On}
 
 
 procedure TsgeGraphic.SetShadeModel(AMode: TsgeGraphicShadeModel);
@@ -352,7 +348,6 @@ begin
 end;
 
 
-{$Warnings Off}
 function TsgeGraphic.GetShadeModel: TsgeGraphicShadeModel;
 var
   rs: Integer;
@@ -361,7 +356,6 @@ begin
   if rs = GL_FLAT then Result := gsmFlat;
   if rs = GL_SMOOTH then Result := gsmSmooth;
 end;
-{$Warnings On}
 
 
 procedure TsgeGraphic.SetState(AState: TsgeGraphicState; AEnable: Boolean);
@@ -378,7 +372,6 @@ begin
 end;
 
 
-{$Warnings Off}
 function TsgeGraphic.GetState(AState: TsgeGraphicState): Boolean;
 begin
   case AState of
@@ -391,7 +384,6 @@ begin
     gsScissor      : Result := glIsEnabled(GL_SCISSOR_TEST);
   end;
 end;
-{$Warnings On}
 
 
 procedure TsgeGraphic.SetRenderBuffer(ABuffer: TsgeGraphicRenderBuffer);
@@ -468,7 +460,6 @@ begin
 end;
 
 
-{$Warnings Off}
 function TsgeGraphic.GetNormalRect(X, Y, W, H: Single; Mode: TsgeGraphicDrawMode): TsgeGraphicRect;
 var
   HalfWidth, HalfHeight: Single;
@@ -532,7 +523,6 @@ begin
       end;
   end;
 end;
-{$Warnings On}
 
 
 function TsgeGraphic.GetTextureRect(Sprite: TsgeGraphicSprite; Xs, Ys, Ws, Hs: Single): TsgeGraphicRect;
@@ -750,7 +740,6 @@ begin
 end;
 
 
-{$Warnings Off}
 procedure TsgeGraphic.SetLineStipple(Scale: Integer; Mode: TsgeGraphicLineStipple);
 var
   w: Word;
@@ -766,7 +755,6 @@ begin
   end;
   glLineStipple(Scale, w);
 end;
-{$Warnings On}
 
 
 procedure TsgeGraphic.DrawPoint(X, Y: Single);

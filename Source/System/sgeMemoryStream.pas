@@ -9,7 +9,7 @@
 
 unit sgeMemoryStream;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -97,7 +97,6 @@ begin
 end;
 
 
-{$Hints Off}
 procedure TsgeMemoryStream.Read(out Buffer; Offset: Int64; Size: Int64);
 var
   sz: Int64;
@@ -112,7 +111,6 @@ begin
   //Скопировать данные
   Move((FData + Offset)^, Buffer, Size);
 end;
-{$Hints On}
 
 
 procedure TsgeMemoryStream.FromString(Str: String);

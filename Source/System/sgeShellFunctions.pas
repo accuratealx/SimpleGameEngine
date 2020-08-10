@@ -9,7 +9,7 @@
 
 unit sgeShellFunctions;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -377,7 +377,6 @@ end;
 Параметры:
   Priotity - Приоритет (Idle, BelowNormal, Normal, AboveNormal, High, RealTime)
 }
-{$Warnings Off}
 function sge_ShellFunctions_System_Priority(Command: TsgeSimpleCommand): String;
 var
   P: TsgePriority;
@@ -415,7 +414,7 @@ begin
     SGE.Shell.LogMessage('Proirity = ' + S);
     end;
 end;
-{$Warnings On}
+
 
 
 

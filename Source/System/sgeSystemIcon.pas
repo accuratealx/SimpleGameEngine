@@ -9,7 +9,7 @@
 
 unit sgeSystemIcon;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -112,7 +112,6 @@ begin
 end;
 
 
-{$Warnings Off}
 procedure TsgeSystemIcon.LoadDefault(AType: TsgeSystemIconType);
 var
   H: HICON;
@@ -129,7 +128,6 @@ begin
   DeleteIcon;
   FHandle := H;
 end;
-{$Warnings On}
 
 
 procedure TsgeSystemIcon.Reload;

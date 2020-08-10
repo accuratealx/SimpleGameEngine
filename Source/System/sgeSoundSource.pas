@@ -13,7 +13,7 @@
 
 unit sgeSoundSource;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -196,7 +196,6 @@ begin
 end;
 
 
-{$Warnings Off}
 function TsgeSoundSource.GetState: TsgeSoundSourceState;
 var
   i: TALint;
@@ -210,7 +209,6 @@ begin
     AL_STOPPED: Result := sssStop;
   end;
 end;
-{$Warnings On}
 
 
 procedure TsgeSoundSource.SetLoop(ALoop: Boolean);

@@ -9,7 +9,7 @@
 
 unit sgeSound;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -73,7 +73,6 @@ const
 
 
 
-{$Warnings Off}
 procedure TsgeSound.SetDistanceModel(ADistance: TsgeSoundDistanceModel);
 var
   Mdl: TALenum;
@@ -92,7 +91,6 @@ begin
   //Изменить модель расчёта расстояния
   alDistanceModel(Mdl);
 end;
-{$Warnings On}
 
 
 function TsgeSound.GetDistanceModel: TsgeSoundDistanceModel;

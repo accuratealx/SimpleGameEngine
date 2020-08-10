@@ -9,7 +9,7 @@
 
 unit sgeStringList;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -401,7 +401,6 @@ begin
 end;
 
 
-{$Hints Off}
 procedure TsgeStringList.LoadFromFile(FileName: String);
 var
   F: TsgeFile;
@@ -430,7 +429,6 @@ begin
   //Преобразовать строку в массив
   FromString(S);
 end;
-{$Hints On}
 
 
 procedure TsgeStringList.Remix(Count: Integer);

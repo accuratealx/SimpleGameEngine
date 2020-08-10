@@ -9,7 +9,7 @@
 
 unit sgeWindow;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -579,13 +579,11 @@ begin
 end;
 
 
-{$Hints Off}
 procedure TsgeWindow.SetWindowProc(Proc: Pointer);
 begin
   if Proc = nil then Exit;
   Windows.SetWindowLongPtr(FHandle, GWLP_WNDPROC,  LONG_PTR(Proc));
 end;
-{$Hints On}
 
 
 procedure TsgeWindow.FullScreen;
@@ -605,7 +603,6 @@ begin
 end;
 
 
-{$Warnings Off}
 procedure TsgeWindow.Center(APos: TsgeWindowCenterPos);
 var
   W, H: Integer;
@@ -633,7 +630,6 @@ begin
   Left := W div 2 - Width div 2;
   Top := H div 2 - Height div 2;
 end;
-{$Warnings On}
 
 
 

@@ -9,7 +9,7 @@
 
 unit sgeObjectList;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -211,7 +211,6 @@ begin
 end;
 
 
-{$Hints Off}
 procedure TsgeObjectList.DeleteByGroup(Group: String);
 var
   i: Integer;
@@ -247,7 +246,7 @@ begin
       Break;
       end;
 end;
-{$Hints On}
+
 
 
 

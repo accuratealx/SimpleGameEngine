@@ -9,7 +9,7 @@
 
 unit sgeSystemCursor;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -112,7 +112,6 @@ begin
 end;
 
 
-{$Warnings Off}
 procedure TsgeSystemCursor.LoadDefault(AType: TsgeSystemCursorType);
 var
   H: HCURSOR;
@@ -137,7 +136,6 @@ begin
   DeleteCursor;
   FHandle := H;
 end;
-{$Warnings On}
 
 
 procedure TsgeSystemCursor.Reload;

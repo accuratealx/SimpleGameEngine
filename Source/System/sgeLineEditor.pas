@@ -9,7 +9,7 @@
 
 unit sgeLineEditor;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -106,9 +106,7 @@ begin
     Exit;
     end;
 
-  {$Warnings Off}
   WS := Str;                                  //В микрософте юникод 2 байтный, преобразовать
-  {$Warnings On}
 
   Size := (Length(WS) + 1) * 2;               //Определить длину на конце символ #0
 
@@ -468,7 +466,6 @@ begin
 end;
 
 
-{$Hints Off}
 procedure TsgeLineEditor.ClipboardPaste;
 var
   Idx: Integer;
@@ -480,7 +477,6 @@ begin
   InsertString(FCursorPos, s);
   ClearSelection;
 end;
-{$Hints On}
 
 
 procedure TsgeLineEditor.ClipboardCut;
@@ -517,7 +513,6 @@ begin
 end;
 
 
-{$Hints Off}
 procedure TsgeLineEditor.DeleteSelection;
 var
   Idx, Count: Integer;
@@ -528,7 +523,6 @@ begin
   FCursorPos := Idx;
   ClearSelection;
 end;
-{$Hints On}
 
 
 function TsgeLineEditor.GetTextBeforePos(APos: Integer): String;

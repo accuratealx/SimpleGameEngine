@@ -9,7 +9,7 @@
 }
 unit sgeScreenSaver;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -121,7 +121,6 @@ begin
 end;
 
 
-{$Warnings Off}
 procedure TsgeScreenSaver.StartSaverConfigBox;
 var
   s: String;
@@ -144,7 +143,6 @@ begin
     end;
   MessageBoxIndirect(BoxPrm);
 end;
-{$Warnings On}
 
 
 procedure TsgeScreenSaver.Run;

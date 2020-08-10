@@ -9,7 +9,7 @@
 
 unit sgeSimpleParameters;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -470,7 +470,6 @@ begin
 end;
 
 
-{$Warnings Off}
 procedure TsgeSimpleParameters.UpdateInString(var Str: String);
 var
   List: TsgeStringList;
@@ -531,7 +530,6 @@ begin
   //Освободить память
   List.Free;
 end;
-{$Warnings On}
 
 
 procedure TsgeSimpleParameters.UpdateFromString(Str: String);
@@ -693,7 +691,6 @@ begin
 end;
 
 
-{$Hints Off}
 procedure TsgeSimpleParameters.LoadFromFile(FileName: String);
 var
   F: TsgeFile;
@@ -723,7 +720,6 @@ begin
   //Преобразовать строку в параметры
   FromString(S);
 end;
-{$Hints On}
 
 
 procedure TsgeSimpleParameters.UpdateInFile(FileName: String);

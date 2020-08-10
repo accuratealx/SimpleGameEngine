@@ -63,6 +63,7 @@ type
   public
     constructor Create(MapWidth, MapHeight, ScreenWidth, ScreenHeight: Single; ScaleType: TsgeViewBoxScaleType = vbstFree; Scale: Single = 1; MinScale: Single = 0; MaxScale: Single = 2);
 
+    //procedure SetScaledCenterPos(Scale: Single; X, Y: Single);
     function  GetMapPosByScreenPoint(X, Y: Single; Safe: Boolean = True): TsgeGraphicPoint;
     function  GetMapBounds: TsgeGraphicRect;
 
@@ -353,6 +354,25 @@ begin
 
   ChangeScale(Scale, 0, 0);
 end;
+
+
+{procedure TsgeViewBox.SetScaledCenterPos(Scale: Single; X, Y: Single);
+var
+  Xc, Yc, X1, Y1, X2, Y2, dX, dY: Single;
+begin
+  X1 := FScreenOffset.X + X;
+  X2 := X1 * Scale / FScale;
+  dX := X2 - X1;
+  Xc := FScreenCenter.X + X2 - dX;
+
+
+  Y1 := FScreenOffset.Y + Y;
+  Y2 := Y1 * Scale / FScale;
+  dY := Y2 - Y1;
+  Yc := FScreenCenter.Y + Y2 - dY;
+
+  ChangeScale(Scale, Xc, Yc);
+end;}
 
 
 function TsgeViewBox.GetMapPosByScreenPoint(X, Y: Single; Safe: Boolean): TsgeGraphicPoint;

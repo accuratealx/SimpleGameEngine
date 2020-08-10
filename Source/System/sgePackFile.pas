@@ -9,7 +9,7 @@
 
 unit sgePackFile;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}{$Warnings Off}{$Hints Off}
 
 interface
 
@@ -37,7 +37,6 @@ function sgePackFile_GetFileHead: TsgePackFileHeader;
 implementation
 
 
-{$Hints Off}
 function sgePackFile_GetFileHead: TsgePackFileHeader;
 const
   PackLabel = 'SGEPACK';
@@ -45,7 +44,6 @@ begin
   Move(PackLabel, Result.hLabel, SizeOf(PackLabel));
   Result.hVersion := 1;
 end;
-{$Hints On}
 
 
 end.
