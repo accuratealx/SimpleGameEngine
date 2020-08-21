@@ -63,12 +63,20 @@ implementation
 
 uses
   sgeConst, sgeTypes,
-  SysUtils, FileUtil, Windows;
+  SysUtils, Windows;
 
 
 const
   _UNITNAME = 'sgeFile';
 
+
+{$IfDef WINDOWS}
+  {$IfDef WIN64}
+    function sgeGetFileSize(hFile: HANDLE; lpFileSizeHigh: PLARGE_INTEGER): BOOL; external 'kernel32' name 'GetFileSizeEx';
+  {$Else}
+    function sgeGetFileSize(hFile: HANDLE; lpFileSizeHigh: LPDWORD): BOOL; external 'kernel32' name 'GetFileSize';
+  {$EndIf}
+{$EndIf}
 
 
 procedure TsgeFile.OpenFile(FileName: String);
@@ -108,10 +116,14 @@ begin
     end;
 
   //Прочитать размер
-  Sz := FileUtil.FileSize(FileName);
+  if not sgeGetFileSize(H, @Sz) then
+    begin
+    FileClose(H);
+    raise EsgeException.Create(_UNITNAME, Err_CantReadFileSize, FileName);
+    end;
 
   //Применить параметры
-  CloseFile;                //Закрыть текущий файл
+  CloseFile;
   FPosition := 0;
   FFileName := FileName;
   FHandle := H;

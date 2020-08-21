@@ -1,7 +1,7 @@
 ﻿{
 Пакет             Simple Game Engine 1
 Файл              sgeTypes.pas
-Версия            1.19
+Версия            1.18
 Создан            06.12.2018
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Константы простого игрового движка
@@ -91,6 +91,7 @@ const
   Err_CantOpenFile                = 'CantOpenFile';
   Err_CantReadBuffer              = 'CantReadBuffer';
   Err_CantReadData                = 'CantReadData';
+  Err_CantReadFileSize            = 'CantReadFileSize';
   Err_CantReadPriority            = 'CantReadPriority';
   Err_CantReallocMemory           = 'CantReallocMemory';
   Err_CantRegisterClass           = 'CantRegisterClass';
