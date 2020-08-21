@@ -1,7 +1,7 @@
 {
 Пакет             Simple Game Engine 1
 Файл              sgeFile.pas
-Версия            1.2
+Версия            1.3
 Создан            15.05.2020
 Автор             Творческий человек  (accuratealx@gmail.com)
 Описание          Класс доступа к файлу
@@ -63,20 +63,12 @@ implementation
 
 uses
   sgeConst, sgeTypes,
-  SysUtils, Windows;
+  SysUtils, FileUtil, Windows;
 
 
 const
   _UNITNAME = 'sgeFile';
 
-
-{$IfDef WINDOWS}
-  {$IfDef WIN64}
-    function sgeGetFileSize(hFile: HANDLE; lpFileSizeHigh: PLARGE_INTEGER): BOOL; external 'kernel32' name 'GetFileSizeEx';
-  {$Else}
-    function sgeGetFileSize(hFile: HANDLE; lpFileSizeHigh: LPDWORD): DWORD; external 'kernel32' name 'GetFileSize';
-  {$EndIf}
-{$EndIf}
 
 
 procedure TsgeFile.OpenFile(FileName: String);
@@ -116,12 +108,7 @@ begin
     end;
 
   //Прочитать размер
-  if not sgeGetFileSize(H, @Sz) then
-    begin
-    FileClose(H);
-    raise EsgeException.Create(_UNITNAME, Err_CantReadFileSize, FileName);
-    end;
-
+  Sz := FileUtil.FileSize(FileName);
 
   //Применить параметры
   CloseFile;                //Закрыть текущий файл
